@@ -4,8 +4,8 @@ class Usuario {
     String nombre
     Integer codigo
     Integer cod_programa
-    //historia academica
-    //amigos
+    static hasOne = [historia:HistoriaAcademica]
+    static hasMany = [asignatura:Asignatura]
     static constraints = {
     }
 }
