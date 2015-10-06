@@ -79,6 +79,7 @@ endpoints:
 
 dataSource:
     pooled: true
+    dbCreate: "update"
     jmxExport: true
     driverClassName: org.h2.Driver
     username: sa
