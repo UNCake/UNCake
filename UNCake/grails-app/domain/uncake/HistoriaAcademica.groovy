@@ -6,9 +6,12 @@ class HistoriaAcademica {
     Integer creditos
     Integer PAPA
     Integer PA
-    //materias aprovadas
-    //materias canceladas
-    //materias perdidas
+    static hasMany = [materias_aprovadas:Asignatura,
+    materias_perdidas:Asignatura,
+    materias_canceladas:Asignatura]
+    static mappedBy = [materias_aprovadas: "none",
+    materias_perdidas: "none",
+    materias_canceladas: "none"]
     static constraints = {
     }
 }
