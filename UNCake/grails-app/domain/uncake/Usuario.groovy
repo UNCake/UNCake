@@ -2,8 +2,8 @@ package uncake
 
 class Usuario {
     String nombre
-    int codigo
-    int cod_programa
+    Integer codigo
+    Integer cod_programa
     //historia academica
     //amigos
     static constraints = {
