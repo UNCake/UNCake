@@ -2,8 +2,8 @@ package uncake
 
 class Horario {
     Integer codigo
-    //materias
     Integer creditos
+    static belongsTo = [materia: Asignatura]
     static constraints = {
     }
 }
