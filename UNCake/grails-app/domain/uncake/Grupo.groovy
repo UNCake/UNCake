@@ -4,7 +4,7 @@ class Grupo {
     //List list
     String profesor
     Integer codigo
-    static hasOne = [horario:Horario]
+    static belongsTo = [horario:Horario]
     //salones?
     static constraints = {
     }
