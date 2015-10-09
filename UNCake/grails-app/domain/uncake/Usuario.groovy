@@ -5,7 +5,7 @@ class Usuario {
     Integer codigo
     Integer cod_programa
     static belongsTo = [historia:HistoriaAcademica]
-    static hasMany = [asignatura:Asignatura]
+    static hasMany = [asignatura:Course]
     static constraints = {
     }
 }
