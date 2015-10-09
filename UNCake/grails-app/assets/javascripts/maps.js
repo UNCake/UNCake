@@ -17,7 +17,7 @@ function initialize(){
     directionsService = new google.maps.DirectionsService();
     var request = {
         origin: new google.maps.LatLng(4.634761756800125,-74.07968401908875),
-        destination: "calle 47 # 78 k 35 sur, Bogotá, Bogotá, Colombia",  /*new google.maps.LatLng(4.637999283155514,-74.08469438552856)*/
+        destination: /*"calle 47 # 78 k 35 sur, Bogotá, Bogotá, Colombia",*/  new google.maps.LatLng(4.637999283155514,-74.08469438552856),
         travelMode: google.maps.DirectionsTravelMode['DRIVING'],
         unitSystem: google.maps.DirectionsUnitSystem['METRIC'],
         provideRouteAlternatives: true
