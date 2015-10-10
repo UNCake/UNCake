@@ -1,6 +1,6 @@
 package uncake
 
-class Place {
+class Location {
     Integer code
     String name
     static constraints = {
