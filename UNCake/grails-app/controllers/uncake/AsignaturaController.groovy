@@ -10,19 +10,19 @@ class AsignaturaController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Course.list(params), model:[asignaturaCount: Course.count()]
+        respond Asignatura.list(params), model:[asignaturaCount: Asignatura.count()]
     }
 
-    def show(Course asignatura) {
+    def show(Asignatura asignatura) {
         respond asignatura
     }
 
     def create() {
-        respond new Course(params)
+        respond new Asignatura(params)
     }
 
     @Transactional
-    def save(Course asignatura) {
+    def save(Asignatura asignatura) {
         if (asignatura == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -39,19 +39,19 @@ class AsignaturaController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'asignatura.label', default: 'Course'), asignatura.id])
+                flash.message = message(code: 'default.created.message', args: [message(code: 'asignatura.label', default: 'Asignatura'), asignatura.id])
                 redirect asignatura
             }
             '*' { respond asignatura, [status: CREATED] }
         }
     }
 
-    def edit(Course asignatura) {
+    def edit(Asignatura asignatura) {
         respond asignatura
     }
 
     @Transactional
-    def update(Course asignatura) {
+    def update(Asignatura asignatura) {
         if (asignatura == null) {
             transactionStatus.setRollbackOnly()
             notFound()
@@ -68,7 +68,7 @@ class AsignaturaController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'asignatura.label', default: 'Course'), asignatura.id])
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'asignatura.label', default: 'Asignatura'), asignatura.id])
                 redirect asignatura
             }
             '*'{ respond asignatura, [status: OK] }
@@ -76,7 +76,7 @@ class AsignaturaController {
     }
 
     @Transactional
-    def delete(Course asignatura) {
+    def delete(Asignatura asignatura) {
 
         if (asignatura == null) {
             transactionStatus.setRollbackOnly()
@@ -88,7 +88,7 @@ class AsignaturaController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'asignatura.label', default: 'Course'), asignatura.id])
+                flash.message = message(code: 'default.deleted.message', args: [message(code: 'asignatura.label', default: 'Asignatura'), asignatura.id])
                 redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }
@@ -98,7 +98,7 @@ class AsignaturaController {
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'asignatura.label', default: 'Course'), params.id])
+                flash.message = message(code: 'default.not.found.message', args: [message(code: 'asignatura.label', default: 'Asignatura'), params.id])
                 redirect action: "index", method: "GET"
             }
             '*'{ render status: NOT_FOUND }

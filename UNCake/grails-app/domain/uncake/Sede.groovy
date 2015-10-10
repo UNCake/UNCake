@@ -1,8 +1,8 @@
 package uncake
 
-class Place {
-    Integer code
-    String name
+class Sede {
+    Integer codigo
+    String nombre
     static constraints = {
     }
 }
