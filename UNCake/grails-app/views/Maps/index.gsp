@@ -17,7 +17,7 @@
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:javascript src="foundation/vendor/modernizr.js"/>
     <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <asset:javascript src="maps.js"/>
+    <asset:javascript src="maps/maps.js"/>
     <asset:javascript src="foundation/vendor/jquery.js"/>
 </head>
 <body>
@@ -39,7 +39,7 @@
             <div class="large-4 small-12 columns">
                 <div class="panel">
                     <h3>Edificio</h3>
-                        <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre"></g:textField>
+                        <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre" value=""></g:textField>
                         <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
                 </div>
                 <div class="panel">
@@ -103,49 +103,61 @@
 <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
 <asset:javascript src="foundation/foundation/foundation.js"/>
 <g:javascript>
-    $(function() {
-        $( "#pointer" ).button().click( function(){
-            var selected = document.getElementById('selectedName').value;
-            var url="${createLink(controller:'Building', action:'getItemByName')}";
-            $.ajax({
-                 url:url,
-                 contentType: "application/json; charset=utf-8",
-                 dataType: "json",
-                 data: {
-                    selectedName: selected
-                 },
-                 success:function( output ) {
-                        alert(output);
-                    },
-                 });
-        });
-        $( "#selectedName" ).autocomplete({
-            source: function( request, response ) {
-                $.ajax({
-                    url: "${createLink(controller: 'Building', action: 'getAllNames')}",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: {
-                        maxRows: 12,
-                        name_startsWith: request.term
-                    },
-                    success: function( data ) {
-                        response( $.map( data, function( item ) {
-                            return {
-                                label: item,
-                                value: item
-                            }
-                        }));
-                    }
+$(function() {
+    $( "#pointer" ).button().click( function(){
+        var selected = document.getElementById('selectedName').value;
+        var url="${createLink(controller:'Building', action:'getItemByName')}";
+        var response = $.ajax({
+            url:url,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: {
+                selectedName: selected
+            },
+            success:function( finalPosition ) {
+                var posMarker = String(finalPosition).split("&");
+                var buildingMarker = new google.maps.Marker({
+                    position: new google.maps.LatLng(posMarker[0],posMarker[1]),
+                    map: map,
+                    title: String(selected),
+                    animation: google.maps.Animation.DROP,
+                    content: String(selected)
                 });
-            }
+                var infowindow = new google.maps.InfoWindow({
+                    content: String(selected)
+                });
+                map.setCenter( new google.maps.LatLng(posMarker[0],posMarker[1]) );
+                google.maps.event.addListener(buildingMarker, 'click', function() {
+                    infowindow.open(map,buildingMarker);
+                });
+            },
         });
     });
+    $( "#selectedName" ).autocomplete({
+        source: function( request, response ) {
+            $.ajax({
+                url: "${createLink(controller: 'Building', action: 'getAllNames')}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {
+                    maxRows: 12,
+                    name_startsWith: request.term
+                },
+                success: function( data ) {
+                    response( $.map( data, function( item ) {
+                        return {
+                            label: item,
+                            value: item
+                        }
+                    }));
+                }
+            });
+        }
+    });
+});
 </g:javascript>
-
 <script>
     $(document).foundation();
-
     var doc = document.documentElement;
     doc.setAttribute('data-useragent', navigator.userAgent);
 </script>

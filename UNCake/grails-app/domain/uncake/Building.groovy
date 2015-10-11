@@ -12,5 +12,4 @@ class Building {
         coordinates nullable:false, blank:false
     }
 
-
 }
