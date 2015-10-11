@@ -1,0 +1,14 @@
+body {
+  padding-top: 50px;
+  background-color: #b2d1ff;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+.map {
+  background-color: #fffdb2;
+}
+#googleMap{
+  background-color: #fffdb2;
+}
