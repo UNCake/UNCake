@@ -39,8 +39,8 @@
             <div class="large-4 small-12 columns">
                 <div class="panel">
                     <h3>Edificio</h3>
-                        <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre" value=""></g:textField>
-                        <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
+                    <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre" value="" ></g:textField>
+                    <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
                 </div>
                 <div class="panel">
                     <div class="row">
@@ -87,6 +87,8 @@
                 </div>
             </div>
         </footer>
+        <g:hiddenField name="doorMarker" id="doorMarker" value="${resource(dir:'images',file:'maps/entry.png', absolute:'true')}"></g:hiddenField>
+        <g:hiddenField name="pointMarker" id="pointMarker" value="${resource(dir:'images',file:'maps/point2.png', absolute:'true')}"></g:hiddenField>
     </div>
 </div>
 <script>
@@ -121,12 +123,14 @@ $(function() {
                     map: map,
                     title: String(selected),
                     animation: google.maps.Animation.DROP,
-                    content: String(selected)
+                    content: String(selected),
+                    icon: document.getElementById("pointMarker").value
                 });
                 var infowindow = new google.maps.InfoWindow({
                     content: String(selected)
                 });
                 map.setCenter( new google.maps.LatLng(posMarker[0],posMarker[1]) );
+                map.setZoom(15);
                 google.maps.event.addListener(buildingMarker, 'click', function() {
                     infowindow.open(map,buildingMarker);
                 });
