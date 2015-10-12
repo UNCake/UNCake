@@ -4,7 +4,7 @@ class Group {
     //List list
     String teacher
     Integer code
-    static belongsTo = [schedule:Horario]
+    static belongsTo = [schedule:Schedule]
     //salones?
     static constraints = {
     }
