@@ -4,7 +4,7 @@ import grails.test.mixin.*
 import spock.lang.*
 
 @TestFor(AsignaturaController)
-@Mock(Asignatura)
+@Mock(Course)
 class AsignaturaControllerSpec extends Specification {
 
     def populateValidParams(params) {
@@ -38,7 +38,7 @@ class AsignaturaControllerSpec extends Specification {
         when:"The save action is executed with an invalid instance"
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'POST'
-            def asignatura = new Asignatura()
+            def asignatura = new Course()
             asignatura.validate()
             controller.save(asignatura)
 
@@ -49,14 +49,14 @@ class AsignaturaControllerSpec extends Specification {
         when:"The save action is executed with a valid instance"
             response.reset()
             populateValidParams(params)
-            asignatura = new Asignatura(params)
+            asignatura = new Course(params)
 
             controller.save(asignatura)
 
         then:"A redirect is issued to the show action"
             response.redirectedUrl == '/asignatura/show/1'
             controller.flash.message != null
-            Asignatura.count() == 1
+            Course.count() == 1
     }
 
     void "Test that the show action returns the correct model"() {
@@ -68,7 +68,7 @@ class AsignaturaControllerSpec extends Specification {
 
         when:"A domain instance is passed to the show action"
             populateValidParams(params)
-            def asignatura = new Asignatura(params)
+            def asignatura = new Course(params)
             controller.show(asignatura)
 
         then:"A model is populated containing the domain instance"
@@ -84,7 +84,7 @@ class AsignaturaControllerSpec extends Specification {
 
         when:"A domain instance is passed to the edit action"
             populateValidParams(params)
-            def asignatura = new Asignatura(params)
+            def asignatura = new Course(params)
             controller.edit(asignatura)
 
         then:"A model is populated containing the domain instance"
@@ -103,7 +103,7 @@ class AsignaturaControllerSpec extends Specification {
 
         when:"An invalid domain instance is passed to the update action"
             response.reset()
-            def asignatura = new Asignatura()
+            def asignatura = new Course()
             asignatura.validate()
             controller.update(asignatura)
 
@@ -114,7 +114,7 @@ class AsignaturaControllerSpec extends Specification {
         when:"A valid domain instance is passed to the update action"
             response.reset()
             populateValidParams(params)
-            asignatura = new Asignatura(params).save(flush: true)
+            asignatura = new Course(params).save(flush: true)
             controller.update(asignatura)
 
         then:"A redirect is issued to the show action"
@@ -136,16 +136,16 @@ class AsignaturaControllerSpec extends Specification {
         when:"A domain instance is created"
             response.reset()
             populateValidParams(params)
-            def asignatura = new Asignatura(params).save(flush: true)
+            def asignatura = new Course(params).save(flush: true)
 
         then:"It exists"
-            Asignatura.count() == 1
+            Course.count() == 1
 
         when:"The domain instance is passed to the delete action"
             controller.delete(asignatura)
 
         then:"The instance is deleted"
-            Asignatura.count() == 0
+            Course.count() == 0
             response.redirectedUrl == '/asignatura/index'
             flash.message != null
     }

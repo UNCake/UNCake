@@ -35,7 +35,7 @@ class DBConnectionController {
                         println a
                     }
 
-                    res = new Asignatura(params)
+                    res = new Course(params)
 
                     if (!res.save(flush: true)) {
                         res.errors.each {
@@ -52,7 +52,7 @@ class DBConnectionController {
                 println $ { resp.statusLine.reasonPhrase }
             }
         }
-        def list_as = Asignatura.list()
+        def list_as = Course.list()
         list_as.each { asig ->
             http.request(POST, JSON) { req ->
                 body = [
