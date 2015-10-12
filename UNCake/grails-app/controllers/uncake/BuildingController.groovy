@@ -21,10 +21,7 @@ class BuildingController {
                 ilike('name', "%${params.selectedName}%")
             }
         }
-        println "${params.selectedName}"
-        println selectedBuilding
         render selectedBuilding.coordinates as JSON
-
     }
 
     def insertBogotaBuildings(){
