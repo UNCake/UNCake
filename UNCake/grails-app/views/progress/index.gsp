@@ -35,25 +35,12 @@
         </div>
         <br>
         <div class="row">
-            <div class="large-4 small-12 columns">
-                <div class="panel">
-                    <h3>Edificio</h3>
-                    <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre" value="" ></g:textField>
-                    <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
-                </div>
-                <div class="panel">
-                    <div class="row">
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="large-8 columns">
+            <div class="large-12 columns">
                 <div class="row">
                     <div class="large-12 columns">
                         <div class="panel" style="padding-left: 32px;padding-right: 32px;">
                             <div class="row">
-                                <g:textArea name="academicHistory" id="academicHistory" value="" rows="5" cols="40" style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                                <g:textArea name="academicHistory" id="academicHistory" value="" rows="8" cols="40" style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                                 <g:submitButton name="calculatePAPA" value="Calcular" action="calculatePAPA"></g:submitButton>
                             </div>
                         </div>
@@ -104,13 +91,23 @@ $(function() {
         var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i
         var historySoFar = history;
         var subjects = [];
+        var sumSubjects = 0.0;
+        var sumCredits = 0;
+        var average;
+        var subject;
         while (subjectPattern.test(historySoFar)) {
-                var subject = subjectPattern.exec(historySoFar);
-                subjects.push(subject);
-                historySoFar = historySoFar.replace(subject, "");
+            subject = String( subjectPattern.exec(historySoFar) );
+            sumSubjects += parseFloat( subject.split('\t')[9] ) * parseInt( subject.split('\t')[6] );
+            sumCredits += parseInt( subject.split('\t')[6] );
+            subjects.push(subject);
+            historySoFar = historySoFar.replace(subject, "");
         }
-        alert(historySoFar);
-        alert(subjects);
+        average = sumSubjects / sumCredits;
+        /*alert( historySoFar );
+        alert( subjects );
+        alert( sumSubjects );
+        alert( sumCredits );*/
+        alert( average );
     });
 });
 </g:javascript>
