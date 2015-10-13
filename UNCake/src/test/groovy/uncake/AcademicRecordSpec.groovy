@@ -6,8 +6,8 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
-@TestFor(Timeline)
-class TimelineSpec extends Specification {
+@TestFor(AcademicRecord)
+class AcademicRecordSpec extends Specification {
 
     def setup() {
     }

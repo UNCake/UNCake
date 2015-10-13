@@ -1,11 +1,11 @@
 package uncake
 
-class Timeline {
+class AcademicRecord {
     Integer code
-    Integer study_plan_code
+    Integer studyPlanCode
     Integer credits
-    Integer PAPA
-    Integer PA
+    Double PAPA
+    Double PA
     static hasMany = [approved:Course,
     lost:Course,
     cancelled:Course]

@@ -4,9 +4,9 @@ class StudyPlan {
     Integer code
     String faculty
     String department
-    Integer basis_credits
-    Integer free_choice_credits
-    Integer disciplinary_credits
+    Integer fundamentalCredits
+    Integer freeChoiceCredits
+    Integer disciplinaryCredits
     static hasMany = [course: Course]
     static mappedBy = [course: "none"]
     static constraints = {
