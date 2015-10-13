@@ -5,7 +5,7 @@ class Course {
     Integer credits
     static hasMany = [groups: Group]
     static mappedBy = [groups: "none"]
-    Integer course_id
+    Integer courseId
     String name
     String typology
     static constraints = {
