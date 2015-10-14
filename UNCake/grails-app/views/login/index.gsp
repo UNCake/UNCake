@@ -56,13 +56,17 @@
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-<div class="container center-contatiner">
 
+
+<div class="container center-contatiner">
+    <div>${flash.message2}</div>
+
+<g:form class="form-signin" action="doLogin" method="post">
     <form class="form-signin">
         <h2 class="form-signin-heading font-uncake" align="center">UNCake</h2>
         <div class="form-group">
             <label >Email</label>
-            <input type="email" id="inputEmail" class="form-control" placeholder="Introduce tu email" required autofocus>
+            <input type="email" id="email" class="form-control"  placeholder="Introduce tu email" required autofocus name="email">
         </div>
         <div class="form-group" >
             <div style="display: flex">
@@ -77,20 +81,20 @@
 
 
 
-            <input type="password" id="inputPassword" class="form-control" placeholder="Introduce tu contraseña" required>
+            <input type="password" id="password" class="form-control" placeholder="Introduce tu contraseña" required name='password'>
         </div>
         <label>
             <input type="checkbox" value="remember-me"> Recordarme
         </label>
 
-        <button class="btn btn-lg btn-primary btn-block color-black"    type="submit">Entrar</button>
+        <button class="btn btn-lg btn-primary btn-block color-black"    type="submit"  value='Login'>Entrar</button>
         <div>¿No tienes una cuenta?
             <a href="/register/index" title="Registrate." >Click aquí para Registrate</a>
         </div>
 
 
     </form>
-
+</g:form>
 </div> <!-- /container -->
 
 

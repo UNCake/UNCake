@@ -41,7 +41,8 @@
 <body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
+    <div class="container ">
+
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -57,21 +58,21 @@
     </div>
 </nav>
 <div class="container center-contatiner-r">
-
+    <g:form class="form-signin" action="doRegister" method="post">
     <form class="form-signin">
         <h2 class="form-signin-heading " align="center">Registrate ya!</h2>
         <div class="form-group">
             <label class="sr-only">Nombre</label>
-            <input type="text" id="inputText" class="form-control" placeholder="Nombre" required >
+            <input type="text" id="inputText" class="form-control" placeholder="Nombre" required name="nombre">
         </div>
         <div class="form-group" >
             <label class="sr-only">Correo electrónico</label>
-            <input type="email" class="form-control" placeholder="Correo electrónico" required >
+            <input type="email" class="form-control" placeholder="Correo electrónico" required name="email">
         </div>
-        <div class="form-group" >
+        <!--   Confirmacion de email eliminada, no es necesario      <div class="form-group" >
             <label class="sr-only">Confirma el email</label>
             <input type="email"  class="form-control" placeholder="Confirma el email" required >
-        </div>
+        </div>-->
         <div class="form-group" >
             <label class="sr-only">Contraseña</label>
             <input title="La contraseña debe tener minimo 7 caracteres e incluir números y letras" type="password"  class="form-control" placeholder="Contraseña" required pattern="(?=.*\d)(?=.*[a-z]).{6,}" name="pwd1" onchange="
@@ -82,13 +83,14 @@
         <div class="form-group" >
             <label class="sr-only">Confirma la contraseña</label>
             <input title="Las contraseñas deben coincidir" type="password"  class="form-control" placeholder="Confirma la contraseña" required pattern="(?=.*\d)(?=.*[a-z]).{6,}" name="pwd2" onchange="
-                this.setCustomValidity(this.validity.patternMismatch ? this.title : '');">
+                this.setCustomValidity(this.validity.patternMismatch ? this.title : '');" >
         </div>
         <button class="btn btn-lg btn-primary btn-block color-black "    type="submit">Registrarse</button>
         <div>¿Ya estas registrado?
             <a href="/login/index" title="Entrar" >Click aquí para Entrar</a>
         </div>
     </form>
+</g:form>
 </div> <!-- /container -->
 
 
