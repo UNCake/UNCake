@@ -1,16 +1,16 @@
 package uncake
 
 class Usuario {
-    String nombre
+    String name
     String email
     String password
-    Integer codigo
-    Integer cod_programa
-    static belongsTo = [historia:HistoriaAcademica]
-    static hasMany = [asignatura:Asignatura]
+    Integer code
+    Integer programCode
+    static belongsTo = [academicRecord:HistoriaAcademica]
+    static hasMany = [course:Asignatura]
     static constraints = {
-        historia nullable:true
-        asignatura nullable: true
+        academicRecord nullable:true
+        course nullable: true
         email unique: true
     }
 }

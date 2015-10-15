@@ -54,7 +54,7 @@ class AsignaturaControllerSpec extends Specification {
             controller.save(asignatura)
 
         then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/asignatura/show/1'
+            response.redirectedUrl == '/course/show/1'
             controller.flash.message != null
             Asignatura.count() == 1
     }
@@ -98,7 +98,7 @@ class AsignaturaControllerSpec extends Specification {
             controller.update(null)
 
         then:"A 404 error is returned"
-            response.redirectedUrl == '/asignatura/index'
+            response.redirectedUrl == '/course/index'
             flash.message != null
 
         when:"An invalid domain instance is passed to the update action"
@@ -119,7 +119,7 @@ class AsignaturaControllerSpec extends Specification {
 
         then:"A redirect is issued to the show action"
             asignatura != null
-            response.redirectedUrl == "/asignatura/show/$asignatura.id"
+            response.redirectedUrl == "/course/show/$asignatura.id"
             flash.message != null
     }
 
@@ -130,7 +130,7 @@ class AsignaturaControllerSpec extends Specification {
             controller.delete(null)
 
         then:"A 404 is returned"
-            response.redirectedUrl == '/asignatura/index'
+            response.redirectedUrl == '/course/index'
             flash.message != null
 
         when:"A domain instance is created"
@@ -146,7 +146,7 @@ class AsignaturaControllerSpec extends Specification {
 
         then:"The instance is deleted"
             Asignatura.count() == 0
-            response.redirectedUrl == '/asignatura/index'
+            response.redirectedUrl == '/course/index'
             flash.message != null
     }
 }
