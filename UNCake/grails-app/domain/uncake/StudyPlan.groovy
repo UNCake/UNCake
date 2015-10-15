@@ -1,14 +1,14 @@
 package uncake
 
-class PlanEstudios {
-    Integer codigo
-    String facultad
-    String Departamento
-    Integer creditos_fundamentacion
-    Integer creditos_libre_eleccion
-    Integer creditos_disciplinar
-    static hasMany = [materia: Asignatura]
-    static mappedBy = [materia: "none"]
+class StudyPlan {
+    Integer code
+    String faculty
+    String department
+    Integer fundamentalCredits
+    Integer freeChoiceCredits
+    Integer disciplinaryCredits
+    static hasMany = [course: Course]
+    static mappedBy = [course: "none"]
     static constraints = {
     }
 }

@@ -110,7 +110,7 @@ $(function() {
         var selected = document.getElementById('selectedName').value;
         var url="${createLink(controller:'Building', action:'getItemByName')}";
         var response = $.ajax({
-            url:url,
+            url: url,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: {
@@ -134,7 +134,7 @@ $(function() {
                 google.maps.event.addListener(buildingMarker, 'click', function() {
                     infowindow.open(map,buildingMarker);
                 });
-            },
+            }
         });
     });
     $( "#selectedName" ).autocomplete({
