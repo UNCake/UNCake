@@ -1,8 +1,8 @@
-import uncake.Usuario
+import uncake.User
 class BootStrap {
 
     def init = { servletContext ->
-        new Usuario(email:"santi@unal.com", password:"lollol12", name:"Santi", code:-1, programCode:-1, academicRecord: null, course: null ).save()
+        new User(email:"santi@unal.com", password:"lollol12", name:"Santi" ).save()
     }
     def destroy = {
     }

@@ -7,9 +7,9 @@ class LoginController {
     }
     def doLogin = {
 
-      def usuario = Usuario.findWhere(email:params.email, password:params.password)
-        session.user = usuario
-        if (usuario)
+      def user = User.findWhere(email:params.email, password:params.password)
+        session.user = user
+        if (user)
             redirect(controller:'home',action:'index')
         else{
             flash.message1="*"

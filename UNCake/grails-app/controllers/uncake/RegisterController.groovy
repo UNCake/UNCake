@@ -6,7 +6,7 @@ class RegisterController {
 
     }
     def doRegister = {
-        new Usuario(email: params.email, password: params.pwd2, name: params.nombre, code: -1, programCode: -1, academicRecord: null, course: null).save()
+        new User(email: params.email, password: params.pwd2, name: params.nombre).save()
         redirect(controller:'login',action:'index')
 
     }
