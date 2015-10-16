@@ -44,11 +44,13 @@
                     <div class="large-12 columns">
                         <div class="panel" style="padding-left: 32px;padding-right: 32px;">
                             <div class="row">
-                                <g:textArea name="academicHistory" id="academicHistory" value="" rows="8" cols="40" style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                                 <g:submitButton name="calculatePAPA" value="Calcular" action="calculatePAPA"></g:submitButton>
                             </div>
                             <div class="row">
-                                <div id="top_x_div" style="width: 900px; height: 500px;"></div>
+                                <br/>
+                                <div id="papa_chart" style="width: 900px; height: 500px;"></div>
+                                <div id="percentage_chart" style="width: 400px; height: 300px"></div>
                             </div>
                         </div>
                     </div>
@@ -94,7 +96,7 @@
 <g:javascript>
 $(function() {
     $( "#calculatePAPA" ).button().click( function() {
-        var history = document.getElementById('academicHistory').value;
+        var history = document.getElementById('academicRecord').value;
         var periods = splitPeriods( history );
         var averages = [];
         for( var i = 0; i < periods.length; i++ ){
@@ -103,10 +105,17 @@ $(function() {
         }
         averages.push( calculatePAPA( history )[0] );
         averages.push( calculatePAPA( history )[1] );
-        drawStuff(averages);
+        drawPercentage( getPercentage( history ) );
+        drawPAPA(averages);
     });
+    function getPercentage( input ){
+        var percentagePattern = /[0-9]+\.[0-9]+%\n+% de avance/i;
+        var textPercentage = String( percentagePattern.exec(input) );
+        var percentage = parseFloat( textPercentage.substring( 0, textPercentage.indexOf('%') ) );
+        return percentage;
+    }
     function calculatePAPA( input ){
-        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i
+        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
         var subjects = [];
         var subjectsAux;
         var sumSubjects = 0.0;
@@ -140,7 +149,7 @@ $(function() {
         return averages;
     }
     function splitPeriods( input ){
-        var periodPattern = /[0-9]+[\t]periodo académico[ ]*\|[ ]*[0-9\-A-Z]+/i
+        var periodPattern = /[0-9]+[\t]periodo académico[ ]*\|[ ]*[0-9\-A-Z]+/i;
         var periods = [];
         var periodNames = [];
         var periodName;
@@ -160,22 +169,41 @@ $(function() {
 });
 
 google.load("visualization", "1.1", {packages:["bar"]});
+google.load("visualization", "1", {packages:["corechart"]});
 
-function drawStuff( averages ) {
+function drawPAPA( averages ) {
     var data = new Array(averages.length/2 + 1);
+    var max = 0;
+    var min = 5;
+    var maxGraph;
+    var minGraph;
+    var adjustedAverages = [];
+    for( i = 0; i < averages.length; i++ ) {
+        if( averages[i]*10 - Math.floor(averages[i]*10) < 0.5 )
+            adjustedAverages[i] = Math.floor( averages[i]*10 ) / 10;
+        else
+            adjustedAverages[i] = Math.ceil( averages[i]*10 ) / 10;
+        if( adjustedAverages[i] > max )
+            max = adjustedAverages[i];
+        if( adjustedAverages[i] < min )
+            min = adjustedAverages[i];
+    }
+    maxGraph = max < 4.9 ? max + 0.11 : 5;
+    minGraph = min > 0.1 ? min - 0.1 : 0;
     for( i = 0; i < averages.length/2 + 1; i++ ) {
-        data[i] = new Array(2);
+        data[i] = new Array(3);
     }
     data[0][0] = 'Semestre';
     data[0][1] = 'PAPA';
+    data[0][2] = 'PA';
     for (var i = 0; i < averages.length/2; i++){
         data[i+1][0] = String( i + 1 );
-        data[i+1][1] = averages[i * 2];
+        data[i+1][1] = adjustedAverages[i * 2];
+        data[i+1][2] = adjustedAverages[i * 2 + 1];
     }
     var data = new google.visualization.arrayToDataTable(
         data
     );
-
     var options = {
         title: 'PAPA y PA',
         width: 900,
@@ -186,12 +214,55 @@ function drawStuff( averages ) {
                 0: { side: 'bottom', label: 'Semestre'}
             }
         },
-        bar: { groupWidth: "60%" }
+        vAxis: {
+            viewWindow: {
+                max: maxGraph,
+                min: minGraph
+            }
+        },
+        bar: { groupWidth: "70%" }
     };
 
-    var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+    var chart = new google.charts.Bar(document.getElementById('papa_chart'));
     chart.draw(data, google.charts.Bar.convertOptions(options));
-};
+}
+function drawPercentage( percentaje ) {
+    var data = new Array(3);
+    for( var i = 0; i < 3; i++ ) {
+        data[i] = new Array(2);
+    }
+    data[0][0] = 'Detalle';
+    data[0][1] = 'Porcentaje';
+    data[1][0] = 'Avance';
+    data[1][1] = percentaje;
+    data[2][0] = 'Pendiente';
+    data[2][1] = 100 - percentaje;
+
+    var data = google.visualization.arrayToDataTable(
+        data
+    );
+
+    var options = {
+        title: 'Mi avance de carrera',
+        pieHole: 0.1,
+        slices: {
+            0: { color: 'springGreen' },
+            1: { color: 'dodgerBlue' }
+        },
+        backgroundColor: 'transparent',
+        is3D: true,
+        pieSliceTextStyle: {
+            color: 'black',
+        }
+        /*slices: {  4: {offset: 0.2},
+            1: {offset: 0.3},
+            2: {offset: 0.4}
+        }*/
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('percentage_chart'));
+    chart.draw(data, options);
+}
 </g:javascript>
 <script>
     $(document).foundation();
