@@ -35,13 +35,13 @@ class DBConnectionController {
                         println a
                     }
 
-                    res = new Course(params)
+                    /*res = new Course(params)
 
                     if (!res.save(flush: true)) {
                         res.errors.each {
                             println it
                         }
-                    }
+                    }*/
 
                 }
             }
@@ -76,6 +76,6 @@ class DBConnectionController {
             }
         }
 
-        render "datos cargados, revisar vista de asignaturas"
+        render "datos cargados"
     }
 }
