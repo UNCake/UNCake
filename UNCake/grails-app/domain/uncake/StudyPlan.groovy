@@ -1,14 +1,20 @@
 package uncake
 
 class StudyPlan {
+
     Integer code
     String faculty
-    String department
+    String type
+    String name
     Integer fundamentalCredits
     Integer freeChoiceCredits
     Integer disciplinaryCredits
-    static hasMany = [course: Course]
-    static mappedBy = [course: "none"]
+    static hasMany = [courses: Prerequisite]
     static constraints = {
+        code nullable: false, unique: true
+        name blank: false
+        faculty blank: false
+        type blank: false
+        courses nullable: false
     }
 }

@@ -1,11 +1,17 @@
 package uncake
 
 class User {
+
     String name
-    Integer code
-    Integer programCode
-    static belongsTo = [academicRecord:AcademicRecord]
-    static hasMany = [course:Course]
+    String email
+    String password
+    //Posible avatar Img avt
+    static hasMany = [academicRecord: AcademicRecord, friends: User, schedules: Schedule]
     static constraints = {
+        name blank: false
+        email blank: false
+        password blank: false
+        friends nullable: true
+        academicRecord nullable: true
     }
 }

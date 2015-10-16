@@ -1,17 +1,18 @@
 package uncake
 
 class AcademicRecord {
-    Integer code
-    Integer studyPlanCode
+
+    StudyPlan studyPlan
     Integer credits
     Double PAPA
     Double PA
-    static hasMany = [approved:Course,
-    lost:Course,
-    cancelled:Course]
-    static mappedBy = [approved: "none",
-    lost: "none",
-    cancelled: "none"]
+    static belongsTo = [user: User]
+    static hasMany = [approved: Course, lost: Course, cancelled: Course]
+
     static constraints = {
+        studyPlan nullable: false
+        approved nullable: true
+        lost nullable: true
+        cancelled nullable: true
     }
 }

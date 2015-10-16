@@ -1,9 +1,10 @@
 package uncake
 
 class Schedule {
-    Integer code
+
     Integer credits
-    static belongsTo = [course: Course]
+    static hasMany = [courses: Course]
+    static belongsTo = [user: User]
     static constraints = {
     }
 }
