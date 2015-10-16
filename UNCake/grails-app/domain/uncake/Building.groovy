@@ -11,6 +11,7 @@ class Building {
         code nullable: false, blank: false, unique: true
         name nullable: false, blank: false
         coordinates nullable: false, blank: false
+        location nullable: true
     }
 
 }
