@@ -1,15 +1,43 @@
 package uncake
 
 import groovyx.net.http.HTTPBuilder
+
 import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 
 class DBConnectionController {
-    def http = new HTTPBuilder('http://sia.bogota.unal.edu.co/buscador/JSON-RPC')
+    def http = new HTTPBuilder('http://sia.bogota.unal.edu.co/academia/scripts/catalogo-programas/items_catalogo_PRE.js')
     def res
 
-    def index() {
+    def initDB() {
+        def pattern = ~"'.+'"
+        def loc = "BOGOTÁ"
+        StudyPlan.getAll().each { var -> var.delete(flush: true) }
+        def source = new URL('http://sia.bogota.unal.edu.co/academia/scripts/catalogo-programas/items_catalogo_PRE.js').getText("ISO-8859-1")
 
+        source = source.replaceAll(loc, "")
+        source = source.findAll(pattern)
+
+        String faculty
+        for (def i = 0; i < source.size(); i++) {
+
+            if (!source[i].toLowerCase().contains("sede") && source[i].toLowerCase().contains("facultad")) {
+                faculty = source[i]
+            } else if (i + 1 < source.size() && source[i + 1].contains("semaforo")) {
+                new StudyPlan(faculty: faculty, code: source[i + 1].find(/[0-9]+/), name: source[i], type: "PRE").save(flush: true)
+            }
+        }
+
+        println "Output database"
+        def list_sp = StudyPlan.list()
+        list_sp.each { sp ->
+            println " $sp.code $sp.name $sp.faculty "
+        }
+    }
+
+    def index() {
+        initDB()
+/*
         http.request(POST, JSON) { req ->
             body = [
                     "jsonrpc": "2.0",
@@ -35,13 +63,13 @@ class DBConnectionController {
                         println a
                     }
 
-                    /*res = new Course(params)
+                    res = new Course(params)
 
                     if (!res.save(flush: true)) {
                         res.errors.each {
                             println it
                         }
-                    }*/
+                    }
 
                 }
             }
@@ -74,7 +102,8 @@ class DBConnectionController {
                     println $ { resp.statusLine.reasonPhrase }
                 }
             }
-        }
+        }*/
+
 
         render "datos cargados"
     }

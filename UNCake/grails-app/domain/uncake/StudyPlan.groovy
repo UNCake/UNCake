@@ -15,6 +15,9 @@ class StudyPlan {
         name blank: false
         faculty blank: false
         type blank: false
-        courses nullable: false
+        courses nullable: true
+        disciplinaryCredits nullable: true
+        fundamentalCredits nullable: true
+        freeChoiceCredits nullable: true
     }
 }
