@@ -11,30 +11,44 @@ class DBConnectionController {
 
     def initDB() {
         def pattern = ~"'.+'"
-        def loc = "BOGOTÁ"
-        def type = ["PRE", "POS"]
-        def urlLoc = 'http://sia.bogota.unal.edu.co/academia/'
-        def source
-        StudyPlan.getAll().each { var -> var.delete(flush: true) }
-        type.each {
-            source = new URL(urlLoc + 'scripts/catalogo-programas/items_catalogo_' + it + '.js').getText("ISO-8859-1")
-            source = source.replaceAll(loc, "")
-            source = source.findAll(pattern)
+        //Location.getAll().each { var -> var.delete(flush: true) }
+        if (Location.count == 0) {
+            new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co/academia/').save()
+            new Location(name: 'BOGOTÁ', url: 'http://sia.bogota.unal.edu.co/academia/').save()
+            new Location(name: 'CARIBE', url: 'http://siacar.unal.edu.co/academia/').save()
+            new Location(name: 'MANIZALES', url: 'http://sia.manizales.unal.edu.co/academia/').save()
+            new Location(name: 'MEDELLÍN', url: 'http://sia.medellin.unal.edu.co/academia/').save()
+            new Location(name: 'ORINOQUIA', url: 'http://siaori.unal.edu.co/academia/').save()
+            new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co/academia/').save()
+            new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co/academia/').save()
 
-            String faculty
-            for (def i = 0; i < source.size(); i++) {
+            def type = ['PRE', 'POS']
+            def source
+            //StudyPlan.getAll().each { var -> var.delete() }
 
-                if (!source[i].toLowerCase().contains("sede") && source[i].toLowerCase().contains("facultad")) {
-                    faculty = source[i]
-                } else if (i + 1 < source.size() && source[i + 1].contains("semaforo")) {
-                    new StudyPlan(faculty: faculty, code: source[i + 1].find(/[0-9]+/), name: source[i], type: it).save(flush: true)
+
+            Location.list().each { loc ->
+                type.each {
+                    source = new URL(loc.url + 'scripts/catalogo-programas/items_catalogo_' + it + '.js').getText('ISO-8859-1')
+                    source = source.findAll(pattern)
+
+                    String faculty = ''
+                    for (def i = 0; i < source.size(); i++) {
+
+                        if (source[i].toLowerCase().contains('facultad')) {
+                            faculty = source[i]
+                        } else if (i + 1 < source.size() && source[i + 1].contains('semaforo')) {
+                            new StudyPlan(location: loc, faculty: faculty.toUpperCase(), code: source[i + 1].find(/[0-9]+/),
+                                    name: source[i], type: it).save()
+                        }
+                    }
                 }
             }
         }
-        println "Output database"
+        println 'Output database'
         def list_sp = StudyPlan.list()
         list_sp.each { sp ->
-            println " $sp.code $sp.name $sp.faculty "
+            println "$sp.location.name $sp.code $sp.name $sp.faculty "
         }
     }
 
