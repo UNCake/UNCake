@@ -12,22 +12,25 @@ class DBConnectionController {
     def initDB() {
         def pattern = ~"'.+'"
         def loc = "BOGOTÁ"
+        def type = ["PRE", "POS"]
+        def urlLoc = 'http://sia.bogota.unal.edu.co/academia/'
+        def source
         StudyPlan.getAll().each { var -> var.delete(flush: true) }
-        def source = new URL('http://sia.bogota.unal.edu.co/academia/scripts/catalogo-programas/items_catalogo_PRE.js').getText("ISO-8859-1")
+        type.each {
+            source = new URL(urlLoc + 'scripts/catalogo-programas/items_catalogo_' + it + '.js').getText("ISO-8859-1")
+            source = source.replaceAll(loc, "")
+            source = source.findAll(pattern)
 
-        source = source.replaceAll(loc, "")
-        source = source.findAll(pattern)
+            String faculty
+            for (def i = 0; i < source.size(); i++) {
 
-        String faculty
-        for (def i = 0; i < source.size(); i++) {
-
-            if (!source[i].toLowerCase().contains("sede") && source[i].toLowerCase().contains("facultad")) {
-                faculty = source[i]
-            } else if (i + 1 < source.size() && source[i + 1].contains("semaforo")) {
-                new StudyPlan(faculty: faculty, code: source[i + 1].find(/[0-9]+/), name: source[i], type: "PRE").save(flush: true)
+                if (!source[i].toLowerCase().contains("sede") && source[i].toLowerCase().contains("facultad")) {
+                    faculty = source[i]
+                } else if (i + 1 < source.size() && source[i + 1].contains("semaforo")) {
+                    new StudyPlan(faculty: faculty, code: source[i + 1].find(/[0-9]+/), name: source[i], type: it).save(flush: true)
+                }
             }
         }
-
         println "Output database"
         def list_sp = StudyPlan.list()
         list_sp.each { sp ->
