@@ -30,7 +30,7 @@
 
 <div id="wrapper">
 
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default">
     <div class="container">
         <div class="navbar-header page-scroll">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -41,12 +41,15 @@
             </button>
             <a class="navbar-brand page-scroll" href="#page-top">UNCake</a>
         </div>
-
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="hidden">
                     <a href="#page-top"></a>
                 </li>
+
+                <g:textField name="selectedName" id="selectedName" placeholder="Digita nombre" value="" ></g:textField>
+
+
                 <li>
                     <a class="page-scroll" href="#about">Registrarme</a>
                 </li>
@@ -125,9 +128,40 @@
 <asset:javascript src="cbpAnimatedHeader.js"/>
 
 <asset:javascript src="agency.js"/>
+<asset:javascript src="foundation/vendor/jquery.js"/>
+<asset:javascript src="foundation/foundation.min.js"/>
 
+<asset:javascript src="foundation/vendor/jquery.js"/>
+<asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
+<asset:javascript src="foundation/foundation/foundation.js"/>
+<g:javascript>
+$(function() {
+    $( "#selectedName" ).autocomplete({
+        source: function( request, response ) {
+            $.ajax({
+                url: "${createLink(controller: 'Home', action: 'getAllNames')}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {
+                    maxRows: 12,
+                    name_startsWith: request.term
+                },
+                success: function( data ) {
+                    response( $.map( data, function( item ) {
+                        return {
+                            label: item,
+                            value: item
+                        }
+                    }));
+                }
+            });
+        }
+    });
+});
+</g:javascript>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
 </div>
+
 </body>
 </html>
