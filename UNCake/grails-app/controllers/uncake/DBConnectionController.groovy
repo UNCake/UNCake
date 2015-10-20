@@ -26,25 +26,26 @@ class DBConnectionController {
             def source
             //StudyPlan.getAll().each { var -> var.delete() }
 
-
             Location.list().each { loc ->
                 type.each {
                     source = new URL(loc.url + 'scripts/catalogo-programas/items_catalogo_' + it + '.js').getText('ISO-8859-1')
                     source = source.findAll(pattern)
 
                     String faculty = ''
-                    for (def i = 0; i < source.size(); i++) {
 
-                        if (source[i].toLowerCase().contains('facultad')) {
+                    for (def i = 0; i < source.size(); i++) {
+                        source[i] = source[i].toUpperCase().replaceAll("'", "")
+                        if (source[i].contains('FACULTAD')) {
                             faculty = source[i]
                         } else if (i + 1 < source.size() && source[i + 1].contains('semaforo')) {
-                            new StudyPlan(location: loc, faculty: faculty.toUpperCase(), code: source[i + 1].find(/[0-9]+/),
+                            new StudyPlan(location: loc, faculty: faculty, code: source[i + 1].find(/[0-9]+/),
                                     name: source[i], type: it).save()
                         }
                     }
                 }
             }
         }
+
         println 'Output database'
         def list_sp = StudyPlan.list()
         list_sp.each { sp ->
