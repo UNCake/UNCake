@@ -67,7 +67,8 @@
         </div>
         <div class="form-group" >
             <label class="sr-only">Correo electrónico</label>
-            <input type="email" class="form-control" placeholder="Correo electrónico" required name="email">
+            <input type="email" class="form-control" placeholder="Correo electrónico" required name="email" onchange="
+                this.setCustomValidity(!('${flash.message1}'==null) ? ${flash.message1} : '');" >
         </div>
         <!--   Confirmacion de email eliminada, no es necesario      <div class="form-group" >
             <label class="sr-only">Confirma el email</label>
@@ -85,6 +86,7 @@
             <input title="Las contraseñas deben coincidir" type="password"  class="form-control" placeholder="Confirma la contraseña" required pattern="(?=.*\d)(?=.*[a-z]).{6,}" name="pwd2" onchange="
                 this.setCustomValidity(this.validity.patternMismatch ? this.title : '');" >
         </div>
+        <div class="error errorm">${flash.message1}</div>
         <button class="btn btn-lg btn-primary btn-block color-black "    type="submit">Registrarse</button>
         <div>¿Ya estas registrado?
             <a href="/login/index" title="Entrar" >Click aquí para Entrar</a>

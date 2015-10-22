@@ -39,7 +39,7 @@ body {
   border-top-right-radius: 0;
 }
 .center-contatiner{
-  margin-top:6%
+  margin-top:5%
 
 }
 .center-contatiner-r{
@@ -72,7 +72,7 @@ body {
 }
 .error{
   font-size: 200%;
-  color: red;
+  color: firebrick;
   margin-right: 1%;
 }
 .error.errorm{

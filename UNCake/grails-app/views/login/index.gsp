@@ -71,7 +71,7 @@
                 <div class="error">${flash.message2}</div>
             </div>
         </div>
-        <div class="form-group" >
+        <div class="form-group" style="margin-bottom: 0px">
             <div style="display: flex">
                 <div class="col-6">
                     <label >Contraseña</label>
@@ -86,9 +86,7 @@
                 <div class="error">${flash.message2}</div>
             </div>
             <div class="error errorm">${flash.message1}</div>
-
         </div>
-
         <label>
             <input type="checkbox" value="remember-me"> Recordarme
         </label>
