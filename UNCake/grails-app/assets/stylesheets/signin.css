@@ -70,3 +70,11 @@ body {
 .col-6{
   width: 50%;
 }
+.error{
+  font-size: 200%;
+  color: red;
+  margin-right: 1%;
+}
+.error.errorm{
+  font-size: 110%;
+}
