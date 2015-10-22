@@ -62,9 +62,14 @@
         var availableTags = $.parseJSON('${userlist.encodeAsJSON()}');
         $("#selectedName").autocomplete({
             source: availableTags
-        });
-    });
+        });/*
+         $("#selectedName").bind("keypress", function(e) {
+         if(e.keyCode==13){
+         console.log(document.getElementById('selectedName').value)
 
+         }
+         });*/
+    });
 </script>
 
 <div id="wrapper">
@@ -87,7 +92,9 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <input type="text" class="form-control" id="selectedName" placeholder="Digita Nombre" style="text-align:center">
+                        <g:form class="form-signin" action="saveFriend" method="post">
+                            <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
+                        </g:form>
                     </li>
 
                     <li>
