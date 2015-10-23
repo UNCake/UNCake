@@ -20,9 +20,9 @@
 
     <title>UNCake</title>
 
-
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="agency.css"/>
+    <asset:stylesheet src="dialogueStyle.css"/>
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
@@ -62,16 +62,33 @@
         var availableTags = $.parseJSON('${userlist.encodeAsJSON()}');
         $("#selectedName").autocomplete({
             source: availableTags
-        });/*
+        });
          $("#selectedName").bind("keypress", function(e) {
-         if(e.keyCode==13){
-         console.log(document.getElementById('selectedName').value)
-
-         }
-         });*/
+             if(e.keyCode==13){
+                 overlay()
+                 document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
+             }
+         });
     });
 </script>
-
+<script>
+    function overlay() {
+        el = document.getElementById("overlay");
+        //console.log(document.getElementById("diagNombre").innerHTML);
+        el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+    }
+</script>
+<div id="overlay">
+    <div class="container">
+        <asset:image src="home/services/icono_horarios.png" alt=""/>
+        <p class="text-warning">Click here to [<a href='#' onclick='overlay()'>close</a>]</p>
+        <g:form class="form-signin" action="saveFriend" method="post">
+            <input type="input" class="form-control has-success text-warning" id="diagNombre" name="diagNombre" placeholder="Nombre" style="text-align:center; 	background: #1AB394;">
+            <p class="text-success" id="diagMail" name="diagMail">alejando@unal.edu.co</p>
+        </g:form>
+        <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='Login'>Entrar</button>
+    </div>
+</div>
 <div id="wrapper">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -92,9 +109,8 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <g:form class="form-signin" action="saveFriend" method="post">
-                            <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
-                        </g:form>
+                        <%--<g:form class="form-signin" action="saveFriend" method="post">--%>
+                        <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
                     </li>
 
                     <li>
