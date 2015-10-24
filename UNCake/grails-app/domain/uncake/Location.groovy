@@ -6,7 +6,7 @@ class Location {
     String url
     static constraints = {
 
-        name blank: false
+        name blank: false, unique: true
         url blank: false
     }
 }
