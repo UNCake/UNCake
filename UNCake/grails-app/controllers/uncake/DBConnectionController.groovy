@@ -1,7 +1,8 @@
 package uncake
 
 import groovyx.net.http.HTTPBuilder
-
+import java.text.Normalizer
+import java.text.Normalizer.Form
 import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 
@@ -11,46 +12,58 @@ class DBConnectionController {
 
     def initDB() {
         def pattern = ~"'.+'"
+        //StudyPlan.getAll().each { var -> var.delete(flush: true) }
         //Location.getAll().each { var -> var.delete(flush: true) }
         if (Location.count == 0) {
+
             new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co/academia/').save()
-            new Location(name: 'BOGOTÁ', url: 'http://sia.bogota.unal.edu.co/academia/').save()
+            new Location(name: 'BOGOTA', url: 'http://sia.bogota.unal.edu.co/academia/').save()
             new Location(name: 'CARIBE', url: 'http://siacar.unal.edu.co/academia/').save()
             new Location(name: 'MANIZALES', url: 'http://sia.manizales.unal.edu.co/academia/').save()
-            new Location(name: 'MEDELLÍN', url: 'http://sia.medellin.unal.edu.co/academia/').save()
+            new Location(name: 'MEDELLIN', url: 'http://sia.medellin.unal.edu.co/academia/').save()
             new Location(name: 'ORINOQUIA', url: 'http://siaori.unal.edu.co/academia/').save()
             new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co/academia/').save()
             new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co/academia/').save()
 
             def type = ['PRE', 'POS']
             def source
-            //StudyPlan.getAll().each { var -> var.delete() }
 
             Location.list().each { loc ->
                 type.each {
-                    source = new URL(loc.url + 'scripts/catalogo-programas/items_catalogo_' + it + '.js').getText('ISO-8859-1')
-                    source = source.findAll(pattern)
+                    try {
+                        source = new URL(loc.url + 'scripts/catalogo-programas/items_catalogo_' + it + '.js').getText('ISO-8859-1')
+                        source = source.findAll(pattern)
 
-                    String faculty = ''
+                        String faculty = ''
 
-                    for (def i = 0; i < source.size(); i++) {
-                        source[i] = source[i].toUpperCase().replaceAll("'", "")
-                        if (source[i].contains('FACULTAD')) {
-                            faculty = source[i]
-                        } else if (i + 1 < source.size() && source[i + 1].contains('semaforo')) {
-                            new StudyPlan(location: loc, faculty: faculty, code: source[i + 1].find(/[0-9]+/),
-                                    name: source[i], type: it).save()
+                        for (def i = 0; i < source.size(); i++) {
+                            source[i] = normalize(source[i]).toUpperCase().replaceAll("'", "")
+                            if (source[i].contains('FACULTAD')) {
+                                faculty = source[i]
+                            } else if (i + 1 < source.size() && source[i + 1].contains('semaforo')) {
+                                new StudyPlan(location: loc, faculty: faculty, code: source[i + 1].find(/[0-9]+/),
+                                        name: source[i], type: it).save()
+                            }
                         }
+                    } catch (Exception e){
+                        println "Sia sede $loc.name no disponible"
                     }
                 }
             }
         }
-
+        /*
         println 'Output database'
         def list_sp = StudyPlan.list()
         list_sp.each { sp ->
             println "$sp.location.name $sp.code $sp.name $sp.faculty "
         }
+        */
+    }
+
+    def normalize(string){
+        Normalizer.normalize(string, Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", '')
+        return string
     }
 
     def index() {
