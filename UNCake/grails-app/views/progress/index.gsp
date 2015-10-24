@@ -19,7 +19,6 @@
     <asset:javascript src="foundation/vendor/jquery.js"/>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
-
     </script>
 </head>
 <body>
@@ -50,7 +49,13 @@
                             <div class="row">
                                 <br/>
                                 <div id="papa_chart" style="width: 900px; height: 500px;"></div>
-                                <div id="percentage_chart" style="width: 400px; height: 300px"></div>
+                                <br/>
+                                <div class="large-6 columns">
+                                    <div id="percentage_chart" style="width: 450px; height: 350px"></div>
+                                </div>
+                                <div class="large-6 columns">
+                                    <div id="components_chart" style="width: 450px; height: 350px"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -105,9 +110,20 @@ $(function() {
         }
         averages.push( calculatePAPA( history )[0] );
         averages.push( calculatePAPA( history )[1] );
-        drawPercentage( getPercentage( history ) );
+        drawComponents( getComponents( history ) );
         drawPAPA(averages);
+        drawPercentage( getPercentage( history ) );
     });
+    function getComponents( input ){
+        var requiredPattern = /exigidos\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9\-]+\t[0-9]+/i;
+        var passedPattern = /aprobados plan\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9\-]+\t[0-9]+/i;
+        var component = String( requiredPattern.exec(input) );
+        var components = [];
+        components.push( component );
+        component = String( passedPattern.exec(input) );
+        components.push( component );
+        return components;
+    }
     function getPercentage( input ){
         var percentagePattern = /[0-9]+\.[0-9]+%\n+% de avance/i;
         var textPercentage = String( percentagePattern.exec(input) );
@@ -168,8 +184,7 @@ $(function() {
     }
 });
 
-google.load("visualization", "1.1", {packages:["bar"]});
-google.load("visualization", "1", {packages:["corechart"]});
+google.load("visualization", "1.1", {packages:["bar", "corechart", "imagebarchart"]});
 
 function drawPAPA( averages ) {
     var data = new Array(averages.length/2 + 1);
@@ -226,6 +241,7 @@ function drawPAPA( averages ) {
     var chart = new google.charts.Bar(document.getElementById('papa_chart'));
     chart.draw(data, google.charts.Bar.convertOptions(options));
 }
+
 function drawPercentage( percentaje ) {
     var data = new Array(3);
     for( var i = 0; i < 3; i++ ) {
@@ -245,6 +261,8 @@ function drawPercentage( percentaje ) {
     var options = {
         title: 'Mi avance de carrera',
         pieHole: 0.1,
+        width: 450,
+        height: 350,
         slices: {
             0: { color: 'springGreen' },
             1: { color: 'dodgerBlue' }
@@ -262,6 +280,50 @@ function drawPercentage( percentaje ) {
 
     var chart = new google.visualization.PieChart(document.getElementById('percentage_chart'));
     chart.draw(data, options);
+}
+function drawComponents( components ) {
+    var componentTitles = ['Fundamentación','Disciplinar','Libre elección'];
+    var data2 = new Array(componentTitles.length + 1);
+    var componentValues = new Array(components.length);
+    for (var i = 0; i < componentTitles.length + 1; i++) {
+        data2[i] = new Array(5);
+    }
+    for (var i = 0; i < components.length; i++) {
+        componentValues[i] = new Array(3);
+        for (var j = 0; j < componentValues[i].length; j++) {
+            componentValues[i][j] = components[i].split('\t')[j+1];
+        }
+    }
+
+    data2[0][0] = 'Componente';
+    data2[0][1] = 'Aprobados';
+    data2[0][2] = { role: 'style' };
+    data2[0][3] = 'Pendientes';
+    //data2[0][4] = { role: 'annotation' };
+    data2[0][4] = { role: 'style' };
+
+    for (var i = 0; i < componentTitles.length; i++){
+        data2[i+1][0] = componentTitles[i];
+        data2[i+1][1] = parseInt( componentValues[1][i] );
+        data2[i+1][2] = 'springGreen';
+        data2[i+1][3] = parseInt( componentValues[0][i] - componentValues[1][i] );
+        //data2[i+1][3] = '';
+        data2[i+1][4] = 'dodgerBlue';
+    }
+    var data2 = google.visualization.arrayToDataTable(data2);
+
+    var options2 = {
+        title: 'Avance por componentes',
+        width: 450,
+        height: 350,
+        backgroundColor: 'transparent',
+        legend: { position: 'none' },
+        bar: { groupWidth: '70%' },
+        isStacked: 'percent',
+        is3D: true
+    };
+    var chart2 = new google.visualization.ColumnChart(document.getElementById('components_chart'));
+    chart2.draw(data2, options2);
 }
 </g:javascript>
 <script>
