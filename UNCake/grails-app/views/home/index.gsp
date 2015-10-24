@@ -66,7 +66,22 @@
          $("#selectedName").bind("keypress", function(e) {
              if(e.keyCode==13){
                  overlay()
-                 document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
+                 //document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
+                 var selected = document.getElementById('selectedName').value;
+                 var url="${createLink(controller:'Home', action:'getUserByName')}";
+                 var response = $.ajax({
+                     url: url,
+                     contentType: "application/json; charset=utf-8",
+                     dataType: "json",
+                     data: {
+                         selectedName: selected
+                     },
+                     success:function( userValues ) {
+                         //userValues ya tiene todos los datos del usuario. Hasta la foto :O
+                         document.getElementById("diagNombre").value = userValues.name;
+                         document.getElementById("diagMail").value = userValues.email;
+                     }
+                 });
              }
          });
     });
@@ -84,9 +99,10 @@
         <p class="text-warning">Click here to [<a href='#' onclick='overlay()'>close</a>]</p>
         <g:form class="form-signin" action="saveFriend" method="post">
             <input type="input" class="form-control has-success text-warning" id="diagNombre" name="diagNombre" placeholder="Nombre" style="text-align:center; 	background: #1AB394;">
-            <p class="text-success" id="diagMail" name="diagMail">alejando@unal.edu.co</p>
+            <input type="input" class="form-control has-success text-warning" id="diagMail" name="diagMail" placeholder="Mail" style="text-align:center; 	background: #1AB394;">
+            <%--<p class="text-success" id="diagMail" name="diagMail">alejando@unal.edu.co</p>--%>
+            <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='Login'>Agregar</button>
         </g:form>
-        <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='Login'>Entrar</button>
     </div>
 </div>
 <div id="wrapper">
