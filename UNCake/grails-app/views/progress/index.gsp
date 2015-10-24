@@ -56,6 +56,8 @@
                                 <div class="large-6 columns">
                                     <div id="components_chart" style="width: 450px; height: 350px"></div>
                                 </div>
+                                <br>
+                                <div id="record_table" style="width: 900px;"></div>
                             </div>
                         </div>
                     </div>
@@ -110,9 +112,10 @@ $(function() {
         }
         averages.push( calculatePAPA( history )[0] );
         averages.push( calculatePAPA( history )[1] );
-        drawComponents( getComponents( history ) );
         drawPAPA(averages);
         drawPercentage( getPercentage( history ) );
+        drawComponents( getComponents( history ) );
+        drawTable( getSubjects( history ) );
     });
     function getComponents( input ){
         var requiredPattern = /exigidos\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9\-]+\t[0-9]+/i;
@@ -155,14 +158,26 @@ $(function() {
                 }
             }
         }
-        var sumSubjects = 0.0;
-        var sumCredits = 0;
+        sumSubjects = 0.0;
+        sumCredits = 0;
         for( var i = 0; i < subjectsAux.length; i++ ){
             sumSubjects += parseFloat( subjectsAux[i].split('\t')[9] ) * parseInt( subjectsAux[i].split('\t')[6] );
             sumCredits += parseInt( subjectsAux[i].split('\t')[6] );
         }
         averages.push( sumSubjects / sumCredits );
         return averages;
+    }
+    function getSubjects( input ){
+        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+        var subjects = [];
+        var subject;
+        var historySoFar = input;
+        while( subjectPattern.test(historySoFar) ) {
+            subject = String( subjectPattern.exec(historySoFar) );
+            subjects.push(subject);
+            historySoFar = historySoFar.replace(subject, "");
+        }
+        return subjects;
     }
     function splitPeriods( input ){
         var periodPattern = /[0-9]+[\t]periodo académico[ ]*\|[ ]*[0-9\-A-Z]+/i;
@@ -184,7 +199,7 @@ $(function() {
     }
 });
 
-google.load("visualization", "1.1", {packages:["bar", "corechart", "imagebarchart"]});
+google.load("visualization", "1.1", {packages:["bar", "corechart", "imagebarchart", "table"]});
 
 function drawPAPA( averages ) {
     var data = new Array(averages.length/2 + 1);
@@ -272,10 +287,6 @@ function drawPercentage( percentaje ) {
         pieSliceTextStyle: {
             color: 'black',
         }
-        /*slices: {  4: {offset: 0.2},
-            1: {offset: 0.3},
-            2: {offset: 0.4}
-        }*/
     };
 
     var chart = new google.visualization.PieChart(document.getElementById('percentage_chart'));
@@ -299,7 +310,6 @@ function drawComponents( components ) {
     data2[0][1] = 'Aprobados';
     data2[0][2] = { role: 'style' };
     data2[0][3] = 'Pendientes';
-    //data2[0][4] = { role: 'annotation' };
     data2[0][4] = { role: 'style' };
 
     for (var i = 0; i < componentTitles.length; i++){
@@ -307,7 +317,6 @@ function drawComponents( components ) {
         data2[i+1][1] = parseInt( componentValues[1][i] );
         data2[i+1][2] = 'springGreen';
         data2[i+1][3] = parseInt( componentValues[0][i] - componentValues[1][i] );
-        //data2[i+1][3] = '';
         data2[i+1][4] = 'dodgerBlue';
     }
     var data2 = google.visualization.arrayToDataTable(data2);
@@ -324,6 +333,26 @@ function drawComponents( components ) {
     };
     var chart2 = new google.visualization.ColumnChart(document.getElementById('components_chart'));
     chart2.draw(data2, options2);
+}
+function drawTable( subjects ){
+    var orderedSubjects = new Array( subjects.length );
+    for (var i = 0; i < subjects.length; i++) {
+        orderedSubjects[i] = new Array(3);
+        orderedSubjects[i][0] = subjects[i].split('\t')[1];
+        orderedSubjects[i][1] = parseInt( subjects[i].split('\t')[6] );
+        orderedSubjects[i][2] = parseFloat( subjects[i].split('\t')[9] );
+    }
+    var dataTable = new google.visualization.DataTable();
+    dataTable.addColumn( 'string', 'Materia', {style: 'font-style:bold; font-size:36px;'} );
+    dataTable.addColumn( 'number', 'Créditos', {style: 'font-style:bold; font-size:36px;'} );
+    dataTable.addColumn( 'number', 'Nota', {style: 'font-style:bold; font-size:36px;'} );
+    for (var i = 0; i < orderedSubjects.length; i++) {
+        dataTable.addRows([
+            [ orderedSubjects[i][0], orderedSubjects[i][1], orderedSubjects[i][2] ]
+        ]);
+    }
+    var table = new google.visualization.Table(document.getElementById('record_table'));
+    table.draw(dataTable, {showRowNumber: true, width: '100%', height: '100%'});
 }
 </g:javascript>
 <script>
