@@ -3,6 +3,6 @@ package uncake
 class ScheduleController {
 
     def index() {
-        [lista: StudyPlan.list().name]
+        [plans: StudyPlan.list().name, locs: Location.list().name]
     }
 }

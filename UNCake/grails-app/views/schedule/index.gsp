@@ -13,42 +13,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
+    <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="schedule.css"/>
-
-    <style>
-    .ui-autocomplete {
-
-        max-height: 100px;
-        overflow-y: auto;
-        /* prevent horizontal scrollbar */
-        overflow-x: hidden;
-    }
-
-    /* IE 6 doesn't support max-height
-     * we use height instead, but this forces the menu to always be this tall
-     */
-    * html .ui-autocomplete {
-        height: 100px;
-    }
-    </style>
+    <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
 
     <script>
-        $(function () {
-            var availableTags = $.parseJSON('${lista.encodeAsJSON()}');
+    $(function () {
 
-            $("#plans").autocomplete({
-                source: availableTags
-            });
+        $("#plans").autocomplete({
+            source: $.parseJSON('${plans.encodeAsJSON()}')
         });
-    </script>
 
-
+        $("#loc").autocomplete({
+            source: $.parseJSON('${locs.encodeAsJSON()}')
+        });
+    });
+</script>
 
 
     <title>Creación de horarios</title>
@@ -71,16 +53,25 @@
 
 
 <div class="column filter">
+
+    <label for="loc">Sede:</label>
     <div class="ui-widget">
-        <label for="plans">Planes:</label>
+        <input id="loc">
+    </div>
+
+    <label for="plans">Planes:</label>
+    <div class="ui-widget">
         <input id="plans">
     </div>
+
 </div>
+
 <div class="column schedule">
     <p>tabla de horario</p>
 </div>
+
 <div class="column selectedC">
-    <p> Materias seleccionadas</p>
+    <p>Materias seleccionadas</p>
 </div>
 
 </body>
