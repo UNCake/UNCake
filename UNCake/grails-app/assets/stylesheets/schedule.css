@@ -13,19 +13,28 @@ body {
 
 .filter {
     width: 25%;
-    background-color: #3a945b;
     float: left;
 }
 
 .schedule {
     width: 50%;
-    background-color: darkred;
 }
 
 .selectedC {
     width: 25%;
-    background-color: coral;
     float: right;
+}
+
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+    border-radius: 8px;
+    width: 70%;
+}
+
+.ui-menu {
+    width: 70%;
 }
 
 .ui-autocomplete {

@@ -29,6 +29,9 @@
         $("#loc").autocomplete({
             source: $.parseJSON('${locs.encodeAsJSON()}')
         });
+
+        $( "#menuTipologia" ).menu();
+
     });
 </script>
 
@@ -59,10 +62,23 @@
         <input id="loc">
     </div>
 
+    <label>Tipo:</label>
+    <div id="typePlan">
+        <input type="checkbox" id="pre"><label for="pre">Pregrado</label>
+        <input type="checkbox" id="pos"><label for="pos">Posgrado</label>
+    </div>
+
     <label for="plans">Planes:</label>
     <div class="ui-widget">
         <input id="plans">
     </div>
+
+    <label>Tipologia:</label>
+    <ul id="menuTipologia">
+        <li>Fundamentacion</li>
+        <li>Libre eleccion</li>
+        <li>Disciplinar</li>
+    </ul>
 
 </div>
 
