@@ -1,0 +1,28 @@
+body {
+    padding-top: 3%;
+    padding-bottom: 2%;
+    background-color: #eee;
+}
+
+.column {
+    padding-top: 3%;
+    height: 100%;
+    display: inline-block;
+}
+
+.filter {
+    width: 25%;
+    background-color: #3a945b;
+    float: left;
+}
+
+.schedule {
+    width: 50%;
+    background-color: darkred;
+}
+
+.selectedC {
+    width: 25%;
+    background-color: coral;
+    float: right;
+}
