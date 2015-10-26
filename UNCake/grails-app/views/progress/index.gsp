@@ -56,8 +56,31 @@
                                 <div class="large-6 columns">
                                     <div id="components_chart" style="width: 450px; height: 350px"></div>
                                 </div>
-                                <br>
+                                <br/>
                                 <div id="record_table" style="width: 900px;"></div>
+                                <br/>
+                                <div id="new_subjects" class="large-12 columns">
+                                    <div id="new_subject">
+                                        <div class="large-2 columns">
+                                            <h5 style="line-height: 30px;">Créditos:</h5>
+                                        </div>
+                                        <div class="large-4 columns">
+                                            <input type="text" name="txtCredits" id="txtCredits" style="width: 200px;" placeholder="Créditos a cursar"/>
+                                        </div>
+                                        <div class="large-1 columns" >
+                                            <h5 style="line-height: 30px;">Nota:</h5>
+                                        </div>
+                                        <div class="large-1 columns" >
+                                            <input type="checkbox" id="checkNota" name="checkNota" style="height: 40px; line-height: 30px; vertical-align: middle;" />
+                                        </div>
+                                        <div class="large-4 columns" >
+                                            <input type="text" name="txtNota" id="txtNota" disabled="true" placeholder="Nota esperada"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="btn_subjects" style="text-align: right;">
+                                    <button id="btn_add">Agregar asignatura</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -102,6 +125,17 @@
 <asset:javascript src="foundation/foundation/foundation.js"/>
 <g:javascript>
 $(function() {
+    $( "#checkNota" ).on( "click", function() {
+        $( "#txtNota" )[0].disabled = true;
+        if( $( "#checkNota" ).is(":checked") ){
+            $( "#txtNota" )[0].disabled = false;
+        }
+    });
+    $( "#btn_add" ).button().click( function() {
+        var newSubjectsContainer = document.getElementById("new_subjects");
+        var newSubject = document.getElementById("new_subject");
+        newSubjectsContainer.appendChild(newSubject);
+    });
     $( "#calculatePAPA" ).button().click( function() {
         var history = document.getElementById('academicRecord').value;
         var periods = splitPeriods( history );
