@@ -30,7 +30,16 @@
             source: $.parseJSON('${locs.encodeAsJSON()}')
         });
 
-        $( "#menuTipologia" ).menu();
+        $( "#menuType" ).selectmenu();
+
+        $( "#selectable" ).selectable();
+
+        var list = $.parseJSON('${locs.encodeAsJSON()}')
+        var html = ''
+        for(item in list){
+            html += '<li class="ui-widget-content">' + list[item] + '</li>';
+        }
+        $('#selectable').append(html);
 
     });
 </script>
@@ -73,12 +82,25 @@
         <input id="plans">
     </div>
 
-    <label>Tipologia:</label>
-    <ul id="menuTipologia">
-        <li>Fundamentacion</li>
-        <li>Libre eleccion</li>
-        <li>Disciplinar</li>
-    </ul>
+
+    <label for="menuType">Tipología:</label>
+    <div class="ui-menu-item">
+        <select name="menuType" id="menuType">
+            <option>Fundamentación</option>
+            <option>Libre elección</option>
+            <option selected="selected">Disciplinar</option>
+        </select>
+    </div>
+
+    <label for="course">Materia:</label>
+    <div class="ui-widget">
+        <input id="course">
+    </div>
+
+    <div class="selectablemenu">
+        <ol id="selectable">
+        </ol>
+    </div>
 
 </div>
 
