@@ -59,27 +59,15 @@
                                 <br/>
                                 <div id="record_table" style="width: 900px;"></div>
                                 <br/>
-                                <div id="new_subjects" class="large-12 columns">
-                                    <div id="new_subject">
-                                        <div class="large-2 columns">
-                                            <h5 style="line-height: 30px;">Créditos:</h5>
-                                        </div>
-                                        <div class="large-4 columns">
-                                            <input type="text" name="txtCredits" id="txtCredits" style="width: 200px;" placeholder="Créditos a cursar"/>
-                                        </div>
-                                        <div class="large-1 columns" >
-                                            <h5 style="line-height: 30px;">Nota:</h5>
-                                        </div>
-                                        <div class="large-1 columns" >
-                                            <input type="checkbox" id="checkNota" name="checkNota" style="height: 40px; line-height: 30px; vertical-align: middle;" />
-                                        </div>
-                                        <div class="large-4 columns" >
-                                            <input type="text" name="txtNota" id="txtNota" disabled="true" placeholder="Nota esperada"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="btn_subjects" style="text-align: right;">
-                                    <button id="btn_add">Agregar asignatura</button>
+                                <div id="new_subjects_1" class="large-12 columns" style="align-content: center; text-align: center;">
+                                    <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                    <input type="text" name="txtCredits" id="txtCredits_1" style="width: 200px; display: inline-block;" placeholder="Créditos a cursar"/>
+                                    <h5 style="line-height: 30px; display: inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nota:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                    <input type="checkbox" id="checkNota_1" name="checkNota" class="checkNota" style="line-height: 30px; display: inline-block;" />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="text" name="txtNota" id="txtNota_1" disabled="true" placeholder="Nota esperada" style=" width: 200px; display: inline-block;"/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="button" class="btn_add" id="1" value="+" style="height: 45px; width: 50px; display: inline-block;"/>
                                 </div>
                             </div>
                         </div>
@@ -125,16 +113,16 @@
 <asset:javascript src="foundation/foundation/foundation.js"/>
 <g:javascript>
 $(function() {
-    $( "#checkNota" ).on( "click", function() {
-        $( "#txtNota" )[0].disabled = true;
-        if( $( "#checkNota" ).is(":checked") ){
-            $( "#txtNota" )[0].disabled = false;
+    $( ".checkNota" ).on( "click", function() {
+        var checkID = parseInt($(this).attr('id').replace('checkNota_',''));
+        $( "#txtNota_" + checkID )[0].disabled = true;
+        if( $( "#checkNota_" + checkID ).is(":checked") ){
+            $( "#txtNota_" + checkID )[0].disabled = false;
         }
     });
-    $( "#btn_add" ).button().click( function() {
-        var newSubjectsContainer = document.getElementById("new_subjects");
-        var newSubject = document.getElementById("new_subject");
-        newSubjectsContainer.appendChild(newSubject);
+    $(".btn_add").button ();
+    $(".btn_add").each(function (){
+        $(this).bind("click",addField);
     });
     $( "#calculatePAPA" ).button().click( function() {
         var history = document.getElementById('academicRecord').value;
@@ -387,6 +375,26 @@ function drawTable( subjects ){
     }
     var table = new google.visualization.Table(document.getElementById('record_table'));
     table.draw(dataTable, {showRowNumber: true, width: '100%', height: '100%'});
+}
+function addField(){
+    var clickID = parseInt($(this).parent('div').attr('id').replace('new_subjects_',''));
+    var newID = (clickID + 1);
+
+    $newClone = $('#new_subjects_'+clickID).clone(true);
+    $newClone.attr("id",'new_subjects_'+newID);
+
+    $newClone.children("input").eq(0).attr("id",'txtCredits_' + newID);
+    $newClone.children("input").eq(1).attr("id",'checkNota_' + newID);
+    $newClone.children("input").eq(2).attr("id",'txtNota_' + newID);
+    $newClone.children("input").eq(3).attr("id",newID);
+
+    $newClone.insertAfter($('#new_subjects_'+clickID));
+
+    $("#" + clickID).val('-').unbind("click",addField);
+    $("#" + clickID).bind("click",delRow);
+}
+function delRow() {
+    $(this).parent('div').remove();
 }
 </g:javascript>
 <script>
