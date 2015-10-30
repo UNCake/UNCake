@@ -46,9 +46,11 @@
                                 <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                                 <g:submitButton name="calculatePAPA" value="Calcular" action="calculatePAPA"></g:submitButton>
                             </div>
-                            <div class="row">
-                                <br/>
-                                <div id="papa_chart" style="width: 900px; height: 500px;"></div>
+                            <br/>
+                            <div class="row" id="information_container" style="display: none; background-color: white;">
+                                <div style="background-color: white; text-align: center; border-radius: 20px;">
+                                    <div id="papa_chart" style="width: 800px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px;"></div>
+                                </div>
                                 <br/>
                                 <div class="large-6 columns">
                                     <div id="percentage_chart" style="width: 450px; height: 350px"></div>
@@ -57,7 +59,9 @@
                                     <div id="components_chart" style="width: 450px; height: 350px"></div>
                                 </div>
                                 <br/>
-                                <div id="record_table" style="width: 900px;"></div>
+                                <div style="text-align: center;">
+                                    <div id="record_table" style="width: 900px; display: inline-block;"></div>
+                                </div>
                                 <br/>
                                 <div id="new_subjects_1" class="large-12 columns" style="align-content: center; text-align: center;">
                                     <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
@@ -78,10 +82,12 @@
                                     <div style="text-align: right;">
                                         <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
                                     </div>
-                                </div>
-                                <div>
                                     <br/>
-                                    <p id="newSubjectsMessage"></p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <br/>
+                                    <p id="newSubjectsMessage" style="text-align: center;"></p>
+                                    <br/>
                                 </div>
                             </div>
                         </div>
@@ -204,17 +210,20 @@ $(function(){
             if( ungradeSubjects > 0 ){
                 gradeNeeded = ( expectedPAPA *( sums[1] + ungradeCredits + gradeCredits) - plannedPAPA*( sums[1] + gradeCredits ) ) / ungradeCredits;
                 if( gradeNeeded <= 5 ) {
+                    $('#newSubjectsMessage').css('color', 'black');
                     if( ungradeSubjects > 1 )
                         $('#newSubjectsMessage').text('La nota mínima requerida en las ' + ungradeSubjects + ' asignaturas para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es de: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
                     else
                         $('#newSubjectsMessage').text('La nota mínima requerida en la asignatura para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es de: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
                 }else{
+                    $('#newSubjectsMessage').css('color', 'red');
                     if( ungradeSubjects > 1 )
                         $('#newSubjectsMessage').text('La nota mínima requerida en las ' + ungradeSubjects + ' asignaturas para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es mayor a 5, exactamente es: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
                     else
                         $('#newSubjectsMessage').text('La nota mínima requerida en la asignatura para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es mayor a 5, exactamente es: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
                 }
             }else{
+                $('#newSubjectsMessage').css('color', 'black');
                 if( gradeSubjects > 1 )
                     $('#newSubjectsMessage').text('El PAPA obtenido cursando las ' + ungradeSubjects + ' asignaturas con las notas asignadas es de: ' + ( Math.ceil(plannedPAPA * 10) / 10.0 ) );
                 else
@@ -223,6 +232,7 @@ $(function(){
         }
     });
     $( "#calculatePAPA" ).button().click( function() {
+        $("#information_container").show();
         var history = document.getElementById('academicRecord').value;
         var periods = splitPeriods( history );
         var averages = [];
@@ -392,7 +402,7 @@ function drawPAPA( averages ) {
     );
     var options = {
         title: 'PAPA y PA',
-        width: 900,
+        width: 800,
         legend: { position: 'none' },
         chart: { },
         axes: {
@@ -404,7 +414,7 @@ function drawPAPA( averages ) {
             viewWindow: {
                 max: maxGraph,
                 min: minGraph
-            }
+            },
         },
         bar: { groupWidth: "70%" }
     };
