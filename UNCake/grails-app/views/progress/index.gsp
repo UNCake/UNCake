@@ -70,6 +70,7 @@
                                     <input type="button" class="btn_add" id="1" value="+" style="height: 45px; width: 50px; display: inline-block;"/>
                                 </div>
                                 <div id="calculate" class="large-12 columns">
+                                    <br>
                                     <div style="text-align: center;" >
                                         <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Promedio esperado:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
                                         <input type="text" class="txtAverage" id="txtAverage" style="width: 200px; display: inline-block;" placeholder="Promedio"/>
@@ -77,6 +78,10 @@
                                     <div style="text-align: right;">
                                         <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
                                     </div>
+                                </div>
+                                <div>
+                                    <br/>
+                                    <p id="newSubjectsMessage"></p>
                                 </div>
                             </div>
                         </div>
@@ -138,6 +143,7 @@ $(function(){
         var calculate = true;
         var typedCredits = [];
         var typedGrades = [];
+        var expectedPAPA = 0;
         $('.txtCredits').each( function() {
             if( $(this).val() == '' || !$(this).val().match(/[1-9][0-9]?[0-9]?/g) ){
                 $(this).focus();
@@ -171,25 +177,49 @@ $(function(){
                     $(this).focus();
                     $(this).effect( "pulsate", {}, 300 );
                     calculate = false;
+                }else{
+                    expectedPAPA = parseFloat( $(this).val() ) - 0.05;
                 }
             }
         });
         var gradeCredits = 0;
         var grades = 0;
         var ungradeCredits = 0;
+        var ungradeSubjects = 0, gradeSubjects = 0;
         if( calculate == true ){
             var history = document.getElementById('academicRecord').value;
             var sums = getSums( history );
             for( var i = 0; i < typedGrades.length; i++ ){
                 if( typedGrades[i] == -1 ){
                     ungradeCredits += typedCredits[i];
+                    ungradeSubjects += 1;
                 }else{
                     gradeCredits += typedCredits[i];
                     grades += typedCredits[i] * typedGrades[i];
+                    gradeSubjects += 1;
                 }
             }
-            alert('ungradeCredits: ' + ungradeCredits + " gradeCredits: " + gradeCredits + " grades: " + grades + " sums: " + sums);
-            alert("PAPA averageGrade: " + ( (sums[0] + grades)/(sums[1] + gradeCredits) )  );
+            var plannedPAPA = (sums[0] + grades) / (sums[1] + gradeCredits);
+            var gradeNeeded = 0;
+            if( ungradeSubjects > 0 ){
+                gradeNeeded = ( expectedPAPA *( sums[1] + ungradeCredits + gradeCredits) - plannedPAPA*( sums[1] + gradeCredits ) ) / ungradeCredits;
+                if( gradeNeeded <= 5 ) {
+                    if( ungradeSubjects > 1 )
+                        $('#newSubjectsMessage').text('La nota mínima requerida en las ' + ungradeSubjects + ' asignaturas para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es de: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                    else
+                        $('#newSubjectsMessage').text('La nota mínima requerida en la asignatura para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es de: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                }else{
+                    if( ungradeSubjects > 1 )
+                        $('#newSubjectsMessage').text('La nota mínima requerida en las ' + ungradeSubjects + ' asignaturas para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es mayor a 5, exactamente es: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                    else
+                        $('#newSubjectsMessage').text('La nota mínima requerida en la asignatura para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es mayor a 5, exactamente es: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                }
+            }else{
+                if( gradeSubjects > 1 )
+                    $('#newSubjectsMessage').text('El PAPA obtenido cursando las ' + ungradeSubjects + ' asignaturas con las notas asignadas es de: ' + ( Math.ceil(plannedPAPA * 10) / 10.0 ) );
+                else
+                    $('#newSubjectsMessage').text('El PAPA obtenido cursando la asignatura con la nota asignada es de: ' + ( Math.ceil(plannedPAPA * 10) / 10.0 ) );
+            }
         }
     });
     $( "#calculatePAPA" ).button().click( function() {
