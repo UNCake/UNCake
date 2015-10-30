@@ -61,13 +61,22 @@
                                 <br/>
                                 <div id="new_subjects_1" class="large-12 columns" style="align-content: center; text-align: center;">
                                     <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                                    <input type="text" name="txtCredits" id="txtCredits_1" style="width: 200px; display: inline-block;" placeholder="Créditos a cursar"/>
+                                    <input type="text" name="txtCredits" class="txtCredits" id="txtCredits_1" style="width: 200px; display: inline-block;" placeholder="Créditos a cursar"/>
                                     <h5 style="line-height: 30px; display: inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nota:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
                                     <input type="checkbox" id="checkNota_1" name="checkNota" class="checkNota" style="line-height: 30px; display: inline-block;" />
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="text" name="txtNota" id="txtNota_1" disabled="true" placeholder="Nota esperada" style=" width: 200px; display: inline-block;"/>
+                                    <input type="text" name="txtNota" id="txtNota_1" class="txtNota" disabled="true" placeholder="Nota esperada" style=" width: 200px; display: inline-block;"/>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <input type="button" class="btn_add" id="1" value="+" style="height: 45px; width: 50px; display: inline-block;"/>
+                                </div>
+                                <div id="calculate" class="large-12 columns">
+                                    <div style="text-align: center;" >
+                                        <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Promedio esperado:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                        <input type="text" class="txtAverage" id="txtAverage" style="width: 200px; display: inline-block;" placeholder="Promedio"/>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -112,10 +121,11 @@
 <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
 <asset:javascript src="foundation/foundation/foundation.js"/>
 <g:javascript>
-$(function() {
+$(function(){
     $( ".checkNota" ).on( "click", function() {
         var checkID = parseInt($(this).attr('id').replace('checkNota_',''));
         $( "#txtNota_" + checkID )[0].disabled = true;
+        $( "#txtNota_" + checkID ).val('');
         if( $( "#checkNota_" + checkID ).is(":checked") ){
             $( "#txtNota_" + checkID )[0].disabled = false;
         }
@@ -123,6 +133,64 @@ $(function() {
     $(".btn_add").button ();
     $(".btn_add").each(function (){
         $(this).bind("click",addField);
+    });
+    $( "#btn_calculate_add" ).button().click( function() {
+        var calculate = true;
+        var typedCredits = [];
+        var typedGrades = [];
+        $('.txtCredits').each( function() {
+            if( $(this).val() == '' || !$(this).val().match(/[1-9][0-9]?[0-9]?/g) ){
+                $(this).focus();
+                $(this).effect( "pulsate", {}, 300 );
+                calculate = false;
+            }else{
+                typedCredits.push( parseInt( $(this).val() ) );
+            }
+        });
+        $('.txtNota').each( function() {
+            if( $(this).val() != '' ){
+                if( !$(this).val().match(/[0-4](?:\.[0-9])?/g) && !$(this).val().match(/5/g) ){
+                    $(this).focus();
+                    $(this).effect( "pulsate", {}, 300 );
+                    calculate = false;
+                }else{
+                    typedGrades.push( parseFloat( $(this).val() ) );
+                }
+            }else{
+                typedGrades.push( -1 );
+            }
+        });
+        $('.txtAverage').each( function() {
+            if( $(this).val() == '' ){
+                $(this).focus();
+                $(this).effect( "pulsate", {}, 300 );
+                calculate = false;
+            }
+            if( $(this).val() != '' ){
+                if( !$(this).val().match(/[0-4](?:\.[0-9])?/g) && !$(this).val().match(/5/g) ){
+                    $(this).focus();
+                    $(this).effect( "pulsate", {}, 300 );
+                    calculate = false;
+                }
+            }
+        });
+        var gradeCredits = 0;
+        var grades = 0;
+        var ungradeCredits = 0;
+        if( calculate == true ){
+            var history = document.getElementById('academicRecord').value;
+            var sums = getSums( history );
+            for( var i = 0; i < typedGrades.length; i++ ){
+                if( typedGrades[i] == -1 ){
+                    ungradeCredits += typedCredits[i];
+                }else{
+                    gradeCredits += typedCredits[i];
+                    grades += typedCredits[i] * typedGrades[i];
+                }
+            }
+            alert('ungradeCredits: ' + ungradeCredits + " gradeCredits: " + gradeCredits + " grades: " + grades + " sums: " + sums);
+            alert("PAPA averageGrade: " + ( (sums[0] + grades)/(sums[1] + gradeCredits) )  );
+        }
     });
     $( "#calculatePAPA" ).button().click( function() {
         var history = document.getElementById('academicRecord').value;
@@ -188,6 +256,42 @@ $(function() {
         }
         averages.push( sumSubjects / sumCredits );
         return averages;
+    }
+    function getSums( input ){
+        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+        var subjects = [];
+        var subjectsAux;
+        var sumSubjects = 0.0;
+        var sumCredits = 0;
+        var subject;
+        var historySoFar = input;
+        var output = []
+        while( subjectPattern.test(historySoFar) ) {
+            subject = String( subjectPattern.exec(historySoFar) );
+            sumSubjects += parseFloat( subject.split('\t')[9] ) * parseInt( subject.split('\t')[6] );
+            sumCredits += parseInt( subject.split('\t')[6] );
+            subjects.push(subject);
+            historySoFar = historySoFar.replace(subject, "");
+        }
+        output.push( sumSubjects );
+        output.push( sumCredits );
+        subjectsAux = subjects;
+        for( var i = 0; i < subjects.length - 1; i++ ){
+            for( var j = i + 1; j < subjects.length; j++ ){
+                if( subjects[i].split('\t')[0].valueOf() == subjects[j].split('\t')[0].valueOf() ){
+                    subjectsAux.splice(i, 1);
+                }
+            }
+        }
+        sumSubjects = 0.0;
+        sumCredits = 0;
+        for( var i = 0; i < subjectsAux.length; i++ ){
+            sumSubjects += parseFloat( subjectsAux[i].split('\t')[9] ) * parseInt( subjectsAux[i].split('\t')[6] );
+            sumCredits += parseInt( subjectsAux[i].split('\t')[6] );
+        }
+        output.push( sumSubjects );
+        output.push( sumCredits );
+        return output;
     }
     function getSubjects( input ){
         var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
