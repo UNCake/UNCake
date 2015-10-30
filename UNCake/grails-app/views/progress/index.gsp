@@ -39,30 +39,35 @@
         <br>
         <div class="row">
             <div class="large-12 columns">
-                <div class="row">
+                <div class="row" >
                     <div class="large-12 columns">
-                        <div class="panel" style="padding-left: 32px;padding-right: 32px;">
+                        <div class="panel" style="background-color: #f7f7f7;padding-left: 36px;padding-right: 36px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                             <div class="row">
+                                <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
                                 <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                                 <g:submitButton name="calculatePAPA" value="Calcular" action="calculatePAPA"></g:submitButton>
                             </div>
-                            <br/>
-                            <div class="row" id="information_container" style="display: none; background-color: white;">
-                                <div style="background-color: white; text-align: center; border-radius: 20px;">
+
+                            <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
+                                <br/>
+                                <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                                     <div id="papa_chart" style="width: 800px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px;"></div>
                                 </div>
                                 <br/>
-                                <div class="large-6 columns">
-                                    <div id="percentage_chart" style="width: 450px; height: 350px"></div>
-                                </div>
-                                <div class="large-6 columns">
-                                    <div id="components_chart" style="width: 450px; height: 350px"></div>
+                                <div class="large-12 columns" style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
+                                    <div class="large-6 columns">
+                                        <div id="percentage_chart" style="width: 450px; height: 350px"></div>
+                                    </div>
+                                    <div class="large-6 columns">
+                                        <div id="components_chart" style="width: 450px; height: 350px"></div>
+                                    </div>
                                 </div>
                                 <br/>
-                                <div style="text-align: center;">
+                                <div class="large-12 columns" style="text-align: center;">
+                                    <br/>
                                     <div id="record_table" style="width: 900px; display: inline-block;"></div>
+                                    <br/><br/>
                                 </div>
-                                <br/>
                                 <div id="new_subjects_1" class="large-12 columns" style="align-content: center; text-align: center;">
                                     <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
                                     <input type="text" name="txtCredits" class="txtCredits" id="txtCredits_1" style="width: 200px; display: inline-block;" placeholder="Créditos a cursar"/>
@@ -387,15 +392,20 @@ function drawPAPA( averages ) {
     maxGraph = max < 4.9 ? max + 0.11 : 5;
     minGraph = min > 0.1 ? min - 0.1 : 0;
     for( i = 0; i < averages.length/2 + 1; i++ ) {
-        data[i] = new Array(3);
+        data[i] = new Array(5);
     }
     data[0][0] = 'Semestre';
     data[0][1] = 'PAPA';
-    data[0][2] = 'PA';
+    data[0][2] = { role: 'style' };
+    data[0][3] = 'PA';
+    data[0][4] = { role: 'style' };
+
     for (var i = 0; i < averages.length/2; i++){
         data[i+1][0] = String( i + 1 );
         data[i+1][1] = adjustedAverages[i * 2];
-        data[i+1][2] = adjustedAverages[i * 2 + 1];
+        data[i+1][2] = 'springGreen';
+        data[i+1][3] = adjustedAverages[i * 2 + 1];
+        data[i+1][4] = 'dodgerBlue';
     }
     var data = new google.visualization.arrayToDataTable(
         data
@@ -418,7 +428,6 @@ function drawPAPA( averages ) {
         },
         bar: { groupWidth: "70%" }
     };
-
     var chart = new google.charts.Bar(document.getElementById('papa_chart'));
     chart.draw(data, google.charts.Bar.convertOptions(options));
 }
