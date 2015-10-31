@@ -18,7 +18,7 @@ class HomeController {
             rootUser.friends.add(user)
         //redireccionar
         redirect(controller:'home',action:'index')
-        print rootUser.friends
+        //print rootUser.friends
     }
 
     def getUserByName(){

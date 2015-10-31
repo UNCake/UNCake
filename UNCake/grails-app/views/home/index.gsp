@@ -30,14 +30,15 @@
           type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 </head>
+
 <style>
-<%--
+
 .navbar-default{
     background-color: transparent !important;
 }
 .navbar-default.navbar-shrink{
     background-color: #2c8bc9 !important;
-}--%>
+}
 .form-control{
     margin-top: 8px;
 }
@@ -65,6 +66,7 @@
         });
          $("#selectedName").bind("keypress", function(e) {
              if(e.keyCode==13){
+                 //console.log(session.user)
                  overlay()
                  //document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
                  var selected = document.getElementById('selectedName').value;
@@ -96,7 +98,7 @@
 <div id="overlay">
     <div class="container">
         <asset:image src="home/services/icono_horarios.png" alt=""/>
-        <p class="text-warning">Click here to [<a href='#' onclick='overlay()'>close</a>]</p>
+        <p class="text-warning">Click aqui para [<a href='#' onclick='overlay()'>cerrar</a>]</p>
         <g:form class="form-signin" action="saveFriend" method="post">
             <input type="input" class="form-control has-success text-warning" id="diagNombre" name="diagNombre" placeholder="Nombre" style="text-align:center; 	background: #1AB394;">
             <input type="input" class="form-control has-success text-warning" id="diagMail" name="diagMail" placeholder="Mail" style="text-align:center; 	background: #1AB394;">
