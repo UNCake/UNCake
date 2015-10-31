@@ -23,11 +23,31 @@
     $(function () {
 
         $("#plans").autocomplete({
-            source: $.parseJSON('${plans.encodeAsJSON()}')
+            source: $.parseJSON('${plans.encodeAsJSON()}'),
+            
+
         });
 
         $("#loc").autocomplete({
-            source: $.parseJSON('${locs.encodeAsJSON()}')
+            source: $.parseJSON('${locs.encodeAsJSON()}'),
+            select: function( event , ui ) {
+                var url="${createLink(controller:'Schedule', action:'searchByLoc')}";
+                var response = $.ajax({
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: {
+                        selectedLoc: ui.item.label
+                    },
+                    success:function(plans) {
+                        $( "#plans" ).autocomplete( "option", "source", plans );
+                    },
+
+                    error: function(request, status, error) {
+                        alert(error)
+                    }
+                });
+            }
         });
 
         $( "#menuType" ).selectmenu();
