@@ -67,23 +67,28 @@
          $("#selectedName").bind("keypress", function(e) {
              if(e.keyCode==13){
                  //console.log(session.user)
-                 overlay()
-                 //document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
                  var selected = document.getElementById('selectedName').value;
-                 var url="${createLink(controller:'Home', action:'getUserByName')}";
-                 var response = $.ajax({
-                     url: url,
-                     contentType: "application/json; charset=utf-8",
-                     dataType: "json",
-                     data: {
-                         selectedName: selected
-                     },
-                     success:function( userValues ) {
-                         //userValues ya tiene todos los datos del usuario. Hasta la foto :O
-                         document.getElementById("diagNombre").value = userValues.name;
-                         document.getElementById("diagMail").value = userValues.email;
-                     }
-                 });
+                 console.log(selected)
+                 if (selected != "") {
+                     //document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
+                     var url = "${createLink(controller:'Home', action:'getUserByName')}";
+                     var response = $.ajax({
+                         url: url,
+                         contentType: "application/json; charset=utf-8",
+                         dataType: "json",
+                         data: {
+                             selectedName: selected
+                         },
+                         success: function (userValues) {
+                             //userValues ya tiene todos los datos del usuario. Hasta la foto :O
+                             if(userValues.name != "null") {
+                                 document.getElementById("diagNombre").value = userValues.name;
+                                 document.getElementById("diagMail").value = userValues.email;
+                                 overlay()
+                             }
+                         }
+                     });
+                 }
              }
          });
     });
