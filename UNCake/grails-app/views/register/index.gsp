@@ -67,8 +67,7 @@
         </div>
         <div class="form-group" >
             <label class="sr-only">Correo electrónico</label>
-            <input type="email" class="form-control" placeholder="Correo electrónico" required name="email" onchange="
-                this.setCustomValidity(!('${flash.message1}'==null) ? ${flash.message1} : '');" >
+            <input type="email" class="form-control" placeholder="Correo electrónico" required name="email"  >
         </div>
         <!--   Confirmacion de email eliminada, no es necesario      <div class="form-group" >
             <label class="sr-only">Confirma el email</label>
