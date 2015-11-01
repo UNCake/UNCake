@@ -22,35 +22,46 @@
     <script>
     $(function () {
 
+        var updatePlans = function( event , ui ) {
+            var url="${createLink(controller:'Schedule', action:'searchByLoc')}";
+            var selLoc= $( "#loc" ).val();
+            var response = $.ajax({
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {
+                    selectedLoc: selLoc,
+                    type: $( "#menuTypePlan" ).val()
+                },
+                success:function(plans) {
+                    $( "#plans" ).autocomplete( "option", "source", plans );
+                },
+
+                error: function(request, status, error) {
+                    alert(error)
+                }
+            });
+        }
+
         $("#plans").autocomplete({
-            source: $.parseJSON('${plans.encodeAsJSON()}'),
-            
+            source: [],
+            select: function( event , ui ) {
+                $( "#plans" ).val( "funciona" );
+                return false;
+            }
 
         });
 
         $("#loc").autocomplete({
             source: $.parseJSON('${locs.encodeAsJSON()}'),
-            select: function( event , ui ) {
-                var url="${createLink(controller:'Schedule', action:'searchByLoc')}";
-                var response = $.ajax({
-                    url: url,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: {
-                        selectedLoc: ui.item.label
-                    },
-                    success:function(plans) {
-                        $( "#plans" ).autocomplete( "option", "source", plans );
-                    },
-
-                    error: function(request, status, error) {
-                        alert(error)
-                    }
-                });
-            }
+            select: updatePlans
         });
 
         $( "#menuType" ).selectmenu();
+
+        $( "#menuTypePlan" ).selectmenu({
+            change: updatePlans
+        });
 
         $( "#selectable" ).selectable();
 
@@ -91,10 +102,12 @@
         <input id="loc">
     </div>
 
-    <label>Tipo:</label>
-    <div id="typePlan">
-        <input type="checkbox" id="pre"><label for="pre">Pregrado</label>
-        <input type="checkbox" id="pos"><label for="pos">Posgrado</label>
+    <label for="menuTypePlan">Tipo:</label>
+    <div class="ui-menu-item">
+        <select name="menuTypePlan" id="menuTypePlan">
+            <option value="PRE" selected="selected">Pregrado</option>
+            <option value="POS" >Posgrado</option>
+        </select>
     </div>
 
     <label for="plans">Planes:</label>

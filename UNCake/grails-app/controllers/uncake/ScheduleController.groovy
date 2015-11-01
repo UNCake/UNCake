@@ -9,6 +9,9 @@ class ScheduleController {
     }
 
     def searchByLoc(){
-        render StudyPlan.findAllByLocation(Location.findByName(params.selectedLoc)).name as JSON
+        if(params.selectedLoc == null)
+            render StudyPlan.findAllByType(params.type).name as JSON
+        else
+            render StudyPlan.findAllByLocationAndType(Location.findByName(params.selectedLoc), params.type).name as JSON
     }
 }
