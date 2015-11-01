@@ -20,60 +20,100 @@
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
 
     <script>
-    $(function () {
+        $(function () {
+            var urlSIA = ""
+            var updatePlans = function (event, ui) {
+                var url = "${createLink(controller:'Schedule', action:'searchByLoc')}";
+                var selLoc = $("#loc").val();
+                var response = $.ajax({
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: {
+                        selectedLoc: selLoc,
+                        type: $("#menuTypePlan").val()
+                    },
+                    success: function (plans) {
+                        $("#plans").autocomplete("option", "source", plans);
+                    },
 
-        var updatePlans = function( event , ui ) {
-            var url="${createLink(controller:'Schedule', action:'searchByLoc')}";
-            var selLoc= $( "#loc" ).val();
-            var response = $.ajax({
-                url: url,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: {
-                    selectedLoc: selLoc,
-                    type: $( "#menuTypePlan" ).val()
-                },
-                success:function(plans) {
-                    $( "#plans" ).autocomplete( "option", "source", plans );
-                },
-
-                error: function(request, status, error) {
-                    alert(error)
-                }
-            });
-        }
-
-        $("#plans").autocomplete({
-            source: [],
-            select: function( event , ui ) {
-                $( "#plans" ).val( "funciona" );
-                return false;
+                    error: function (request, status, error) {
+                        alert(error)
+                    }
+                });
             }
 
+            var updateUrlSIA = function(){
+                var url = "${createLink(controller:'Schedule', action:'geturlSIA')}";
+                var response = $.ajax({
+                    url: url,
+                    contentType: "application/text; charset=utf-8",
+                    dataType: "text",
+                    data: { selectedLoc: $("#loc").val()},
+                    success: function (sia) { urlSIA = sia },
+                    error: function (request, status, error) {
+                        alert(error)
+                    }
+                });
+            }
+
+            var updateCourses = function (event, ui) {
+                var url = "${createLink(controller:'Schedule', action:'searchCourses')}";
+
+                var response = $.ajax({
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    crossDomain: true,
+                    data: {
+                        selectedLoc: $("#loc").val(),
+                        studyplan: $("#plans").val(),
+                        name: $("#course").val(),
+                        type: $("#menuTypePlan").val()
+                    },
+                    success: function (courses) {
+                        var resList = courses
+                        var html = ''
+                        for (item in resList) {
+                            html += '<li class="ui-widget-content">' + resList[item] + '</li>';
+                        }
+                        $('#selectable').append(html);
+                    },
+                    error: function (request, status, error) {
+                        alert(error)
+                    }
+                });
+            }
+
+            $("#plans").autocomplete({
+                source: [],
+                select: function (event, ui) {
+                    $("#plans").val(ui.item.label);
+                    updateCourses();
+                }
+
+            });
+
+
+            $("#loc").autocomplete({
+                source: $.parseJSON('${locs.encodeAsJSON()}'),
+                select: function(event, ui) {
+                    $("#loc").val(ui.item.label);
+                    updatePlans();
+                }
+            });
+
+            $("#menuType").selectmenu();
+
+            $("#menuTypePlan").selectmenu({
+                change: updatePlans
+            });
+
+            $("#selectable").selectable();
+
+
         });
-
-        $("#loc").autocomplete({
-            source: $.parseJSON('${locs.encodeAsJSON()}'),
-            select: updatePlans
-        });
-
-        $( "#menuType" ).selectmenu();
-
-        $( "#menuTypePlan" ).selectmenu({
-            change: updatePlans
-        });
-
-        $( "#selectable" ).selectable();
-
-        var list = $.parseJSON('${locs.encodeAsJSON()}')
-        var html = ''
-        for(item in list){
-            html += '<li class="ui-widget-content">' + list[item] + '</li>';
-        }
-        $('#selectable').append(html);
-
-    });
-</script>
+    </script>
 
 
     <title>Creación de horarios</title>
@@ -98,25 +138,29 @@
 <div class="column filter">
 
     <label for="loc">Sede:</label>
+
     <div class="ui-widget">
         <input id="loc">
     </div>
 
     <label for="menuTypePlan">Tipo:</label>
+
     <div class="ui-menu-item">
         <select name="menuTypePlan" id="menuTypePlan">
             <option value="PRE" selected="selected">Pregrado</option>
-            <option value="POS" >Posgrado</option>
+            <option value="POS">Posgrado</option>
         </select>
     </div>
 
     <label for="plans">Planes:</label>
+
     <div class="ui-widget">
         <input id="plans">
     </div>
 
 
     <label for="menuType">Tipología:</label>
+
     <div class="ui-menu-item">
         <select name="menuType" id="menuType">
             <option>Fundamentación</option>
@@ -126,6 +170,7 @@
     </div>
 
     <label for="course">Materia:</label>
+
     <div class="ui-widget">
         <input id="course">
     </div>

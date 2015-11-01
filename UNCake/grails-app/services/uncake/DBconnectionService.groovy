@@ -9,7 +9,7 @@ class DBconnectionService {
 
         def pattern = ~"'.+'"
 
-        //StudyPlan.getAll().each { var -> var.delete(flush: true) }"""
+        //StudyPlan.getAll().each { var -> var.delete(flush: true) }
         //Location.getAll().each { var -> var.delete(flush: true) }
 
         def type = ['PRE', 'POS']
@@ -18,7 +18,7 @@ class DBconnectionService {
         Location.list().each { loc ->
             type.each {
                 try {
-                    source = new URL(loc.url + 'scripts/catalogo-programas/items_catalogo_' + it + '.js')
+                    source = new URL(loc.url + 'academia/scripts/catalogo-programas/items_catalogo_' + it + '.js')
                             .getText('ISO-8859-1')
                     source = source.findAll(pattern)
 
