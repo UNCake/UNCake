@@ -10,5 +10,6 @@ class Groups {
     //Faltan agregar limitaciones de inscripcion por carrera
     static constraints = {
         code nullable: false
+        timeSlots nullable: true
     }
 }

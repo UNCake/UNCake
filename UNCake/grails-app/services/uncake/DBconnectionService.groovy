@@ -18,7 +18,7 @@ class DBconnectionService {
         Location.list().each { loc ->
             type.each {
                 try {
-                    source = new URL(loc.url + 'academia/scripts/catalogo-programas/items_catalogo_' + it + '.js')
+                    source = new URL(loc.url + '/academia/scripts/catalogo-programas/items_catalogo_' + it + '.js')
                             .getText('ISO-8859-1')
                     source = source.findAll(pattern)
 

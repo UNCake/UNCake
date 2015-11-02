@@ -23,8 +23,9 @@ class ScheduleController {
     }
 
     def searchCourses() {
-
-        def http = new HTTPBuilder(Location.findByName(params.selectedLoc).url + 'buscador/JSON-RPC')
+        def url = (params.selectedLoc == 'MEDELLIN')? Location.findByName(params.selectedLoc).url + ":9401/":
+                Location.findByName(params.selectedLoc).url
+        def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
         def codeStudyPlan = StudyPlan.findByNameAndLocation(params.studyplan, Location.findByName(params.selectedLoc)).code
 
         def list = []
@@ -69,7 +70,11 @@ class ScheduleController {
     }
 
     def searchGroups() {
-        def http = new HTTPBuilder(Location.findByName(params.selectedLoc).url + 'buscador/JSON-RPC')
+        def url = (params.selectedLoc == 'MEDELLIN')? Location.findByName(params.selectedLoc).url + ":9401/":
+                Location.findByName(params.selectedLoc).url
+        def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
+        def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+        def groups = []
         http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
             body = [
                     "jsonrpc": "2.0",
@@ -79,8 +84,13 @@ class ScheduleController {
 
             // success response handler
             response.success = { resp, json ->
-                println json
-                //asig.grupos = json.toString()
+                json.result.list.each{ a ->
+                    def temp = ["teacher": a.nombredocente, "code": a.codigo,
+                    "availableSpots": a.cuposdisponibles, "totalSpots": a.cupostotal, "timeSlots": []]
+                    days.each{ d -> temp["timeSlots"].add(setTimeSlot(d, a)) }
+                    groups.add(temp)
+                }
+
             }
 
             // failure response handler
@@ -89,7 +99,25 @@ class ScheduleController {
                 println ${resp.statusLine.reasonPhrase}
             }
         }
-        def list = []
-        render list as JSON
+
+        render groups as JSON
+    }
+
+    def setTimeSlot(day, timeslot){
+        def time = 'horario_' + day
+
+        if(timeslot[time] == '--'){
+            return ["endHour": -1, "startHour": -1, "day": day,
+                    "classroom": 'no']
+        }
+
+        def t = timeslot[time].split('-')
+        def place = 'aula_' + day
+        def p = timeslot[place].split('-')
+
+        return ["startHour": t[0].toInteger(),
+        "endHour": t[1].toInteger(),
+        "classroom": p[0], "day": day,
+        "building": (p.size() > 1)? Building.findByCode(p[1]) : null]
     }
 }
