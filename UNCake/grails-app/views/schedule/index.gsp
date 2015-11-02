@@ -21,7 +21,6 @@
 
     <script>
         $(function () {
-            var urlSIA = ""
             var updatePlans = function (event, ui) {
                 var url = "${createLink(controller:'Schedule', action:'searchByLoc')}";
                 var selLoc = $("#loc").val();
@@ -63,12 +62,33 @@
                         for (item in resList) {
                             html += '<li class="ui-widget-content">' + resList[item] + '</li>';
                         }
+                        $('#selectable').empty();
                         $('#selectable').append(html);
                     },
                     error: function (request, status, error) {
                         alert(error)
                     }
                 });
+            }
+
+            var updateTypeCourse = function(){
+                var courseType = $.parseJSON('${courseType.encodeAsJSON()}')
+                $('#menuType').empty();
+                if( $("#menuTypePlan").val() == 'PRE') {
+                    $.each(courseType["PRE"], function(key, value) {
+                        $('#menuType')
+                                .append($('<option>', { value : value })
+                                        .text(key));
+                    });
+
+                }else {
+                    $.each(courseType["POS"], function(key, value) {
+                        $('#menuType')
+                                .append($('<option>', { value : value })
+                                        .text(key));
+                    });
+                }
+                $('#menuType').selectmenu("refresh", true);
             }
 
             $("#plans").autocomplete({
@@ -92,11 +112,23 @@
             $("#menuType").selectmenu();
 
             $("#menuTypePlan").selectmenu({
-                change: updatePlans
+                create: updateTypeCourse(),
+                select: function() {
+                    updateTypeCourse()
+                    updatePlans()
+                }
             });
 
             $("#course").keyup(function(){
-                console.log($("#course").val())
+                var course = $(this).val().toLowerCase();
+                if(course == ""){
+                    $('#selectable li').show();
+                } else {
+                    $('#selectable li').each(function(){
+                        var text = $(this).text().toLowerCase();
+                        (text.indexOf(course) >= 0) ? $(this).show() : $(this).hide();
+                    });
+                };
             });
 
             $("#selectable").selectable();
@@ -152,9 +184,7 @@
 
     <div>
         <select name="menuType" id="menuType">
-            <option>Fundamentación</option>
-            <option>Libre elección</option>
-            <option selected="selected">Disciplinar</option>
+            <option value="" selected="selected">TODAS</option>
         </select>
     </div>
 

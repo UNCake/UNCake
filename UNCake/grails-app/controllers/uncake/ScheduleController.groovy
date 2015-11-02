@@ -7,7 +7,10 @@ import grails.converters.JSON
 class ScheduleController {
 
     def index() {
-        [locs: Location.list().name]
+        def courseType = [ "PRE" : ["Todas": "","Fundamentación" : "B", "Disciplinar": "C",
+                                    "Libre elección" : "L", "Nivelación" : "P"] ,
+                           "POS" : ["Todas": "","Obligatorio" : "O", "Elegible" : "T"] ]
+        [locs: Location.list().name, courseType : courseType]
     }
 
     def searchByLoc(){
