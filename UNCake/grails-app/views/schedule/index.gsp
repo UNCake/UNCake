@@ -22,7 +22,7 @@
     <script>
         $(function () {
             var courses
-            var updatePlans = function (event, ui) {
+            var updatePlans = function () {
                 var url = "${createLink(controller:'Schedule', action:'searchByLoc')}";
                 var selLoc = $("#loc").val();
                 var response = $.ajax({
@@ -43,7 +43,7 @@
                 });
             }
 
-            var updateCourses = function (event, ui) {
+            var updateCourses = function () {
                 var url = "${createLink(controller:'Schedule', action:'searchCourses')}";
 
                 var response = $.ajax({
@@ -70,6 +70,37 @@
                     }
                 });
             }
+
+            var updateGroups = function (event, ui) {
+
+
+                var url = "${createLink(controller:'Schedule', action:'searchGroups')}";
+
+                var response = $.ajax({
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    crossDomain: true,
+                    data: {
+                        selectedLoc: $("#loc").val(),
+                        code: courses[$(ui.selected).attr('value')].code
+                    },
+                    success: function (groups) {
+                        console.log(groups);
+                        /*
+                        $('#selectable').empty();
+                        $.each(courses, function (key, value) {
+                            $('#selectable')
+                                    .append($('<li>', {value: key})
+                                            .text(value.name));
+                        });*/
+                    },
+                    error: function (request, status, error) {
+                        alert(error)
+                    }
+                });
+            }
+
 
             var updateTypeCourse = function () {
                 var courseType = $.parseJSON('${courseType.encodeAsJSON()}')
@@ -167,6 +198,7 @@
             $("#selectable").selectable({
                     selected: function (event, ui) {
                         $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
+                        updateGroups(event, ui);
                     }
                 }
             );
