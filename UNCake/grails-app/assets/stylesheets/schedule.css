@@ -69,14 +69,18 @@ select {
     padding: 10px;
 }
 
+#accordionGroup {
+    height: 100%;
+    overflow-y: auto;
+}
+
 #accordionGroup h3 {
     overflow: auto;
 }
 
-.deleteCourse {
+#accordionGroup a {
     float: right;
 }
-
 
 .ui-autocomplete {
 

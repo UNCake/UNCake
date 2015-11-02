@@ -22,6 +22,8 @@
     <script>
         $(function () {
             var courses
+            var prevSelected = -1
+
             var updatePlans = function () {
                 var url = "${createLink(controller:'Schedule', action:'searchByLoc')}";
                 var selLoc = $("#loc").val();
@@ -72,8 +74,6 @@
             }
 
             var updateGroups = function (event, ui) {
-
-
                 var url = "${createLink(controller:'Schedule', action:'searchGroups')}";
 
                 var response = $.ajax({
@@ -86,14 +86,40 @@
                         code: courses[$(ui.selected).attr('value')].code
                     },
                     success: function (groups) {
+                        var name = courses[$(ui.selected).attr('value')].name;
                         console.log(groups);
-                        /*
-                        $('#selectable').empty();
-                        $.each(courses, function (key, value) {
-                            $('#selectable')
-                                    .append($('<li>', {value: key})
-                                            .text(value.name));
-                        });*/
+                        $('#accordionGroup')
+                                .append('<h3>'+name+'<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
+
+                        var div = $('<ol>', {class:'selectableItem', id: name})
+
+                        $.each(groups, function (key, value) {
+                            div.append($('<li>', {value: key})
+                                    .text(value.teacher));
+                        });
+                        $('#accordionGroup').append(div);
+
+                        $('#accordionGroup').accordion("refresh");
+/*
+                         <div id="accordionGroup">
+
+                         <h3>The Title - Item 1  </h3>
+
+                         <div>
+                         <ol class="selectableItem" id="selectableGroup">
+                         <li>s</li>
+                         <li>s</li>
+                         <li>s</li>
+                         </ol>
+
+                         </div>
+
+                         <h3>The Title - Item 2  <button class="deleteCourse"/></h3>
+
+                         <div>The Content - Item 2</div>
+                         </div>
+
+                        */
                     },
                     error: function (request, status, error) {
                         alert(error)
@@ -180,7 +206,7 @@
                 heightStyle: "content"
             });
 
-            $('.deleteCourse').click(function () {
+            $('#accordionGroup').on('click','a', function(){
                 var parent = $(this).closest('h3');
                 var head = parent.next('div');
                 parent.add(head).fadeOut('slow', function () {
@@ -188,22 +214,20 @@
                 });
             });
 
-            $('.deleteCourse').button({
-                icons: {
-                    primary: "ui-icon-close"
-                },
-                text: false
-            })
-
             $("#selectable").selectable({
                     selected: function (event, ui) {
                         $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
-                        updateGroups(event, ui);
+                        if(prevSelected != $(ui.selected).attr('value')){
+                            prevSelected = $(ui.selected).attr('value')
+                            updateGroups(event, ui);
+                        }
                     }
                 }
             );
 
-            $("#selectableGroup").selectable();
+            $('#accordionGroup').on('click','ol', function() {
+                $(this).selectable();
+            });
 
         });
     </script>
@@ -280,21 +304,6 @@
     <p>Materias seleccionadas</p>
 
     <div id="accordionGroup">
-
-        <h3>The Title - Item 1 <button class="deleteCourse"/> </h3>
-
-        <div>
-            <ol class="selectableItem" id="selectableGroup">
-                <li>s</li>
-                <li>s</li>
-                <li>s</li>
-            </ol>
-
-        </div>
-
-        <h3>The Title - Item 2  <button class="deleteCourse"/></h3>
-
-        <div>The Content - Item 2</div>
     </div>
 
 
