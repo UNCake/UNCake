@@ -144,7 +144,34 @@
                 ;
             });
 
-            $("#selectable").selectable();
+            $( "#accordionGroup" ).accordion({
+                collapsible: true,
+                heightStyle: "content"
+            });
+
+            $('.deleteCourse').click(function () {
+                var parent = $(this).closest('h3');
+                var head = parent.next('div');
+                parent.add(head).fadeOut('slow', function () {
+                    $(this).remove();
+                });
+            });
+
+            $('.deleteCourse').button({
+                icons: {
+                    primary: "ui-icon-close"
+                },
+                text: false
+            })
+
+            $("#selectable").selectable({
+                    selected: function (event, ui) {
+                        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
+                    }
+                }
+            );
+
+            $("#selectableGroup").selectable();
 
         });
     </script>
@@ -207,7 +234,7 @@
     </div>
 
     <div class="selectablemenu">
-        <ol id="selectable">
+        <ol class="selectableItem" id="selectable">
         </ol>
     </div>
 
@@ -219,6 +246,26 @@
 
 <div class="column selectedC">
     <p>Materias seleccionadas</p>
+
+    <div id="accordionGroup">
+
+        <h3>The Title - Item 1 <button class="deleteCourse"/> </h3>
+
+        <div>
+            <ol class="selectableItem" id="selectableGroup">
+                <li>s</li>
+                <li>s</li>
+                <li>s</li>
+            </ol>
+
+        </div>
+
+        <h3>The Title - Item 2  <button class="deleteCourse"/></h3>
+
+        <div>The Content - Item 2</div>
+    </div>
+
+
 </div>
 
 </body>
