@@ -43,20 +43,6 @@
                 });
             }
 
-            var updateUrlSIA = function(){
-                var url = "${createLink(controller:'Schedule', action:'geturlSIA')}";
-                var response = $.ajax({
-                    url: url,
-                    contentType: "application/text; charset=utf-8",
-                    dataType: "text",
-                    data: { selectedLoc: $("#loc").val()},
-                    success: function (sia) { urlSIA = sia },
-                    error: function (request, status, error) {
-                        alert(error)
-                    }
-                });
-            }
-
             var updateCourses = function (event, ui) {
                 var url = "${createLink(controller:'Schedule', action:'searchCourses')}";
 
@@ -109,8 +95,11 @@
                 change: updatePlans
             });
 
-            $("#selectable").selectable();
+            $("#course").keyup(function(){
+                console.log($("#course").val())
+            });
 
+            $("#selectable").selectable();
 
         });
     </script>
@@ -145,7 +134,7 @@
 
     <label for="menuTypePlan">Tipo:</label>
 
-    <div class="ui-menu-item">
+    <div>
         <select name="menuTypePlan" id="menuTypePlan">
             <option value="PRE" selected="selected">Pregrado</option>
             <option value="POS">Posgrado</option>
@@ -161,7 +150,7 @@
 
     <label for="menuType">Tipología:</label>
 
-    <div class="ui-menu-item">
+    <div>
         <select name="menuType" id="menuType">
             <option>Fundamentación</option>
             <option>Libre elección</option>

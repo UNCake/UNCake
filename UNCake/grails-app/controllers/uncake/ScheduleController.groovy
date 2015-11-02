@@ -17,10 +17,6 @@ class ScheduleController {
             render StudyPlan.findAllByLocationAndType(Location.findByName(params.selectedLoc), params.type).name as JSON
     }
 
-    def geturlSIA(){
-        render Location.findByName(params.selectedLoc).url
-    }
-
     def searchCourses(){
         println params
         def http = new HTTPBuilder(Location.findByName(params.selectedLoc).url + 'buscador/JSON-RPC')
