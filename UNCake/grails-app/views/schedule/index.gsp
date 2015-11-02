@@ -21,6 +21,7 @@
 
     <script>
         $(function () {
+            var courses
             var updatePlans = function (event, ui) {
                 var url = "${createLink(controller:'Schedule', action:'searchByLoc')}";
                 var selLoc = $("#loc").val();
@@ -53,17 +54,16 @@
                     data: {
                         selectedLoc: $("#loc").val(),
                         studyplan: $("#plans").val(),
-                        name: $("#course").val(),
                         type: $("#menuTypePlan").val()
                     },
-                    success: function (courses) {
-                        var resList = courses
-                        var html = ''
-                        for (item in resList) {
-                            html += '<li class="ui-widget-content">' + resList[item] + '</li>';
-                        }
+                    success: function (resCourses) {
+                        courses = resCourses
                         $('#selectable').empty();
-                        $('#selectable').append(html);
+                        $.each(courses, function (key, value) {
+                            $('#selectable')
+                                    .append($('<li>', {value: key})
+                                            .text(value.name));
+                        });
                     },
                     error: function (request, status, error) {
                         alert(error)
@@ -71,20 +71,20 @@
                 });
             }
 
-            var updateTypeCourse = function(){
+            var updateTypeCourse = function () {
                 var courseType = $.parseJSON('${courseType.encodeAsJSON()}')
                 $('#menuType').empty();
-                if( $("#menuTypePlan").val() == 'PRE') {
-                    $.each(courseType["PRE"], function(key, value) {
+                if ($("#menuTypePlan").val() == 'PRE') {
+                    $.each(courseType["PRE"], function (key, value) {
                         $('#menuType')
-                                .append($('<option>', { value : value })
+                                .append($('<option>', {value: value})
                                         .text(key));
                     });
 
-                }else {
-                    $.each(courseType["POS"], function(key, value) {
+                } else {
+                    $.each(courseType["POS"], function (key, value) {
                         $('#menuType')
-                                .append($('<option>', { value : value })
+                                .append($('<option>', {value: value})
                                         .text(key));
                     });
                 }
@@ -103,32 +103,45 @@
 
             $("#loc").autocomplete({
                 source: $.parseJSON('${locs.encodeAsJSON()}'),
-                select: function(event, ui) {
+                select: function (event, ui) {
                     $("#loc").val(ui.item.label);
                     updatePlans();
                 }
             });
 
-            $("#menuType").selectmenu();
-
-            $("#menuTypePlan").selectmenu({
-                create: updateTypeCourse(),
-                select: function() {
-                    updateTypeCourse()
-                    updatePlans()
+            $("#menuType").selectmenu({
+                select: function () {
+                    if ($("#menuType").val() == "") {
+                        $('#selectable li').show();
+                    } else {
+                        $('#selectable li').each(function () {
+                            (courses[$(this).val()].typology == $("#menuType").val()) ? $(this).show() : $(this).hide();
+                        });
+                    }
                 }
             });
 
-            $("#course").keyup(function(){
+            $("#menuTypePlan").selectmenu({
+                create: updateTypeCourse(),
+                select: function () {
+                    updateTypeCourse()
+                    $("#plans").val("")
+                    updatePlans()
+                    $("#selectable").empty()
+                }
+            });
+
+            $("#course").keyup(function () {
                 var course = $(this).val().toLowerCase();
-                if(course == ""){
+                if (course == "") {
                     $('#selectable li').show();
                 } else {
-                    $('#selectable li').each(function(){
+                    $('#selectable li').each(function () {
                         var text = $(this).text().toLowerCase();
                         (text.indexOf(course) >= 0) ? $(this).show() : $(this).hide();
                     });
-                };
+                }
+                ;
             });
 
             $("#selectable").selectable();
@@ -184,7 +197,6 @@
 
     <div>
         <select name="menuType" id="menuType">
-            <option value="" selected="selected">TODAS</option>
         </select>
     </div>
 

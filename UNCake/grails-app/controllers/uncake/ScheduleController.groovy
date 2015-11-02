@@ -21,35 +21,29 @@ class ScheduleController {
     }
 
     def searchCourses(){
-        println params
+
         def http = new HTTPBuilder(Location.findByName(params.selectedLoc).url + 'buscador/JSON-RPC')
         def codeStudyPlan = StudyPlan.findByNameAndLocation(params.studyplan, Location.findByName(params.selectedLoc)).code
-        println codeStudyPlan
+
         def list = []
         http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
 
             body = [
                     "jsonrpc": "2.0",
                     "method" : "buscador.obtenerAsignaturas",
-                    "params" : [params.name, "PRE", "", params.type, codeStudyPlan, "", 1, 999]
+                    "params" : ["", "PRE", "", params.type, codeStudyPlan, "", 1, 999]
             ]
 
             // success response handler
             response.success = { resp, json ->
 
                 json.result.asignaturas.list.each { v ->
-                    list.add(v.nombre)
-                    def params = [:]
-
+                    list.add(["name" : v.nombre, "typology" : v.tipologia,
+                              "code" : v.codigo, "credits" : v.creditos])
+/*
                     v.each { a ->
-                        if (!a.toString().startsWith("j") || !a.toString().startsWith("g")) {
-                            params << a
-                        }
-                    }
-
-                    params.each { a ->
                         println a
-                    }
+                    }*/
 /*
                     res = new Course(params)
 
@@ -69,7 +63,6 @@ class ScheduleController {
             }
         }
 
-        println list
         render list as JSON
     }
 }
