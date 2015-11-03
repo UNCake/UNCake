@@ -59,16 +59,19 @@
 
 
 <div class="container center-contatiner">
-    <div>${flash.message2}</div>
+
 
 <g:form class="form-signin" action="doLogin" method="post">
     <form class="form-signin">
         <h2 class="form-signin-heading font-uncake" align="center">UNCake</h2>
         <div class="form-group">
             <label >Email</label>
-            <input type="email" id="email" class="form-control"  placeholder="Introduce tu email" required autofocus name="email">
+            <div style="display: flex">
+                <input type="email" id="email" class="form-control"  placeholder="Introduce tu email" required autofocus name="email">
+                <div class="error">${flash.message2}</div>
+            </div>
         </div>
-        <div class="form-group" >
+        <div class="form-group" style="margin-bottom: 0px">
             <div style="display: flex">
                 <div class="col-6">
                     <label >Contraseña</label>
@@ -78,10 +81,11 @@
                     <a class="text-center" href="/forgotpassword" title="Solicita una contraseña nueva por correo electrónico." >Olvidé mi contraseña</a>
                 </div>
             </div>
-
-
-
-            <input type="password" id="password" class="form-control" placeholder="Introduce tu contraseña" required name='password'>
+            <div style="display: flex">
+                <input type="password" id="password" class="form-control" placeholder="Introduce tu contraseña" required name='password'>
+                <div class="error">${flash.message2}</div>
+            </div>
+            <div class="error errorm">${flash.message1}</div>
         </div>
         <label>
             <input type="checkbox" value="remember-me"> Recordarme
