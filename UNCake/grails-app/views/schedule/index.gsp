@@ -202,7 +202,6 @@
                 var name = parent.attr('value')
                 delete groups[name];
                 $("#scheduleTable td").each(function(){
-                    console.log($(this).html())
                     if ($(this).html() == name) {
                         $(this).html("")
                     }
@@ -231,17 +230,35 @@
                         var name = $(ui.selected).attr('value')
                         var gr = groups[name][$(ui.selected).attr('id')]
                         $("#scheduleTable td").each(function(){
-                            console.log($(this).html())
                             if ($(this).html() == name) {
                                 $(this).html("")
                             }
                         });
 
+                        var available = true
                         for(var i in gr["timeSlots"]){
                             var ts = gr["timeSlots"][i]
-                            if(ts.startHour > 0) {
-                                for(var s = ts.startHour; s <= ts.endHour; s++) {
-                                    $("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).html(name);
+                            for (var s = ts.startHour; s <= ts.endHour; s++) {
+                                if($("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).text().trim()!=""){
+                                    available = false;
+                                    break;
+                                }
+                            }
+                            if(!available) break;
+                        }
+
+                        if(!available){
+                            alert("Existe cruce de horarios");
+                        }else {
+                            for(var i in gr["timeSlots"]) {
+                                for (var i in gr["timeSlots"]) {
+                                    var ts = gr["timeSlots"][i]
+                                    if (ts.startHour > 0) {
+                                        for (var s = ts.startHour; s <= ts.endHour; s++) {
+                                            $("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).html(name);
+                                        }
+
+                                    }
                                 }
                             }
                         }
