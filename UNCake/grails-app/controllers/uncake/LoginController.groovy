@@ -16,6 +16,7 @@ class LoginController {
             flash.message2="Los datos son incorrectos"
             redirect(controller:'login',action:'index')
         }
+        print session.user
 
     /*    println params
         println params.email
