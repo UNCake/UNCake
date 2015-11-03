@@ -5,11 +5,13 @@ import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 
 class DBConnectionController {
-    def http = new HTTPBuilder('http://sia.bogota.unal.edu.co/buscador/JSON-RPC')
+    def http = new HTTPBuilder('http://sia.bogota.unal.edu.co/academia/scripts/catalogo-programas/items_catalogo_PRE.js')
     def res
 
-    def index() {
 
+
+    def index() {
+/*
         http.request(POST, JSON) { req ->
             body = [
                     "jsonrpc": "2.0",
@@ -35,13 +37,13 @@ class DBConnectionController {
                         println a
                     }
 
-                    /*res = new Course(params)
+                    res = new Course(params)
 
                     if (!res.save(flush: true)) {
                         res.errors.each {
                             println it
                         }
-                    }*/
+                    }
 
                 }
             }
@@ -74,7 +76,8 @@ class DBConnectionController {
                     println $ { resp.statusLine.reasonPhrase }
                 }
             }
-        }
+        }*/
+
 
         render "datos cargados"
     }

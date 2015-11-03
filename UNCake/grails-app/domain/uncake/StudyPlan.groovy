@@ -6,6 +6,7 @@ class StudyPlan {
     String faculty
     String type
     String name
+    Location location
     Integer fundamentalCredits
     Integer freeChoiceCredits
     Integer disciplinaryCredits
@@ -13,8 +14,12 @@ class StudyPlan {
     static constraints = {
         code nullable: false, unique: true
         name blank: false
-        faculty blank: false
+        faculty blank: true, nullable: true
         type blank: false
-        courses nullable: false
+        courses nullable: true
+        location nullable: false
+        disciplinaryCredits nullable: true
+        fundamentalCredits nullable: true
+        freeChoiceCredits nullable: true
     }
 }
