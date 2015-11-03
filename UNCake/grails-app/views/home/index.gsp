@@ -137,10 +137,10 @@
                     </li>
 
                     <li>
-                        <a class="page-scroll" href="#about">Registrarme</a>
+                        <a class="page-scroll" href="register">Registrarme</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#services">Ingresar</a>
+                        <a class="page-scroll" href="login">Ingresar</a>
                     </li>
                 </ul>
             </div>
@@ -167,7 +167,7 @@
                 <div class="col-md-4 col-sm-6 portfolio-item">
                     <div class="portfolio-caption">
                         <div class="img-centered">
-                            <a href="#" class="portfolio-link" data-toggle="modal">
+                            <a href="schedule" class="portfolio-link" data-toggle="modal">
                                 <asset:image src="home/services/icono_horarios.png" alt=""/>
                             </a>
                         </div>
@@ -178,7 +178,7 @@
                 <div class="col-md-4 col-sm-6 portfolio-item">
                     <div class="portfolio-caption">
                         <div class="img-centered">
-                            <a href="#">
+                            <a href="maps">
                                 <asset:image src="home/services/icono_edificios.png" alt=""/>
                             </a>
                         </div>
@@ -189,7 +189,7 @@
                 <div class="col-md-4 col-sm-6 portfolio-item">
                     <div class="portfolio-caption">
                         <div class="img-centered">
-                            <a href="#" class="portfolio-link" data-toggle="modal">
+                            <a href="progress" class="portfolio-link" data-toggle="modal">
                                 <asset:image src="home/services/icono_papa.png" alt=""/>
                             </a>
                         </div>

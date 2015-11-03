@@ -49,7 +49,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand font-uncaket" href="#">UNCake</a>
+            <a class="navbar-brand font-uncaket" href="home">UNCake</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
 

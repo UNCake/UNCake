@@ -285,7 +285,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand page-scroll" href="#page-top">UNCake</a>
+        <a class="navbar-brand page-scroll" href="home">UNCake</a>
     </div>
 </nav>
 
@@ -335,8 +335,6 @@
 </div>
 
 <div class="column schedule">
-    <p>tabla de horario</p>
-
     <div class="scheduleTableD">
         <table id="scheduleTable">
             <div id="head_nav">
