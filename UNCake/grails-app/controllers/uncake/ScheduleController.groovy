@@ -7,12 +7,12 @@ import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 
 class ScheduleController {
-
+    def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
     def index() {
         def courseType = ["PRE": ["Todas"         : "", "Fundamentación": "B", "Disciplinar": "C",
                                   "Libre elección": "L", "Nivelación": "P"],
                           "POS": ["Todas": "", "Obligatorio": "O", "Elegible": "T"]]
-        [locs: Location.list().name, courseType: courseType]
+        [locs: Location.list().name, courseType: courseType, days: days]
     }
 
     def searchByLoc() {
@@ -73,7 +73,7 @@ class ScheduleController {
         def url = (params.selectedLoc == 'MEDELLIN')? Location.findByName(params.selectedLoc).url + ":9401/":
                 Location.findByName(params.selectedLoc).url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
-        def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+
         def groups = []
         http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
             body = [

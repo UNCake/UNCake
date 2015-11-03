@@ -25,6 +25,7 @@
         $(function () {
             var courses
             var groups = {}
+            var days = $.parseJSON('${days.encodeAsJSON()}')
 
             for (var i = 6; i <= 21; i++) {
                 $("#scheduleTable").append('<tr id="r' + i + '"><th>' + i + '</th></tr>')
@@ -198,7 +199,14 @@
             $('#accordionGroup').on('click', 'a', function () {
                 $("#accordionGroup").accordion("option", "active", false);
                 var parent = $(this).closest('h3');
-                delete groups[parent.attr('value')]
+                var name = parent.attr('value')
+                delete groups[name];
+                $("#scheduleTable td").each(function(){
+                    console.log($(this).html())
+                    if ($(this).html() == name) {
+                        $(this).html("")
+                    }
+                });
                 var head = parent.next('ol');
 
                 parent.add(head).fadeOut('slow', function () {
@@ -220,8 +228,24 @@
                 $(this).selectable({
                     selected: function (event, ui) {
                         $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
-                        var ts = groups[$(ui.selected).attr('value')][$(ui.selected).attr('id')]
-                        console.log(ts)
+                        var name = $(ui.selected).attr('value')
+                        var gr = groups[name][$(ui.selected).attr('id')]
+                        $("#scheduleTable td").each(function(){
+                            console.log($(this).html())
+                            if ($(this).html() == name) {
+                                $(this).html("")
+                            }
+                        });
+
+                        for(var i in gr["timeSlots"]){
+                            var ts = gr["timeSlots"][i]
+                            if(ts.startHour > 0) {
+                                for(var s = ts.startHour; s <= ts.endHour; s++) {
+                                    $("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).html(name);
+                                }
+                            }
+                        }
+
                     }
                 });
             });
