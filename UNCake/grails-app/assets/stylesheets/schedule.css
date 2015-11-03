@@ -82,6 +82,42 @@ select {
     float: right;
 }
 
+
+.scheduleTableD {
+    width: 100%;
+    overflow: auto;
+}
+
+th,td
+{
+    font-size: 1em;
+    margin: 0;
+    text-align: center;
+    border-collapse: collapse;
+    border:1px dashed #C0C0C0;
+    padding:5px;
+    background:#F0F0F0;
+}
+
+td
+{
+    padding: 5px 10px;
+}
+
+th
+{
+    background: #666;
+    color: white;
+    padding: 5px 10px;
+}
+
+td:hover
+{
+    cursor: pointer;
+    background: #666;
+    color: white;
+}
+
 .ui-autocomplete {
 
     max-height: 100px;

@@ -13,6 +13,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
     <asset:javascript src="jquery-2.1.3.js"/>
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="bootstrap.min.css"/>
@@ -22,7 +24,14 @@
     <script>
         $(function () {
             var courses
-            var prevSelected = -1
+            var groups = {}
+
+            for (var i = 6; i <= 21; i++) {
+                $("#scheduleTable").append('<tr id="r' + i + '"><th>' + i + '</th></tr>')
+                for (var j = 0; j < 7; j++) {
+                    $("#scheduleTable #r" + i).append($('<td>', {id: i * j}))
+                }
+            }
 
             var updatePlans = function () {
                 var url = "${createLink(controller:'Schedule', action:'searchByLoc')}";
@@ -85,15 +94,15 @@
                         selectedLoc: $("#loc").val(),
                         code: courses[$(ui.selected).attr('value')].code
                     },
-                    success: function (groups) {
+                    success: function (group) {
                         var name = courses[$(ui.selected).attr('value')].name;
                         $('#accordionGroup')
-                                .append('<h3>'+name+'<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
+                                .append('<h3 value="'+name+'">' + name + '<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
 
-                        var div = $('<ol>', {class:'selectableItem', id: name})
-
-                        $.each(groups, function (key, value) {
-                            div.append($('<li>', {value: key})
+                        var div = $('<ol>', {class: 'selectableItem', id: name});
+                        groups[name] = group;
+                        $.each(group, function (key, value) {
+                            div.append($('<li>', {value: name, id: key})
                                     .text(value.teacher));
                         });
                         $('#accordionGroup').append(div);
@@ -180,15 +189,16 @@
                 ;
             });
 
-            $( "#accordionGroup" ).accordion({
+            $("#accordionGroup").accordion({
                 collapsible: true,
                 active: false,
                 heightStyle: "content"
             });
 
-            $('#accordionGroup').on('click','a', function(){
-                $("#accordionGroup").accordion( "option", "active", false );
+            $('#accordionGroup').on('click', 'a', function () {
+                $("#accordionGroup").accordion("option", "active", false);
                 var parent = $(this).closest('h3');
+                delete groups[parent.attr('value')]
                 var head = parent.next('ol');
 
                 parent.add(head).fadeOut('slow', function () {
@@ -197,18 +207,23 @@
             });
 
             $("#selectable").selectable({
-                    selected: function (event, ui) {
-                        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
-                        if(prevSelected != $(ui.selected).attr('value')){
-                            prevSelected = $(ui.selected).attr('value')
-                            updateGroups(event, ui);
+                        selected: function (event, ui) {
+                            $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
+                            if(!(courses[$(ui.selected).attr('value')].name in groups)) {
+                                updateGroups(event, ui);
+                            }
                         }
                     }
-                }
             );
 
-            $('#accordionGroup').on('click','ol', function() {
-                $(this).selectable();
+            $('#accordionGroup').on('click', 'ol', function () {
+                $(this).selectable({
+                    selected: function (event, ui) {
+                        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
+                        var ts = groups[$(ui.selected).attr('value')][$(ui.selected).attr('id')]
+                        console.log(ts)
+                    }
+                });
             });
 
         });
@@ -280,14 +295,31 @@
 
 <div class="column schedule">
     <p>tabla de horario</p>
+
+    <div class="scheduleTableD">
+        <table id="scheduleTable">
+            <div id="head_nav">
+                <tr>
+                    <th>Hora</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miercoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                    <th>Sabado</th>
+                    <th>Domingo</th>
+                </tr>
+            </div>
+        </table>
+    </div>
+
 </div>
 
 <div class="column selectedC">
-    <p>Materias seleccionadas</p>
+    <label for="accordionGroup">Materias seleccionadas</label>
 
     <div id="accordionGroup">
     </div>
-
 
 </div>
 
