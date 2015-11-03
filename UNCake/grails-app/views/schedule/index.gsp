@@ -87,7 +87,6 @@
                     },
                     success: function (groups) {
                         var name = courses[$(ui.selected).attr('value')].name;
-                        console.log(groups);
                         $('#accordionGroup')
                                 .append('<h3>'+name+'<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
 
@@ -100,26 +99,6 @@
                         $('#accordionGroup').append(div);
 
                         $('#accordionGroup').accordion("refresh");
-/*
-                         <div id="accordionGroup">
-
-                         <h3>The Title - Item 1  </h3>
-
-                         <div>
-                         <ol class="selectableItem" id="selectableGroup">
-                         <li>s</li>
-                         <li>s</li>
-                         <li>s</li>
-                         </ol>
-
-                         </div>
-
-                         <h3>The Title - Item 2  <button class="deleteCourse"/></h3>
-
-                         <div>The Content - Item 2</div>
-                         </div>
-
-                        */
                     },
                     error: function (request, status, error) {
                         alert(error)
@@ -203,12 +182,15 @@
 
             $( "#accordionGroup" ).accordion({
                 collapsible: true,
+                active: false,
                 heightStyle: "content"
             });
 
             $('#accordionGroup').on('click','a', function(){
+                $("#accordionGroup").accordion( "option", "active", false );
                 var parent = $(this).closest('h3');
-                var head = parent.next('div');
+                var head = parent.next('ol');
+
                 parent.add(head).fadeOut('slow', function () {
                     $(this).remove();
                 });
