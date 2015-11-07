@@ -16,10 +16,13 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
+    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
+    <asset:stylesheet src="agency.css"/>
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
-    <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="schedule.css"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
     <script>
         $(function () {
@@ -277,20 +280,41 @@
 
 <body>
 
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="navbar-header page-scroll">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand page-scroll" href="home">UNCake</a>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand page-scroll" href="home">UNCake</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+
+                <li>
+                    <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
+                </li>
+            </ul>
+
+        </div>
     </div>
 </nav>
 
-
-<div class="column filter">
+<div class="row">
+<div class="col-sm-3">
 
     <label for="loc">Sede:</label>
 
@@ -334,9 +358,9 @@
 
 </div>
 
-<div class="column schedule">
-    <div class="scheduleTableD">
-        <table id="scheduleTable">
+<div class="col-sm-6">
+    <div class="table-responsive">
+        <table id="scheduleTable" class="table-condensed">
             <div id="head_nav">
                 <tr>
                     <th>Hora</th>
@@ -354,13 +378,13 @@
 
 </div>
 
-<div class="column selectedC">
+<div class="col-sm-3">
     <label for="accordionGroup">Materias seleccionadas</label>
 
     <div id="accordionGroup">
     </div>
 
 </div>
-
+</div>
 </body>
 </html>

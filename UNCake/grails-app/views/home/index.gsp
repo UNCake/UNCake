@@ -15,12 +15,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
 
     <title>UNCake</title>
 
-    <asset:stylesheet src="bootstrap.min.css"/>
+    <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
     <asset:stylesheet src="agency.css"/>
     <asset:stylesheet src="dialogueStyle.css"/>
 
@@ -32,13 +33,10 @@
 </head>
 
 <style>
+h4{
+    color: #E9E9E9;
+}
 
-.navbar-default{
-    background-color: transparent !important;
-}
-.navbar-default.navbar-shrink{
-    background-color: #2c8bc9 !important;
-}
 .form-control{
     margin-top: 8px;
 }
@@ -113,6 +111,7 @@
     </div>
 </div>
 <div id="wrapper">
+
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header page-scroll">
@@ -127,25 +126,29 @@
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="hidden">
-                        <a href="#page-top"></a>
-                    </li>
-                    <li>
-                        <%--<g:form class="form-signin" action="saveFriend" method="post">--%>
+
+                     <li class="hidden">
+                         <a href="#page-top"></a>
+                     </li>
+                     <li>
+
                         <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
                     </li>
 
                     <li>
-                        <a class="page-scroll" href="register">Registrarme</a>
+                        <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="login">Ingresar</a>
+                        <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
                     </li>
                 </ul>
+
             </div>
         </div>
     </nav>
+
 
     <header>
         <div class="container">
@@ -167,7 +170,7 @@
                 <div class="col-md-4 col-sm-6 portfolio-item">
                     <div class="portfolio-caption">
                         <div class="img-centered">
-                            <a href="schedule" class="portfolio-link" data-toggle="modal">
+                            <a href="schedule">
                                 <asset:image src="home/services/icono_horarios.png" alt=""/>
                             </a>
                         </div>
@@ -189,7 +192,7 @@
                 <div class="col-md-4 col-sm-6 portfolio-item">
                     <div class="portfolio-caption">
                         <div class="img-centered">
-                            <a href="progress" class="portfolio-link" data-toggle="modal">
+                            <a href="progress" >
                                 <asset:image src="home/services/icono_papa.png" alt=""/>
                             </a>
                         </div>
