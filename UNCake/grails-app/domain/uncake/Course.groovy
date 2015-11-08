@@ -4,7 +4,7 @@ class Course {
 
     Integer code
     Integer credits
-    static hasMany = [groups: Groups]
+    static hasMany = [groups: Groups, comments: Comment]
     String name
     String typology
     static constraints = {
