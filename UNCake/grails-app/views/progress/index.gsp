@@ -5,7 +5,7 @@
   Time: 18:55
 --%>
 
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="uncake.User" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -37,6 +37,7 @@
             </div>
         </div>
         <br>
+
         <div class="row">
             <div class="large-12 columns">
                 <div class="row" >
@@ -44,12 +45,26 @@
                         <div class="panel" style="background-color: #f7f7f7;padding-left: 36px;padding-right: 36px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                             <div class="row">
                                 <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
-                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
-                                <g:submitButton name="calculatePAPA" value="Calcular" action="calculatePAPA"></g:submitButton>
+                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                                <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular"></input>
                             </div>
 
                             <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
                                 <br/>
+                                <g:if test="${session.user == null}">
+
+                                </g:if>
+                                <g:else>
+                                    <g:if test="${uncake.User.findAllById(Integer.parseInt((session.user).toString().split(':')[1].trim())).academicRecord == null}">
+
+                                    </g:if>
+                                    <g:else>
+                                        <div style="text-align: center">
+                                            <input type="button" class="" id="btn_save" value="Guardar"/>
+                                        </div>
+                                        <br>
+                                    </g:else>
+                                </g:else>
                                 <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                                     <div id="papa_chart" style="width: 800px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px;"></div>
                                 </div>
@@ -137,6 +152,17 @@
 <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
 <asset:javascript src="foundation/foundation/foundation.js"/>
 <g:javascript>
+
+    function validate(evt) {
+        var theEvent = evt || window.event;
+        var key = theEvent.charCode || theEvent.which;
+
+        if(key >= 32 && (theEvent.ctrlKey === undefined || !theEvent.ctrlKey)) {
+            if(theEvent.preventDefault) theEvent.preventDefault();
+            else theEvent.returnValue = false;
+        }
+    }
+
 $(function(){
     $( ".checkNota" ).on( "click", function() {
         var checkID = parseInt($(this).attr('id').replace('checkNota_',''));
@@ -149,6 +175,9 @@ $(function(){
     $(".btn_add").button ();
     $(".btn_add").each(function (){
         $(this).bind("click",addField);
+    });
+    $( "#btn_save" ).button().click( function() {
+
     });
     $( "#btn_calculate_add" ).button().click( function() {
         var calculate = true;
