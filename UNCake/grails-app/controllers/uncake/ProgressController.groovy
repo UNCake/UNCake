@@ -12,5 +12,10 @@ class ProgressController {
         return*/
     }
 
+    def saveAcademicRecord(){
+        println params.record
+        render params
+    }
+
 
 }

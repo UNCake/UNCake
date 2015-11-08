@@ -152,17 +152,15 @@
 <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
 <asset:javascript src="foundation/foundation/foundation.js"/>
 <g:javascript>
+function validate(evt) {
+    var theEvent = evt || window.event;
+    var key = theEvent.charCode || theEvent.which;
 
-    function validate(evt) {
-        var theEvent = evt || window.event;
-        var key = theEvent.charCode || theEvent.which;
-
-        if(key >= 32 && (theEvent.ctrlKey === undefined || !theEvent.ctrlKey)) {
-            if(theEvent.preventDefault) theEvent.preventDefault();
-            else theEvent.returnValue = false;
-        }
+    if(key >= 32 && (theEvent.ctrlKey === undefined || !theEvent.ctrlKey)) {
+        if(theEvent.preventDefault) theEvent.preventDefault();
+        else theEvent.returnValue = false;
     }
-
+}
 $(function(){
     $( ".checkNota" ).on( "click", function() {
         var checkID = parseInt($(this).attr('id').replace('checkNota_',''));
@@ -177,7 +175,18 @@ $(function(){
         $(this).bind("click",addField);
     });
     $( "#btn_save" ).button().click( function() {
-
+        var ret = "hgfhgfjhkgf";
+        var response = $.ajax({
+            type: 'POST',
+            url: "${createLink(action: 'saveAcademicRecord')}",
+            data: {record: ret},
+            success: function( data ){
+                alert("bien " + data);
+            },
+            error: function( data ){
+                alert("error " + data.record);
+            }
+        });
     });
     $( "#btn_calculate_add" ).button().click( function() {
         var calculate = true;
