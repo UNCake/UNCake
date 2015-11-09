@@ -175,16 +175,14 @@ $(function(){
         $(this).bind("click",addField);
     });
     $( "#btn_save" ).button().click( function() {
-        var ret = "hgfhgfjhkgf";
+        var record = document.getElementById('academicRecord').value;
         var response = $.ajax({
             type: 'POST',
             url: "${createLink(action: 'saveAcademicRecord')}",
-            data: {record: ret},
+            data: {record: record},
             success: function( data ){
-                alert("bien " + data);
             },
             error: function( data ){
-                alert("error " + data.record);
             }
         });
     });
