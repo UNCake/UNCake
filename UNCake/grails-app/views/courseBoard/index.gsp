@@ -22,6 +22,7 @@
     <asset:stylesheet src="schedule.css"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:javascript src="courseboard/courseboard.js"/>
+    <asset:stylesheet src="courseboard.css"/>
     <script>
 
     </script>
@@ -46,54 +47,57 @@
 </nav>
 
 
-<div class="column filter">
-
-    <label for="loc">Sede:</label>
-
-    <div class="ui-widget">
-        <input id="loc">
-    </div>
-
-    <label for="menuTypePlan">Tipo:</label>
-
-    <div>
-        <select name="menuTypePlan" id="menuTypePlan">
-            <option value="PRE" selected="selected">Pregrado</option>
-            <option value="POS">Posgrado</option>
-        </select>
-    </div>
-
-    <label for="plans">Planes:</label>
-
-    <div class="ui-widget">
-        <input id="plans">
-    </div>
-
-
-    <label for="menuType">Tipología:</label>
-
-    <div>
-        <select name="menuType" id="menuType">
-        </select>
-    </div>
-
-    <label for="course">Materia:</label>
-
-    <div class="ui-widget">
-        <input id="course">
-    </div>
-
-    <div class="selectablemenu">
-        <ol class="selectableItem" id="selectable">
-        </ol>
-    </div>
-
-</div>
-
 <div>
-    <iframe src="coursedata.gsp">
-        
-    </iframe>
+    <div class="column filter col-md-4">
+
+        <label for="loc">Sede:</label>
+
+        <div class="ui-widget">
+            <input id="loc">
+        </div>
+
+        <label for="menuTypePlan">Tipo:</label>
+
+        <div>
+            <select name="menuTypePlan" id="menuTypePlan">
+                <option value="PRE" selected="selected">Pregrado</option>
+                <option value="POS">Posgrado</option>
+            </select>
+        </div>
+
+        <label for="plans">Planes:</label>
+
+        <div class="ui-widget">
+            <input id="plans">
+        </div>
+
+
+        <label for="menuType">Tipología:</label>
+
+        <div>
+            <select name="menuType" id="menuType">
+            </select>
+        </div>
+
+        <label for="course">Materia:</label>
+
+        <div class="ui-widget">
+            <input id="course">
+        </div>
+
+        <div class="selectablemenu">
+            <ol class="selectableItem" id="selectable">
+            </ol>
+        </div>
+
+    </div>
+
+    <div class="container col-md-8 column">
+        <iframe src="${createLinkTo(dir:"courseBoard", file: "coursedata.html")}" class="iframe">
+
+        </iframe>
+    </div>
+
 </div>
 
 </body>
