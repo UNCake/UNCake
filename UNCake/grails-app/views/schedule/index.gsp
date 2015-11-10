@@ -248,7 +248,7 @@
                         for(var i in gr["timeSlots"]){
                             var ts = gr["timeSlots"][i]
                             for (var s = ts.startHour; s <= ts.endHour; s++) {
-                                if($("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).text().trim()!=""){
+                                if($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim()!=""){
                                     available = false;
                                     break;
                                 }
@@ -264,8 +264,8 @@
                                     var ts = gr["timeSlots"][i]
                                     if (ts.startHour > 0) {
                                         for (var s = ts.startHour; s <= ts.endHour; s++) {
-                                            $("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).html(code);
-                                            $("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).css("background-color",
+                                            $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code);
+                                            $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
                                                     color);
                                         }
 
