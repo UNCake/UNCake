@@ -209,7 +209,7 @@
                 $("#scheduleTable td").each(function(){
                     if ($(this).html() == code) {
                         $(this).html("")
-
+                        $(this).css("background-color", "#eee")
                     }
                 });
                 var head = parent.next('ol');
@@ -240,6 +240,7 @@
                         $("#scheduleTable td").each(function(){
                             if ($(this).html() == code) {
                                 $(this).html("")
+                                $(this).css("background-color", "#eee")
                             }
                         });
 
@@ -258,19 +259,18 @@
                         if(!available){
                             alert("Existe cruce de horarios");
                         }else {
-                            for(var i in gr["timeSlots"]) {
+                            var color = '#'+Math.floor(Math.random()*16777215).toString(16);
                                 for (var i in gr["timeSlots"]) {
                                     var ts = gr["timeSlots"][i]
                                     if (ts.startHour > 0) {
-                                        
                                         for (var s = ts.startHour; s <= ts.endHour; s++) {
                                             $("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).html(code);
-
+                                            $("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).css("background-color",
+                                                    color);
                                         }
 
                                     }
                                 }
-                            }
                         }
 
                     }
