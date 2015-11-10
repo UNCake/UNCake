@@ -100,13 +100,14 @@
                     },
                     success: function (group) {
                         var name = courses[$(ui.selected).attr('value')].name;
+                        var code = courses[$(ui.selected).attr('value')].code;
                         $('#accordionGroup')
                                 .append('<h3 value="'+name+'">' + name + '<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
 
-                        var div = $('<ol>', {class: 'selectableItem', id: name});
+                        var div = $('<ol>', {class: 'selectableItem', id: name, value: code});
                         groups[name] = group;
                         $.each(group, function (key, value) {
-                            div.append($('<li>', {value: name, id: key})
+                            div.append($('<li>', {value: code, id: key})
                                     .text(value.teacher));
                         });
                         $('#accordionGroup').append(div);
@@ -202,11 +203,13 @@
             $('#accordionGroup').on('click', 'a', function () {
                 $("#accordionGroup").accordion("option", "active", false);
                 var parent = $(this).closest('h3');
-                var name = parent.attr('value')
+                var name = parent.attr('value');
+                var code = parent.next('ol').attr('value');
                 delete groups[name];
                 $("#scheduleTable td").each(function(){
-                    if ($(this).html() == name) {
+                    if ($(this).html() == code) {
                         $(this).html("")
+
                     }
                 });
                 var head = parent.next('ol');
@@ -230,10 +233,12 @@
                 $(this).selectable({
                     selected: function (event, ui) {
                         $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
-                        var name = $(ui.selected).attr('value')
+                        var code = $(ui.selected).attr('value')
+                        var parent = $(this).prev('h3');
+                        var name = parent.attr('value')
                         var gr = groups[name][$(ui.selected).attr('id')]
                         $("#scheduleTable td").each(function(){
-                            if ($(this).html() == name) {
+                            if ($(this).html() == code) {
                                 $(this).html("")
                             }
                         });
@@ -257,8 +262,10 @@
                                 for (var i in gr["timeSlots"]) {
                                     var ts = gr["timeSlots"][i]
                                     if (ts.startHour > 0) {
+                                        
                                         for (var s = ts.startHour; s <= ts.endHour; s++) {
-                                            $("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).html(name);
+                                            $("#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * s).html(code);
+
                                         }
 
                                     }
