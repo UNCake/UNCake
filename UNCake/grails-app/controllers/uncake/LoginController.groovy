@@ -13,11 +13,11 @@ class LoginController {
             session.user = user
 
             if (user)
-                redirect(controller:'home',action:'index')
+                redirect(controller:'home')
             else{
                 flash.message2="*"
                 flash.message1="Los datos son incorrectos"
-                redirect(controller:'login',action:'index')
+                redirect(controller:'login')
             }
 
         }
