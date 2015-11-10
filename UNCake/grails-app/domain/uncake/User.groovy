@@ -24,17 +24,17 @@ class User {
     //SS
     @Override
     int hashCode() {
-        username?.hashCode() ?: 0
+        email?.hashCode() ?: 0
     }
 
     @Override
     boolean equals(other) {
-        is(other) || (other instanceof User && other.username == username)
+        is(other) || (other instanceof User && other.email == email)
     }
 
     @Override
     String toString() {
-        username
+        email
     }
 
     Set<Role> getAuthorities() {
