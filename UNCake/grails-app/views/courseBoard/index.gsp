@@ -8,7 +8,6 @@
 
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ defaultCodec="none" %>
-<html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,7 +27,7 @@
     </script>
 
 
-    <title>Creación de horarios</title>
+    <title>Tablon de materias</title>
 </head>
 
 
@@ -47,7 +46,7 @@
 </nav>
 
 
-<div>
+<div class="container-fluid">
     <div class="column filter col-md-4">
 
         <label for="loc">Sede:</label>
@@ -92,9 +91,16 @@
 
     </div>
 
-    <div class="container col-md-8 column">
-        <iframe src="${createLinkTo(dir:"courseBoard", file: "coursedata.html")}" class="iframe">
-
+    <div class="col-md-8 column">
+        <iframe src="${createLinkTo(dir:"courseBoard", file: "coursedata.gsp")}" class="iframe">
+        <!--<iframe>
+        <html>
+        <head>
+        </head>
+        <body>
+        Hello World
+        </body>
+        </html> -->
         </iframe>
     </div>
 
