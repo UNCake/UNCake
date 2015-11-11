@@ -124,8 +124,29 @@ h4{
                 </button>
                 <a class="navbar-brand page-scroll" href="#page-top">UNCake</a>
             </div>
+            <g:if test="${session.user != null}">
 
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2" >
+
+                    <ul class="nav navbar-nav navbar-right">
+
+                        <li class="hidden">
+                            <a href="#page-top"></a>
+                        </li>
+
+                        <li>
+                            <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hello ${session.user.name}!</a>
+                        </li>
+                        <li>
+                            <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-in"></span>Logout</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </g:if>
+
+
+            <div class="collapse navbar-collapse" id="navbar1" style="visibility: hidden">
 
                 <ul class="nav navbar-nav navbar-right">
 
@@ -146,6 +167,18 @@ h4{
                 </ul>
 
             </div>
+            <g:if test="${session.user == null}"   >
+
+                <script>
+
+                    document.getElementById('navbar1').style.visibility = "visible";
+
+                </script>
+
+
+
+            </g:if>
+
         </div>
     </nav>
 
