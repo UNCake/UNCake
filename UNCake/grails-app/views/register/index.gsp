@@ -117,7 +117,7 @@
         <div class="error errorm">${flash.message1}</div>
         <button class="btn btn-lg btn-primary btn-block color-black "    type="submit">Registrarse</button>
         <div>¿Ya estas registrado?
-            <a href="/login/index" title="Entrar" >Click aquí para Entrar</a>
+            <a href="/login" title="Entrar" >Click aquí para Entrar</a>
         </div>
     </form>
 </g:form>

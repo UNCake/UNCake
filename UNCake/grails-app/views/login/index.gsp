@@ -82,7 +82,7 @@
 <div class="container center-contatiner">
 
 
-<g:form class="form-signin" action="doLogin" method="post">
+<g:form class="form-signin" action="doLogin" method="post" useToken="true" >
     <form class="form-signin">
         <h2 class="form-signin-heading font-uncake" align="center">UNCake</h2>
         <div class="form-group">
@@ -114,7 +114,7 @@
 
         <button class="btn btn-lg btn-primary btn-block color-black"    type="submit"  value='Login'>Entrar</button>
         <div>¿No tienes una cuenta?
-            <a href="/register/index" title="Registrate." >Click aquí para Registrate</a>
+            <a href="/register" title="Registrate." >Click aquí para Registrate</a>
         </div>
 
 
