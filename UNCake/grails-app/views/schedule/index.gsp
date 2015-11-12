@@ -77,7 +77,7 @@
                         $.each(courses, function (key, value) {
                             $('#selectable')
                                     .append($('<li>', {value: key})
-                                            .text(value.code +" "+value.name));
+                                            .text(value.code + " " + value.name));
                         });
                     },
                     error: function (request, status, error) {
@@ -102,13 +102,13 @@
                         var name = courses[$(ui.selected).attr('value')].name;
                         var code = courses[$(ui.selected).attr('value')].code;
                         $('#accordionGroup')
-                                .append('<h3 value="'+name+'">' +code+' '+name + '<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
+                                .append('<h3 value="' + name + '">' + code + ' ' + name + '<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
 
                         var div = $('<ol>', {class: 'selectableItem', id: name, value: code});
                         groups[name] = group;
                         $.each(group, function (key, value) {
                             div.append($('<li>', {value: code, id: key})
-                                    .text(value.code+' - '+value.teacher));
+                                    .text(value.code + ' - ' + value.teacher));
                         });
                         $('#accordionGroup').append(div);
 
@@ -206,7 +206,7 @@
                 var name = parent.attr('value');
                 var code = parent.next('ol').attr('value');
                 delete groups[name];
-                $("#scheduleTable td").each(function(){
+                $("#scheduleTable td").each(function () {
                     if ($(this).html().indexOf(code) >= 0) {
                         $(this).html("")
                         $(this).css("background-color", "#eee")
@@ -224,7 +224,7 @@
                             $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
                             $("#selectedCoursesCol").removeClass('hidden');
                             $("#msgCol").addClass('hidden');
-                            if(!(courses[$(ui.selected).attr('value')].name in groups)) {
+                            if (!(courses[$(ui.selected).attr('value')].name in groups)) {
                                 updateGroups(event, ui);
                             }
                         }
@@ -239,7 +239,7 @@
                         var parent = $(this).prev('h3');
                         var name = parent.attr('value')
                         var gr = groups[name][$(ui.selected).attr('id')]
-                        $("#scheduleTable td").each(function(){
+                        $("#scheduleTable td").each(function () {
                             if ($(this).html().indexOf(code) >= 0) {
                                 $(this).html("")
                                 $(this).css("background-color", "#eee")
@@ -247,32 +247,32 @@
                         });
 
                         var available = true
-                        for(var i in gr["timeSlots"]){
+                        for (var i in gr["timeSlots"]) {
                             var ts = gr["timeSlots"][i]
                             for (var s = ts.startHour; s <= ts.endHour; s++) {
-                                if($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim()!=""){
+                                if ($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim() != "") {
                                     available = false;
                                     break;
                                 }
                             }
-                            if(!available) break;
+                            if (!available) break;
                         }
 
-                        if(!available){
-                            alert("Existe cruce de horarios");
-                        }else {
-                            var color = '#'+Math.floor(Math.random()*16777215).toString(16);
-                                for (var i in gr["timeSlots"]) {
-                                    var ts = gr["timeSlots"][i]
-                                    if (ts.startHour > 0) {
-                                        for (var s = ts.startHour; s <= ts.endHour; s++) {
-                                            $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code+'-'+gr["code"]);
-                                            $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
-                                                    color);
-                                        }
-
+                        if (!available) {
+                            $("#modalCr").modal("show");
+                        } else {
+                            var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                            for (var i in gr["timeSlots"]) {
+                                var ts = gr["timeSlots"][i]
+                                if (ts.startHour > 0) {
+                                    for (var s = ts.startHour; s <= ts.endHour; s++) {
+                                        $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code + '-' + gr["code"]);
+                                        $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
+                                                color);
                                     }
+
                                 }
+                            }
                         }
 
                     }
@@ -323,85 +323,103 @@
 </nav>
 
 <div class="row">
-<div class="col-sm-3">
+    <div class="col-sm-3">
 
-    <label for="loc">Sede:</label>
+        <label for="loc">Sede:</label>
 
-    <div class="ui-widget">
-        <input id="loc">
+        <div class="ui-widget">
+            <input id="loc">
+        </div>
+
+        <label for="menuTypePlan">Tipo:</label>
+
+        <div>
+            <select name="menuTypePlan" id="menuTypePlan">
+                <option value="PRE" selected="selected">Pregrado</option>
+                <option value="POS">Posgrado</option>
+            </select>
+        </div>
+
+        <label for="plans">Planes:</label>
+
+        <div class="ui-widget">
+            <input id="plans">
+        </div>
+
+
+        <label for="menuType">Tipología:</label>
+
+        <div>
+            <select name="menuType" id="menuType">
+            </select>
+        </div>
+
+        <label for="course">Materia:</label>
+
+        <div class="ui-widget">
+            <input id="course">
+        </div>
+
+        <div class="selectablemenu">
+            <ol class="selectableItem" id="selectable">
+            </ol>
+        </div>
+
     </div>
 
-    <label for="menuTypePlan">Tipo:</label>
+    <div class="col-sm-6">
+        <div class="table-responsive">
+            <table id="scheduleTable" class="table-condensed">
+                <div id="head_nav">
+                    <tr>
+                        <th>H</th>
+                        <th>Lunes</th>
+                        <th>Martes</th>
+                        <th>Miercoles</th>
+                        <th>Jueves</th>
+                        <th>Viernes</th>
+                        <th>Sabado</th>
+                        <th>Domingo</th>
+                    </tr>
+                </div>
+            </table>
+        </div>
 
-    <div>
-        <select name="menuTypePlan" id="menuTypePlan">
-            <option value="PRE" selected="selected">Pregrado</option>
-            <option value="POS">Posgrado</option>
-        </select>
     </div>
 
-    <label for="plans">Planes:</label>
+    <div class="col-sm-3">
 
-    <div class="ui-widget">
-        <input id="plans">
-    </div>
-
-
-    <label for="menuType">Tipología:</label>
-
-    <div>
-        <select name="menuType" id="menuType">
-        </select>
-    </div>
-
-    <label for="course">Materia:</label>
-
-    <div class="ui-widget">
-        <input id="course">
-    </div>
-
-    <div class="selectablemenu">
-        <ol class="selectableItem" id="selectable">
-        </ol>
-    </div>
-
-</div>
-
-<div class="col-sm-6">
-    <div class="table-responsive">
-        <table id="scheduleTable" class="table-condensed">
-            <div id="head_nav">
-                <tr>
-                    <th>H</th>
-                    <th>Lunes</th>
-                    <th>Martes</th>
-                    <th>Miercoles</th>
-                    <th>Jueves</th>
-                    <th>Viernes</th>
-                    <th>Sabado</th>
-                    <th>Domingo</th>
-                </tr>
+        <div class="panel panel-default" id="msgCol">
+            <div class="panel-body">
+                <h3>Bienvenido!</h3>
+                Utiliza los filtros para empezar a crear tu horario.
             </div>
-        </table>
-    </div>
+        </div>
 
-</div>
+        <div id="selectedCoursesCol" class="hidden">
+            <label for="accordionGroup">Materias seleccionadas</label>
 
-<div class="col-sm-3" >
+            <div id="accordionGroup">
+            </div>
+        </div>
 
-    <div class="panel panel-default" id="msgCol">
-        <div class="panel-body">
-            <h3>Bienvenido!</h3>
-            Utiliza los filtros para empezar a crear tu horario.
+        <!-- Modal -->
+        <div class="modal fade" id="modalCr" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Cruce de horarios</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>Selecciona otro grupo.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div id="selectedCoursesCol" class = "hidden">
-        <label for="accordionGroup">Materias seleccionadas</label>
-        <div id="accordionGroup">
-        </div>
-    </div>
 
-</div>
 </div>
 </body>
 </html>
