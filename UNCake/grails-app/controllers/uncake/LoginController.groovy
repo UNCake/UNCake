@@ -5,7 +5,7 @@ class LoginController {
     def index = {
         if(session.user!=null){
             render{
-                div(id: "myDiv", "Ya estas logeado, si no eres ${session.user.name} oprime atras y luego el boton de Logout")
+                div(id: "myDiv", "Ya iniciaste sesión, si no eres ${session.user.name} y quieres registrate oprime atrás y luego el botón de salir")
             }
 
         }

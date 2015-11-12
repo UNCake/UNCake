@@ -142,7 +142,7 @@ h4{
                             <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
                         </li>
                         <li>
-                            <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a>
+                            <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Salir</a>
                         </li>
                     </ul>
 
