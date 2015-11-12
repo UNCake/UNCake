@@ -1,6 +1,5 @@
 body {
-    padding-top: 0;
-    padding-bottom: 40px;
+    padding: 0;
     background-color: #eee;
 }
 
@@ -43,6 +42,7 @@ select {
     background-color: #66afe9;
 }
 
+
 #accordionGroup  .ui-accordion-content{
     padding: 10px;
 }
@@ -57,6 +57,10 @@ select {
 
 #accordionGroup a {
     float: right;
+}
+
+#scheduleTable {
+    table-layout: fixed;
 }
 
 th,td
@@ -74,6 +78,8 @@ td
 {
     padding: 5px 10px;
     color: #e7e7e7;
+    width: 84px;
+    word-wrap:break-word;
 }
 
 th
