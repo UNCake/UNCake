@@ -207,7 +207,7 @@
                 var code = parent.next('ol').attr('value');
                 delete groups[name];
                 $("#scheduleTable td").each(function(){
-                    if ($(this).html() == code) {
+                    if ($(this).html().indexOf(code) >= 0) {
                         $(this).html("")
                         $(this).css("background-color", "#eee")
                     }
@@ -238,7 +238,7 @@
                         var name = parent.attr('value')
                         var gr = groups[name][$(ui.selected).attr('id')]
                         $("#scheduleTable td").each(function(){
-                            if ($(this).html() == code) {
+                            if ($(this).html().indexOf(code) >= 0) {
                                 $(this).html("")
                                 $(this).css("background-color", "#eee")
                             }

@@ -73,6 +73,7 @@ th,td
 td
 {
     padding: 5px 10px;
+    color: #e7e7e7;
 }
 
 th
@@ -86,7 +87,7 @@ td:hover
 {
     cursor: pointer;
     background: #666;
-    color: white;
+    color: #f8da4e;
 }
 
 .ui-autocomplete {
