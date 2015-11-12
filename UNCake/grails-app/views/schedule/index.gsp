@@ -108,7 +108,7 @@
                         groups[name] = group;
                         $.each(group, function (key, value) {
                             div.append($('<li>', {value: code, id: key})
-                                    .text(value.teacher));
+                                    .text(value.code+' - '+value.teacher));
                         });
                         $('#accordionGroup').append(div);
 
@@ -264,7 +264,7 @@
                                     var ts = gr["timeSlots"][i]
                                     if (ts.startHour > 0) {
                                         for (var s = ts.startHour; s <= ts.endHour; s++) {
-                                            $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code);
+                                            $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code+' - '+gr["code"]);
                                             $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
                                                     color);
                                         }
