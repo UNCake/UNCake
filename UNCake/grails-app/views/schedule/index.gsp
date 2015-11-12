@@ -77,7 +77,7 @@
                         $.each(courses, function (key, value) {
                             $('#selectable')
                                     .append($('<li>', {value: key})
-                                            .text(value.name));
+                                            .text(value.code +" "+value.name));
                         });
                     },
                     error: function (request, status, error) {
@@ -102,7 +102,7 @@
                         var name = courses[$(ui.selected).attr('value')].name;
                         var code = courses[$(ui.selected).attr('value')].code;
                         $('#accordionGroup')
-                                .append('<h3 value="'+name+'">' + name + '<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
+                                .append('<h3 value="'+name+'">' +code+' '+name + '<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
 
                         var div = $('<ol>', {class: 'selectableItem', id: name, value: code});
                         groups[name] = group;
