@@ -1,8 +1,8 @@
 body {
-    padding: 0;
+    padding-left: 5px;
+    padding-right: 5px;
     background-color: #eee;
 }
-
 
 .ui-widget input,
 .ui-widget select,
@@ -78,7 +78,7 @@ td
 {
     padding: 5px 10px;
     color: #e7e7e7;
-    width: 84px;
+    width: 90px;
     word-wrap:break-word;
 }
 

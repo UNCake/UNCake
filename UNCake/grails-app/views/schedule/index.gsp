@@ -222,6 +222,8 @@
             $("#selectable").selectable({
                         selected: function (event, ui) {
                             $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
+                            $("#selectedCoursesCol").removeClass('hidden');
+                            $("#msgCol").addClass('hidden');
                             if(!(courses[$(ui.selected).attr('value')].name in groups)) {
                                 updateGroups(event, ui);
                             }
@@ -264,7 +266,7 @@
                                     var ts = gr["timeSlots"][i]
                                     if (ts.startHour > 0) {
                                         for (var s = ts.startHour; s <= ts.endHour; s++) {
-                                            $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code+' - '+gr["code"]);
+                                            $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code+'-'+gr["code"]);
                                             $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
                                                     color);
                                         }
@@ -370,7 +372,7 @@
         <table id="scheduleTable" class="table-condensed">
             <div id="head_nav">
                 <tr>
-                    <th>Hora</th>
+                    <th>H</th>
                     <th>Lunes</th>
                     <th>Martes</th>
                     <th>Miercoles</th>
@@ -385,10 +387,18 @@
 
 </div>
 
-<div class="col-sm-3">
-    <label for="accordionGroup">Materias seleccionadas</label>
+<div class="col-sm-3" >
 
-    <div id="accordionGroup">
+    <div class="panel panel-default" id="msgCol">
+        <div class="panel-body">
+            <h3>Bienvenido!</h3>
+            Utiliza los filtros para empezar a crear tu horario.
+        </div>
+    </div>
+    <div id="selectedCoursesCol" class = "hidden">
+        <label for="accordionGroup">Materias seleccionadas</label>
+        <div id="accordionGroup">
+        </div>
     </div>
 
 </div>
