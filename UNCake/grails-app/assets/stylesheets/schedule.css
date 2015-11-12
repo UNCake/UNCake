@@ -1,9 +1,8 @@
 body {
-    padding-top: 0;
-    padding-bottom: 40px;
+    padding-left: 5px;
+    padding-right: 5px;
     background-color: #eee;
 }
-
 
 .ui-widget input,
 .ui-widget select,
@@ -43,6 +42,7 @@ select {
     background-color: #66afe9;
 }
 
+
 #accordionGroup  .ui-accordion-content{
     padding: 10px;
 }
@@ -59,6 +59,10 @@ select {
     float: right;
 }
 
+#scheduleTable {
+    table-layout: fixed;
+}
+
 th,td
 {
     font-size: 1em;
@@ -73,6 +77,9 @@ th,td
 td
 {
     padding: 5px 10px;
+    color: #e7e7e7;
+    width: 90px;
+    word-wrap:break-word;
 }
 
 th
@@ -86,7 +93,7 @@ td:hover
 {
     cursor: pointer;
     background: #666;
-    color: white;
+    color: #f8da4e;
 }
 
 .ui-autocomplete {
