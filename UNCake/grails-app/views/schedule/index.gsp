@@ -292,24 +292,48 @@
             </button>
             <a class="navbar-brand page-scroll" href="home">UNCake</a>
         </div>
+        <g:if test="${session.user == null}">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
 
-            <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
 
-                <li class="hidden">
-                    <a href="#page-top"></a>
-                </li>
+                    <li>
+                        <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
+                    </li>
+                </ul>
 
-                <li>
-                    <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
-                </li>
-                <li>
-                    <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
-                </li>
-            </ul>
+            </div>
 
-        </div>
+        </g:if>
+
+        <g:if test="${session.user != null}">
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name}!</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a>
+                    </li>
+                </ul>
+
+            </div>
+        </g:if>
+
+
     </div>
 </nav>
 

@@ -126,19 +126,23 @@ h4{
             </div>
             <g:if test="${session.user != null}">
 
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2" >
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
 
                     <ul class="nav navbar-nav navbar-right">
 
                         <li class="hidden">
                             <a href="#page-top"></a>
                         </li>
+                        <li>
+
+                            <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
+                        </li>
 
                         <li>
-                            <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hello ${session.user.name}!</a>
+                            <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name}!</a>
                         </li>
                         <li>
-                            <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-in"></span>Logout</a>
+                            <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a>
                         </li>
                     </ul>
 
@@ -146,36 +150,24 @@ h4{
             </g:if>
 
 
-            <div class="collapse navbar-collapse" id="navbar1" style="visibility: hidden">
 
-                <ul class="nav navbar-nav navbar-right">
-
-                     <li class="hidden">
-                         <a href="#page-top"></a>
-                     </li>
-                     <li>
-
-                        <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
-                    </li>
-
-                    <li>
-                        <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
-                    </li>
-                </ul>
-
-            </div>
             <g:if test="${session.user == null}"   >
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
 
-                <script>
+                    <ul class="nav navbar-nav navbar-right">
 
-                    document.getElementById('navbar1').style.visibility = "visible";
+                        <li class="hidden">
+                            <a href="#page-top"></a>
+                        </li>
+                         <li>
+                            <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
+                        </li>
+                        <li>
+                            <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
+                        </li>
+                    </ul>
 
-                </script>
-
-
+                </div>
 
             </g:if>
 

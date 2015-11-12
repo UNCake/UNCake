@@ -3,6 +3,12 @@ package uncake
 class RegisterController {
 
     def index() {
+        if(session.user!=null){
+            render{
+                div(id: "myDiv", "Estas logeado, si no eres ${session.user.name} y quieres registrate oprime atras y luego el boton de Logout")
+            }
+
+        }
 
     }
     def doRegister = {

@@ -3,9 +3,16 @@ package uncake
 class LoginController {
 
     def index = {
+        if(session.user!=null){
+            render{
+                div(id: "myDiv", "Ya estas logeado, si no eres ${session.user.name} oprime atras y luego el boton de Logout")
+            }
+
+        }
 
     }
     def doLogin = {
+
         // good request
         withForm {
 
