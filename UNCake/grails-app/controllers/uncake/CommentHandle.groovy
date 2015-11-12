@@ -4,6 +4,10 @@ class CommentHandle {
 
     def index() {
     }
+
+    def commentView() {
+        render(view: "commentView", model:[name: params.name, id: params.id])
+    }
     def saveComment() {
 
     }
