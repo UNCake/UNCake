@@ -11,10 +11,10 @@
 </head>
 <body>
 <div class="container-fluid">
-    <g:form name="myForm" url="[controller:'courseBoard',action:'saveComment']">
+    <g:form name="commentForm" url="[controller:'commentHandle',action:'saveComment']">
         <div class="form-group">
-            <label for="comment">Anadir comentario:</label>
-            <g:textArea id="comment" name="myField" placeholder="Inserte su comentario" class="form-control"/>
+            <label for="comm">Anadir comentario:</label>
+            <g:textArea id="comm" name="comment" placeholder="Inserte su comentario" class="form-control"/>
             <g:actionSubmit value="Enviar" class="btn btn-default"/>
         </div>
     </g:form>

@@ -92,7 +92,7 @@
     </div>
 
     <div class="col-md-8 column">
-        <iframe src="${createLinkTo(dir:"courseBoard", file: "coursedata.gsp")}" class="iframe">
+        <iframe src="${createLinkTo(dir:"commentHandle", file: "coursedata.gsp")}" class="iframe">
         <!--<iframe>
         <html>
         <head>

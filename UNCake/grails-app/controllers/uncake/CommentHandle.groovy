@@ -1,6 +1,6 @@
 package uncake
 
-class CourseBoardController {
+class CommentHandle {
 
     def index() {
     }
