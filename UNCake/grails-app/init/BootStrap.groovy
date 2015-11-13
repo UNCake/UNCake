@@ -25,26 +25,34 @@ class BootStrap {
 
 
 
-        DBconnectionService.initDB()
+        //DBconnectionService.initDB()
 
         //Materias de prueba
-
-        new Course(code: 1, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 2, name: "Teoria de la informacion y sistemas de comunicacion", typology: "").save()
-        def srch = Course.findById(2)
+        new Course(code: 1, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
+        new Course(code: 2, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
+        println(Course.list())
+        def srch = Course.findByCode(2)
         println("course id found "+srch.name)
 
         //Adicion de comentarios de prueba
 
-        def c = new Comment(id: 1, comment: "Esa materia es una mierda")
-        c.save()
-        srch.addToComments(c)
-        def srch2 = srch.comments.findAll {
-            comment -> comment.id == 1
+        new Comment(code: 1, comment: "comment 1").save()
+        new Comment(code: 2, comment: "comment 2").save()
+        new Comment(code: 6, comment: "comment 6").save()
+        new Comment(code: 8, comment: "comment 8").save()
+        //c.save()
+        Comment.list().each {
+            comm ->
+                println(comm.code)
+                if (comm.code > 5)
+                    Course.findByCode(1).addToComments(comm)
+
+                else
+                    Course.findByCode(2).addToComments(comm)
+
         }
-        srch2.each {
-            println(it.comment)
-        }
+        println Course.findByCode(1).comments
+        println Course.findByCode(2).comments
 
     }
     def destroy = {
