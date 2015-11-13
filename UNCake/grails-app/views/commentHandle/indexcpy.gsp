@@ -45,12 +45,66 @@
     </div>
 </nav>
 
-<g:form method="GET" action="comments">
-    <div class="column">
-        <g:textField name="id"></g:textField>
-        <g:submitButton name="bt1" value="Ver comentarios"></g:submitButton>
+
+<div class="container-fluid">
+    <div class="column filter col-md-4">
+
+        <label for="loc">Sede:</label>
+
+        <div class="ui-widget">
+            <input id="loc">
+        </div>
+
+        <label for="menuTypePlan">Tipo:</label>
+
+        <div>
+            <select name="menuTypePlan" id="menuTypePlan">
+                <option value="PRE" selected="selected">Pregrado</option>
+                <option value="POS">Posgrado</option>
+            </select>
+        </div>
+
+        <label for="plans">Planes:</label>
+
+        <div class="ui-widget">
+            <input id="plans">
+        </div>
+
+
+        <label for="menuType">Tipología:</label>
+
+        <div>
+            <select name="menuType" id="menuType">
+            </select>
+        </div>
+
+        <label for="course">Materia:</label>
+
+        <div class="ui-widget">
+            <input id="course">
+        </div>
+
+        <div class="selectablemenu">
+            <ol class="selectableItem" id="selectable">
+            </ol>
+        </div>
+
     </div>
-</g:form>
+
+    <div class="col-md-8 column">
+        <iframe src="${createLinkTo(dir:"commentHandle", file: "coursedata.gsp")}" class="iframe">
+        <!--<iframe>
+        <html>
+        <head>
+        </head>
+        <body>
+        Hello World
+        </body>
+        </html> -->
+        </iframe>
+    </div>
+
+</div>
 
 </body>
 </html>

@@ -1,3 +1,5 @@
+import uncake.Comment
+import uncake.Course
 import uncake.Location
 import uncake.User
 class BootStrap {
@@ -21,7 +23,28 @@ class BootStrap {
         new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co').save()
         new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co').save()
 
+
+
         DBconnectionService.initDB()
+
+        //Materias de prueba
+
+        new Course(code: 1, name: "Calculo diferencial", typology: "Fundamentacion").save()
+        new Course(code: 2, name: "Teoria de la informacion y sistemas de comunicacion", typology: "").save()
+        def srch = Course.findById(2)
+        println("course id found "+srch.name)
+
+        //Adicion de comentarios de prueba
+
+        def c = new Comment(id: 1, comment: "Esa materia es una mierda")
+        c.save()
+        srch.addToComments(c)
+        def srch2 = srch.comments.findAll {
+            comment -> comment.id == 1
+        }
+        srch2.each {
+            println(it.comment)
+        }
 
     }
     def destroy = {

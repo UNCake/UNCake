@@ -17,10 +17,9 @@
 
 <body>
 <h1> ${name}:</h1>
+<h1> ${id}:</h1>
 
 <p>Comentarios:</p>
-
-
 
 </body>
 </html>
