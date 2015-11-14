@@ -14,7 +14,7 @@ class DBconnectionService {
         //Location.getAll().each { var -> var.delete(flush: true) }
 
         def type = ['PRE', 'POS']
-        def source, html
+        def source, html, credits, component
 
         Location.list().each { loc ->
             type.each {
@@ -41,14 +41,42 @@ class DBconnectionService {
                         html = source.get([:])
 
                         if(sp.name == "INGENIERIA DE SISTEMAS Y COMPUTACION"){
-                            html."**".findAll { it.name().equals("h4")}.each {
+                            println sp.name
+                            println "found it"
+
+                            html."**".find{it.@class == 'info-tabla'}.TBODY.TR.each{
                                 println it
-                                
+
+                                component = it.TD[1].text().toLowerCase()
+                                credits = it.TD[2].text()
+                                println component + " " + credits
+
+                                if(component.indexOf('fund') >= 0){
+                                    sp.fundamentalCredits = credits.toInteger()
+                                }else if(component.contains('disci')){
+                                    sp.disciplinaryCredits = credits.toInteger()
+                                }else if(component.contains('libre')){
+                                    sp.freeChoiceCredits = credits.toInteger()
+                                }else if(component.contains('grado')){
+                                    sp.disciplinaryCredits += credits.toInteger()
+                                }else if(component.contains('idioma')){
+                                    sp.languageCredits = credits.toInteger()
+                                }
+
                             }
+
+                            println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits
+
+                            /*
+                            def courses = html."**".findAll { it.name().equals("H5")}
+                            for(def i = 0; i < courses.size(); i++){
+
+                            }*/
                         }
                         //println sp.name + '\n' + source.size()
                     }
                 } catch (Exception e) {
+                    println e.stackTrace
                     println "Sia sede $loc.name no disponible"
                 }
             }
