@@ -1,6 +1,7 @@
 package uncake
 
 import grails.transaction.Transactional
+import groovyx.net.http.HTTPBuilder
 
 @Transactional
 class DBconnectionService {
@@ -13,7 +14,7 @@ class DBconnectionService {
         //Location.getAll().each { var -> var.delete(flush: true) }
 
         def type = ['PRE', 'POS']
-        def source
+        def source, html
 
         Location.list().each { loc ->
             type.each {
@@ -33,17 +34,32 @@ class DBconnectionService {
                                     name: source[i], type: it).save()
                         }
                     }
+
+                    StudyPlan.list().each { sp ->
+                        source = new HTTPBuilder(loc.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
+                                '&tipo=' + it + '&tipoVista=semaforo&nodo=1&parametro=on')
+                        html = source.get([:])
+
+                        if(sp.name == "INGENIERIA DE SISTEMAS Y COMPUTACION"){
+                            html."**".findAll { it.name().equals("h4")}.each {
+                                println it
+                                
+                            }
+                        }
+                        //println sp.name + '\n' + source.size()
+                    }
                 } catch (Exception e) {
                     println "Sia sede $loc.name no disponible"
                 }
             }
         }
-
+        /*
         println 'Output database'
         def list_sp = StudyPlan.list()
         list_sp.each { sp ->
             println "$sp.location.name $sp.code $sp.name $sp.faculty "
         }
+        */
     }
 
 
