@@ -35,12 +35,10 @@ class BootStrap {
         println("course id found "+srch.name)
 
         //Adicion de comentarios de prueba
-
         new Comment(code: 1, comment: "comment 1").save()
         new Comment(code: 2, comment: "comment 2").save()
         new Comment(code: 6, comment: "comment 6").save()
         new Comment(code: 8, comment: "comment 8").save()
-        //c.save()
         Comment.list().each {
             comm ->
                 println(comm.code)
@@ -53,7 +51,6 @@ class BootStrap {
         }
         println Course.findByCode(1).comments
         println Course.findByCode(2).comments
-
     }
     def destroy = {
     }

@@ -47,7 +47,7 @@
 
 <g:form method="GET" action="comments">
     <div class="column">
-        <g:textField name="id"></g:textField>
+        <g:textField name="code"></g:textField>
         <g:submitButton name="bt1" value="Ver comentarios"></g:submitButton>
     </div>
 </g:form>

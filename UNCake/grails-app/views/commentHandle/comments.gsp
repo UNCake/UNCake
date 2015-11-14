@@ -17,9 +17,30 @@
 
 <body>
 <h1> ${name}:</h1>
-<h1> ${id}:</h1>
+<br>
 
-<p>Comentarios:</p>
+<h4>Comentarios:</h4>
+<br>
+<% def limit=5 %>
+<div class="container-fluid">
+<g:each in="${0..limit}" var="t">
 
+    <g:if test="${t < comments.size()}">
+        <div class="container col-md-8 well well-sm">
+        <h3>Comentario: ${t}<br></h3>
+        <p>${comments[t].comment}<br></p>
+        </div>
+    </g:if>
+    <br>
+</g:each>
+</div>
+<div class="container-fluid">
+<g:form class="col-md-8">
+    <div class="form-group">
+    <g:textArea name="sub-comment" placeholder="Escribir un comentario" class="form-control"></g:textArea>
+    </div>
+    <g:submitButton name="submit" value="Enviar" class="btn btn-default"></g:submitButton>
+</g:form>
+</div>
 </body>
 </html>
