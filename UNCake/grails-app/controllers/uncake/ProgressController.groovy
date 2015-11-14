@@ -22,13 +22,12 @@ class ProgressController {
         def sumSubjects = 0.0;
         def sumCredits = 0;
         def record = params.record
-        def newUser = uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) )
         def codeStudyPlan = Integer.parseInt( String.valueOf( record.find(planPattern) ).split('\\|')[0].trim() )
         def studyPlan = uncake.StudyPlan.findByCode( codeStudyPlan )
 
-        studyPlan.fundamentalCredits = studyPlan.fundamentalCredits == null ? Integer.parseInt( academicRecord.find( requiredPattern ).split('\\t')[1] ) : studyPlan.fundamentalCredits
-        studyPlan.disciplinaryCredits = studyPlan.disciplinaryCredits == null ? Integer.parseInt( academicRecord.find( requiredPattern ).split('\\t')[2] ) : studyPlan.disciplinaryCredits
-        studyPlan.freeChoiceCredits = studyPlan.freeChoiceCredits == null ? Integer.parseInt( academicRecord.find( requiredPattern ).split('\\t')[3] ) : studyPlan.freeChoiceCredits
+        studyPlan.fundamentalCredits = studyPlan.fundamentalCredits == null ? Integer.parseInt( record.find( requiredPattern ).split('\\t')[1] ) : studyPlan.fundamentalCredits
+        studyPlan.disciplinaryCredits = studyPlan.disciplinaryCredits == null ? Integer.parseInt( record.find( requiredPattern ).split('\\t')[2] ) : studyPlan.disciplinaryCredits
+        studyPlan.freeChoiceCredits = studyPlan.freeChoiceCredits == null ? Integer.parseInt( record.find( requiredPattern ).split('\\t')[3] ) : studyPlan.freeChoiceCredits
 
         while( record.find(subjectPattern) ){
             def subject = String.valueOf( record.find(subjectPattern) );
@@ -56,12 +55,35 @@ class ProgressController {
         }
         def PA = sumSubjects / sumCredits;
 
-        def academicRecord = new AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA )
+        def myRecord = new uncake.AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA )
 
-        newUser.addToAcademicRecord( academicRecord )
+        def studyPlanCreated = false;
+
+        uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each{
+            if( it.studyPlan.code == studyPlan.code )
+                studyPlanCreated = true
+        }
+
+        if( studyPlanCreated ){
+            def delStudyPlan = []
+            if( delStudyPlan != null ) {
+                uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each{
+                    if( uncake.AcademicRecord.findById( it.id ).studyPlan.code == studyPlan.code )
+                        delStudyPlan.add(it)
+                }
+            }
+            delStudyPlan.each {
+                uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).removeFromAcademicRecord( it )
+            }
+            uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).addToAcademicRecord( myRecord )
+        }
+        else
+            uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).addToAcademicRecord( myRecord )
 
         uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each {
+            println it.studyPlan.code
             println it.PAPA
+
         }
 
         //newUser.academicRecord = academicRecord

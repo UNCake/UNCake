@@ -51,20 +51,6 @@
 
                             <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
                                 <br/>
-                                <g:if test="${session.user == null}">
-
-                                </g:if>
-                                <g:else>
-                                    <g:if test="${uncake.User.findAllById(Integer.parseInt((session.user).toString().split(':')[1].trim())).academicRecord == null}">
-
-                                    </g:if>
-                                    <g:else>
-                                        <div style="text-align: center">
-                                            <input type="button" class="" id="btn_save" value="Guardar"/>
-                                        </div>
-                                        <br>
-                                    </g:else>
-                                </g:else>
                                 <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                                     <div id="papa_chart" style="width: 800px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px;"></div>
                                 </div>
@@ -83,6 +69,15 @@
                                     <div id="record_table" style="width: 900px; display: inline-block;"></div>
                                     <br/><br/>
                                 </div>
+                                <g:if test="${session.user == null}">
+
+                                </g:if>
+                                <g:else>
+                                    <div style="text-align: center">
+                                        <input type="button" class="" id="btn_save" value="Guardar"/>
+                                    </div>
+                                    <br>
+                                </g:else>
                                 <div id="new_subjects_1" class="large-12 columns" style="align-content: center; text-align: center;">
                                     <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
                                     <input type="text" name="txtCredits" class="txtCredits" id="txtCredits_1" style="width: 200px; display: inline-block;" placeholder="Créditos a cursar"/>
