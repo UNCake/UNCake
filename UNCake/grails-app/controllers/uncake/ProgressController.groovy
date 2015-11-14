@@ -41,9 +41,8 @@ class ProgressController {
         def subjectsAux = subjects;
         for( def i = 0; i < subjects.size() - 1; i++ ){
             for( def j = i + 1; j < subjects.size(); j++ ){
-                if( String.valueOf( subjects[i].split('\t')[0] ) == String.valueOf( subjects[j].split('\t')[0] ) ){
+                if( String.valueOf( subjects[i].split('\t')[0] ) == String.valueOf( subjects[j].split('\t')[0] ) )
                     subjectsAux.remove(i)
-                }
             }
         }
         def totalCredits = sumCredits
@@ -55,11 +54,10 @@ class ProgressController {
         }
         def PA = sumSubjects / sumCredits;
 
-        def myRecord = new uncake.AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA )
-
         def studyPlanCreated = false;
+        def newUser = uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) )
 
-        uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each{
+        newUser.academicRecord.each{
             if( it.studyPlan.code == studyPlan.code )
                 studyPlanCreated = true
         }
@@ -67,27 +65,23 @@ class ProgressController {
         if( studyPlanCreated ){
             def delStudyPlan = []
             if( delStudyPlan != null ) {
-                uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each{
+                newUser.academicRecord.each{
                     if( uncake.AcademicRecord.findById( it.id ).studyPlan.code == studyPlan.code )
                         delStudyPlan.add(it)
                 }
             }
             delStudyPlan.each {
-                uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).removeFromAcademicRecord( it )
+                newUser.removeFromAcademicRecord( it )
             }
-            uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).addToAcademicRecord( myRecord )
+            newUser.addToAcademicRecord( new uncake.AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA ) )
         }
         else
-            uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).addToAcademicRecord( myRecord )
+            newUser.addToAcademicRecord( new uncake.AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA ) )
 
-        uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each {
+        newUser.academicRecord.each {
             println it.studyPlan.code
             println it.PAPA
-
         }
-
-        //newUser.academicRecord = academicRecord
-        //println newUser.academicRecord
         render ""
     }
 
