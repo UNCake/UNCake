@@ -16,6 +16,7 @@ class DBconnectionService {
         def type = ['PRE', 'POS']
         def source, html, credits, component
 
+
         Location.list().each { loc ->
             type.each {
                 try {
@@ -35,50 +36,56 @@ class DBconnectionService {
                         }
                     }
 
-                    StudyPlan.list().each { sp ->
-                        source = new HTTPBuilder(loc.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
-                                '&tipo=' + it + '&tipoVista=semaforo&nodo=1&parametro=on')
-                        html = source.get([:])
-
-                        if(sp.name == "INGENIERIA DE SISTEMAS Y COMPUTACION"){
-                            println sp.name
-                            println "found it"
-
-                            html."**".find{it.@class == 'info-tabla'}.TBODY.TR.each{
-                                println it
-
-                                component = it.TD[1].text().toLowerCase()
-                                credits = it.TD[2].text()
-                                println component + " " + credits
-
-                                if(component.indexOf('fund') >= 0){
-                                    sp.fundamentalCredits = credits.toInteger()
-                                }else if(component.contains('disci')){
-                                    sp.disciplinaryCredits = credits.toInteger()
-                                }else if(component.contains('libre')){
-                                    sp.freeChoiceCredits = credits.toInteger()
-                                }else if(component.contains('grado')){
-                                    sp.disciplinaryCredits += credits.toInteger()
-                                }else if(component.contains('idioma')){
-                                    sp.languageCredits = credits.toInteger()
-                                }
-
-                            }
-
-                            println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits
-
-                            /*
-                            def courses = html."**".findAll { it.name().equals("H5")}
-                            for(def i = 0; i < courses.size(); i++){
-
-                            }*/
-                        }
-                        //println sp.name + '\n' + source.size()
-                    }
                 } catch (Exception e) {
-                    println e.stackTrace
                     println "Sia sede $loc.name no disponible"
                 }
+            }
+        }
+
+
+        StudyPlan.list().each { sp ->
+            try {
+                source = new HTTPBuilder(sp.location.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
+                        '&tipo=' + sp.type + '&tipoVista=semaforo&nodo=1&parametro=on')
+                html = source.get([:])
+
+                if (sp.name == "INGENIERIA DE SISTEMAS Y COMPUTACION") {
+                    println sp.name
+                    println "found it"
+
+                    html."**".find { it.@class == 'info-tabla' }.TBODY.TR.each {
+                        println it
+
+                        component = it.TD[1].text().toLowerCase()
+                        credits = it.TD[2].text()
+                        println component + " " + credits
+
+                        if (component.indexOf('fund') >= 0) {
+                            sp.fundamentalCredits = credits.toInteger()
+                        } else if (component.contains('disci')) {
+                            sp.disciplinaryCredits = credits.toInteger()
+                        } else if (component.contains('libre')) {
+                            sp.freeChoiceCredits = credits.toInteger()
+                        } else if (component.contains('grado')) {
+                            sp.disciplinaryCredits += credits.toInteger()
+                        } else if (component.contains('idioma')) {
+                            sp.languageCredits = credits.toInteger()
+                        }
+
+                    }
+
+                    println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits
+
+                    /*
+                    def courses = html."**".findAll { it.name().equals("H5")}
+                    for(def i = 0; i < courses.size(); i++){
+
+                    }*/
+                }
+                //println sp.name + '\n' + source.size()
+            } catch (Exception e) {
+                println e.stackTrace
+                println "Programa academico $sp.name de la sede $sp.location.name no disponible"
             }
         }
         /*
