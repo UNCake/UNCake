@@ -75,14 +75,14 @@ class DBconnectionService {
 
                                 it.TBODY.TR[0].TD[1].DIV.each {
                                     pr = getCourseInfo(it, value[1])
-                                    if (pr != null) sp.addToCourses(pr)
+                                    if (pr != null && pr.id != null) sp.addToCourses(pr)
                                 }
 
                                 it.TBODY.TR[0].TD[1].TABLE.each {
 
                                     it.TBODY.TR[0].TD[1].DIV.each {
                                         pr = getCourseInfo(it, value[1])
-                                        if (pr != null) sp.addToCourses(pr)
+                                        if (pr != null && pr.id != null) sp.addToCourses(pr)
                                     }
                                 }
                             }
@@ -91,8 +91,8 @@ class DBconnectionService {
                 }
 
                 /*println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
-                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")*/
-                sp.save()
+                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")
+                sp.save()*/
 
             } catch (Exception e) {
                 println "Programa academico $sp.name de la sede $sp.location.name no disponible"
