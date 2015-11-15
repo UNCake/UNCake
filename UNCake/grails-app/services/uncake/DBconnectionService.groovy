@@ -54,51 +54,34 @@ class DBconnectionService {
                     println "found it"
 
                     type = ["arco_5_6": ["fundamentalCredits", "B"]]
-                    def code, name
+                    def pr
                     type.each { key, value ->
                         println "key " + key
+                        def var = 0
                         html."**".find { it.@id == key }.TABLE.TBODY.each {
                             sp[value[0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
 
                             it.TR[1].TD[0].TABLE.each {
-
                                 it.TBODY.TR[0].TD[1].DIV.each {
-                                    code = it.DIV[1].A.H5.text()
-                                    credits = it.DIV[1].A.DIV[1].text()
-                                    name = it.DIV[2].DIV[1].H4.text()
-                                    println name + " " + code + " " + credits
+                                    pr = getCourseInfo(it, value[1])
+                                    if (pr != null) sp.addToCourses(pr)
                                 }
 
                                 it.TBODY.TR[0].TD[1].TABLE.each {
-
                                     it.TBODY.TR[0].TD[1].DIV.each {
-                                        code = it.DIV[1].A.H5.text()
-                                        credits = it.DIV[1].A.DIV[1].text()
-                                        name = it.DIV[2].DIV[1].H4.text()
-
-                                        println name + " " + code + " " + credits
+                                        pr = getCourseInfo(it, value[1])
+                                        if (pr != null) sp.addToCourses(pr)
                                     }
                                 }
                             }
 
-                            //it.@class= "right"}
-
-                            //sp.fundamentalCredits = credits
-
-                            //println 'materias ' + it.TR[1]
-                            /*
-*/
-
-                            println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits
+                            println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
+                                    "courses " + sp.courses.size() + "  var " + var
                         }
                     }
-                    /*
-                def courses = html."**".findAll { it.name().equals("H5")}
-                for(def i = 0; i < courses.size(); i++){
 
-                }*/
                 }
-                //println sp.name + '\n' + source.size()
+                
             } catch (Exception e) {
                 println e.stackTrace
                 println "Programa academico $sp.name de la sede $sp.location.name no disponible"
@@ -112,6 +95,22 @@ class DBconnectionService {
         println "$sp.location.name $sp.code $sp.name $sp.faculty "
     }
     */
+
+    def getCourseInfo(it, typology) {
+        def code, credits, name
+
+        code = it.DIV[1].A.H5.text()
+        credits = it.DIV[1].A.DIV[1].text()
+        name = it.DIV[2].DIV[1].H4.text()
+
+        if (code != "") {
+            println name + " " + code + " " + credits
+            return new Prerequisite(course: new Course(name: name, code: code,
+                    credits: credits, typology: typology))
+        }
+
+        return null
+    }
 
 
 }
