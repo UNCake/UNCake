@@ -50,33 +50,49 @@ class DBconnectionService {
                         '&tipo=' + sp.type + '&tipoVista=semaforo&nodo=1&parametro=on')
                 html = source.get([:])
 
-                type = ["arco_5_6": ["fundamentalCredits", "B"], "arco_6_7": ["disciplinaryCredits", "C"],
-                        "arco_8_9": ["disciplinaryCredits", "C"]]
+                type = [["fundamentalCredits", "B"], ["disciplinaryCredits", "C"], ["freeChoiceCredits", "L"]]
                 def pr
-                type.each { key, value ->
 
-                    html."**".find { it.@id == key }.TABLE.TBODY.each {
-                        if (sp[value[0]] == null) sp[value[0]] = 0
-                        sp[value[0]] += it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
 
-                        it.TR[1].TD[0].TABLE.each {
-                            it.TBODY.TR[0].TD[1].DIV.each {
-                                pr = getCourseInfo(it, value[1])
-                                if (pr != null) sp.addToCourses(pr)
-                            }
+                html."**".findAll { it.@id.text().find(/arco_[0-9]+/) }.TABLE.TBODY.each {
 
-                            it.TBODY.TR[0].TD[1].TABLE.each {
+                        def value = -1
+
+                        if (it.TR[0].TD[0].text().contains("Fund")) {
+                            value = type[0]
+                            sp[value[0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
+                        } else if (it.TR[0].TD[0].text().contains("Disc") || it.TR[0].TD[0].text().contains("Grad")) {
+                            value = type[1]
+                            if (sp[value[0]] == null) sp[value[0]] = 0
+                            sp[value[0]] += it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
+                        }else if (it.TR[0].TD[0].text().contains("Libre")) {
+                            sp[type[2][0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
+                        }
+
+                        if (value != -1) {
+
+                            it.TR[1].TD[0].TABLE.each {
+
                                 it.TBODY.TR[0].TD[1].DIV.each {
                                     pr = getCourseInfo(it, value[1])
                                     if (pr != null) sp.addToCourses(pr)
                                 }
+
+                                it.TBODY.TR[0].TD[1].TABLE.each {
+
+                                    it.TBODY.TR[0].TD[1].DIV.each {
+                                        pr = getCourseInfo(it, value[1])
+                                        if (pr != null) sp.addToCourses(pr)
+                                    }
+                                }
                             }
+
                         }
 
-                        println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
-                                "courses " + sp.courses.size()
-                    }
                 }
+
+                println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
+                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")
 
                 sp.save()
 
@@ -99,6 +115,7 @@ class DBconnectionService {
         name = it.DIV[2].DIV[1].H4.text()
 
         if (code != "") {
+           
             return new Prerequisite(course: new Course(name: name, code: code,
                     credits: credits, typology: typology))
         }
