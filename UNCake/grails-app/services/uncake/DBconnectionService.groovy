@@ -53,11 +53,10 @@ class DBconnectionService {
                     println sp.name
                     println "found it"
 
-                    type = ["arco_5_6": ["fundamentalCredits", "B"]]
+                    type = ["arco_5_6": ["fundamentalCredits", "B"], "arco_6_7": ["disciplinaryCredits", "C"] ]
                     def pr
                     type.each { key, value ->
                         println "key " + key
-                        def var = 0
                         html."**".find { it.@id == key }.TABLE.TBODY.each {
                             sp[value[0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
 
@@ -76,12 +75,12 @@ class DBconnectionService {
                             }
 
                             println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
-                                    "courses " + sp.courses.size() + "  var " + var
+                                    "courses " + sp.courses.size() 
                         }
                     }
 
                 }
-                
+
             } catch (Exception e) {
                 println e.stackTrace
                 println "Programa academico $sp.name de la sede $sp.location.name no disponible"
