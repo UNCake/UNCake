@@ -75,29 +75,27 @@ class DBconnectionService {
                     type = ["arco_5_6": ["fundamentalCredits", "B"]]
                     def code, name
                     type.each { key, value ->
-                        println "key "+ key
+                        println "key " + key
                         html."**".find { it.@id == key }.TABLE.TBODY.each {
                             sp[value[0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
 
                             it.TR[1].TD[0].TABLE.each {
                                 println "materias"
-                                it.TBODY.TR[0].TD[1].TABLE.each{
-                                    def var = 0
-                                    it.TBODY.TR[0].TD[1].DIV.each{
-                                        it.DIV.each {
-                                            println "materia : " + var + "\n" + it
-                                            if (it.@class == "interior") {
-                                                code = it.A.H5.text()
-                                                credits = it.A.DIV.find { it.@class == "cred" }
-                                            }
 
+                                it.TBODY.TR[0].TD[1].DIV.each {
+                                    code = it.DIV[1].A.H5.text()
+                                    credits = it.DIV[1].A.DIV[1].text()
+                                    name = it.DIV[2].DIV[1].H4.text()
+                                    println name + " " + code + " " + credits
+                                }
 
-                                            if (it.@class == "popup-box") {
-                                                it.DIV.find { it.@class == "popup-int" }.each {
-                                                    name = it.H4.text()
-                                                }
-                                            }
-                                        }
+                                it.TBODY.TR[0].TD[1].TABLE.each {
+                                    //println it
+                                    it.TBODY.TR[0].TD[1].DIV.each {
+                                        code = it.DIV[1].A.H5.text()
+                                        credits = it.DIV[1].A.DIV[1].text()
+                                        name = it.DIV[2].DIV[1].H4.text()
+
                                         println name + " " + code + " " + credits
                                     }
                                 }
@@ -115,26 +113,26 @@ class DBconnectionService {
                             println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits
                         }
                     }
-                        /*
-                    def courses = html."**".findAll { it.name().equals("H5")}
-                    for(def i = 0; i < courses.size(); i++){
+                    /*
+                def courses = html."**".findAll { it.name().equals("H5")}
+                for(def i = 0; i < courses.size(); i++){
 
-                    }*/
-                    }
-                    //println sp.name + '\n' + source.size()
-                } catch (Exception e ) {
-                    println e.stackTrace
-                    println "Programa academico $sp.name de la sede $sp.location.name no disponible"
+                }*/
                 }
+                //println sp.name + '\n' + source.size()
+            } catch (Exception e) {
+                println e.stackTrace
+                println "Programa academico $sp.name de la sede $sp.location.name no disponible"
             }
         }
-        /*
-        println 'Output database'
-        def list_sp = StudyPlan.list()
-        list_sp.each { sp ->
-            println "$sp.location.name $sp.code $sp.name $sp.faculty "
-        }
-        */
+    }
+    /*
+    println 'Output database'
+    def list_sp = StudyPlan.list()
+    list_sp.each { sp ->
+        println "$sp.location.name $sp.code $sp.name $sp.faculty "
+    }
+    */
 
 
 }
