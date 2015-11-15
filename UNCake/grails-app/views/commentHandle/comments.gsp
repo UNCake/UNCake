@@ -28,9 +28,8 @@
 <div class="container-fluid">
     <ul class="list-group" id="commentList">
         <g:each in="${top-4..top}" var="t">
-            <g:if test="${t < 0}">
-                ${t = 0}
-            </g:if>
+                <% if(t < 0)
+                    t = 0 %>
             <g:if test="${t > 0}">
                 <li class="list-group-item col-md-8 well well-sm">
                 <h3>Comentario: ${t}<br></h3>

@@ -12,7 +12,6 @@ class CommentHandleController {
         println(params.code)
         def course = Course.findByCode(params.code)
         render(view: "comments", model:[name: course.name, comments: course.comments, code: course.code])
-        new Comment(code: 1, comment: "comment 1").save()
     }
 
 
