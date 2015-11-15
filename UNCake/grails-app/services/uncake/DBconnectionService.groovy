@@ -52,26 +52,7 @@ class DBconnectionService {
                 if (sp.name == "INGENIERIA DE SISTEMAS Y COMPUTACION") {
                     println sp.name
                     println "found it"
-/*
-                    html."**".find { it.@class == 'info-tabla' }.TBODY.TR.each {
 
-                        component = it.TD[1].text().toLowerCase()
-                        credits = it.TD[2].text()
-
-                        if (component.indexOf('fund') >= 0) {
-                            sp.fundamentalCredits = credits.toInteger()
-                        } else if (component.contains('disci')) {
-                            sp.disciplinaryCredits = credits.toInteger()
-                        } else if (component.contains('libre')) {
-                            sp.freeChoiceCredits = credits.toInteger()
-                        } else if (component.contains('grado')) {
-                            sp.disciplinaryCredits += credits.toInteger()
-                        } else if (component.contains('idioma')) {
-                            sp.languageCredits = credits.toInteger()
-                        }
-
-                    }
-*/
                     type = ["arco_5_6": ["fundamentalCredits", "B"]]
                     def code, name
                     type.each { key, value ->
@@ -80,7 +61,6 @@ class DBconnectionService {
                             sp[value[0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
 
                             it.TR[1].TD[0].TABLE.each {
-                                println "materias"
 
                                 it.TBODY.TR[0].TD[1].DIV.each {
                                     code = it.DIV[1].A.H5.text()
@@ -90,7 +70,7 @@ class DBconnectionService {
                                 }
 
                                 it.TBODY.TR[0].TD[1].TABLE.each {
-                                    //println it
+
                                     it.TBODY.TR[0].TD[1].DIV.each {
                                         code = it.DIV[1].A.H5.text()
                                         credits = it.DIV[1].A.DIV[1].text()
@@ -99,7 +79,6 @@ class DBconnectionService {
                                         println name + " " + code + " " + credits
                                     }
                                 }
-                                println "fin materias"
                             }
 
                             //it.@class= "right"}
