@@ -6,17 +6,18 @@ import groovyx.net.http.HTTPBuilder
 @Transactional
 class DBconnectionService {
 
+    /*
+        Se encarga de poblar la base de datos con los planes de estudio
+        y sus materias.
+     */
+
     def initDB() {
 
         def pattern = ~"'.+'"
-
-        //StudyPlan.getAll().each { var -> var.delete(flush: true) }
-        //Location.getAll().each { var -> var.delete(flush: true) }
-
         def type = ['PRE', 'POS']
-        def source, html, credits, component
+        def source, html
 
-
+        //Se cargan los planes de estudio por sede
         Location.list().each { loc ->
             type.each {
                 try {
@@ -42,44 +43,42 @@ class DBconnectionService {
             }
         }
 
-
-        StudyPlan.list().each { sp ->
+        //Se almacenan las materias de fundamentacion y disciplinar de cada plan de estudios (pregrado)
+        StudyPlan.findAllByType("PRE").each { sp ->
             try {
                 source = new HTTPBuilder(sp.location.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
                         '&tipo=' + sp.type + '&tipoVista=semaforo&nodo=1&parametro=on')
                 html = source.get([:])
 
-                if (sp.name == "INGENIERIA DE SISTEMAS Y COMPUTACION") {
-                    println sp.name
-                    println "found it"
+                type = ["arco_5_6": ["fundamentalCredits", "B"], "arco_6_7": ["disciplinaryCredits", "C"],
+                        "arco_8_9": ["disciplinaryCredits", "C"]]
+                def pr
+                type.each { key, value ->
 
-                    type = ["arco_5_6": ["fundamentalCredits", "B"], "arco_6_7": ["disciplinaryCredits", "C"] ]
-                    def pr
-                    type.each { key, value ->
-                        println "key " + key
-                        html."**".find { it.@id == key }.TABLE.TBODY.each {
-                            sp[value[0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
+                    html."**".find { it.@id == key }.TABLE.TBODY.each {
+                        if (sp[value[0]] == null) sp[value[0]] = 0
+                        sp[value[0]] += it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
 
-                            it.TR[1].TD[0].TABLE.each {
+                        it.TR[1].TD[0].TABLE.each {
+                            it.TBODY.TR[0].TD[1].DIV.each {
+                                pr = getCourseInfo(it, value[1])
+                                if (pr != null) sp.addToCourses(pr)
+                            }
+
+                            it.TBODY.TR[0].TD[1].TABLE.each {
                                 it.TBODY.TR[0].TD[1].DIV.each {
                                     pr = getCourseInfo(it, value[1])
                                     if (pr != null) sp.addToCourses(pr)
                                 }
-
-                                it.TBODY.TR[0].TD[1].TABLE.each {
-                                    it.TBODY.TR[0].TD[1].DIV.each {
-                                        pr = getCourseInfo(it, value[1])
-                                        if (pr != null) sp.addToCourses(pr)
-                                    }
-                                }
                             }
-
-                            println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
-                                    "courses " + sp.courses.size() 
                         }
-                    }
 
+                        println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
+                                "courses " + sp.courses.size()
+                    }
                 }
+
+                sp.save()
 
             } catch (Exception e) {
                 println e.stackTrace
@@ -87,13 +86,10 @@ class DBconnectionService {
             }
         }
     }
+
     /*
-    println 'Output database'
-    def list_sp = StudyPlan.list()
-    list_sp.each { sp ->
-        println "$sp.location.name $sp.code $sp.name $sp.faculty "
-    }
-    */
+        Construye los objetos Prerequisite, a partir de la informacion de la materia
+     */
 
     def getCourseInfo(it, typology) {
         def code, credits, name
@@ -103,7 +99,6 @@ class DBconnectionService {
         name = it.DIV[2].DIV[1].H4.text()
 
         if (code != "") {
-            println name + " " + code + " " + credits
             return new Prerequisite(course: new Course(name: name, code: code,
                     credits: credits, typology: typology))
         }
