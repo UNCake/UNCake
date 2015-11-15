@@ -23,11 +23,15 @@
 <h4>Comentarios:</h4>
 <br>
 <%  def limit=5
-    def top = comments.size()-1 %>
+    def top = comments.size()-1
+%>
 <div class="container-fluid">
     <ul class="list-group" id="commentList">
         <g:each in="${top-4..top}" var="t">
-            <g:if test="${t < comments.size()}">
+            <g:if test="${t < 0}">
+                ${t = 0}
+            </g:if>
+            <g:if test="${t > 0}">
                 <li class="list-group-item col-md-8 well well-sm">
                 <h3>Comentario: ${t}<br></h3>
                 <p>${comments[t].comment}<br></p>
