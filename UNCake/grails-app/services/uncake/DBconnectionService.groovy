@@ -10,7 +10,6 @@ class DBconnectionService {
         Se encarga de poblar la base de datos con los planes de estudio
         y sus materias.
      */
-
     def initDB() {
 
         def pattern = ~"'.+'"
@@ -45,6 +44,7 @@ class DBconnectionService {
 
         //Se almacenan las materias de fundamentacion y disciplinar de cada plan de estudios (pregrado)
         StudyPlan.findAllByType("PRE").each { sp ->
+
             try {
                 source = new HTTPBuilder(sp.location.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
                         '&tipo=' + sp.type + '&tipoVista=semaforo&nodo=1&parametro=on')
@@ -53,11 +53,11 @@ class DBconnectionService {
                 type = [["fundamentalCredits", "B"], ["disciplinaryCredits", "C"], ["freeChoiceCredits", "L"]]
                 def pr
 
-
                 html."**".findAll { it.@id.text().find(/arco_[0-9]+/) }.TABLE.TBODY.each {
 
                         def value = -1
 
+                        //Se obtiene la cantidad de creditos por componente
                         if (it.TR[0].TD[0].text().contains("Fund")) {
                             value = type[0]
                             sp[value[0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
@@ -88,16 +88,13 @@ class DBconnectionService {
                             }
 
                         }
-
                 }
 
-                println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
-                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")
-
+                /*println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
+                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")*/
                 sp.save()
 
             } catch (Exception e) {
-                println e.stackTrace
                 println "Programa academico $sp.name de la sede $sp.location.name no disponible"
             }
         }
@@ -115,13 +112,11 @@ class DBconnectionService {
         name = it.DIV[2].DIV[1].H4.text()
 
         if (code != "") {
-           
-            return new Prerequisite(course: new Course(name: name, code: code,
-                    credits: credits, typology: typology))
+            def course =  new Course(name: name, code: code, credits: credits, typology: typology)
+            course.save()
+            return new Prerequisite(course: course)
         }
 
         return null
     }
-
-
 }
