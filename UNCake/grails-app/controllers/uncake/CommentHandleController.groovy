@@ -7,7 +7,6 @@ class CommentHandleController {
         println("index")
     }
 
-
     def comments() {
         println("in comments")
         println(params.code)
@@ -18,6 +17,8 @@ class CommentHandleController {
         }
         render(view: "comments", model:[name: course.name, comments: course.comments])
     }
+
+
     def saveComment() {
         println("in save")
         println(params.comment)

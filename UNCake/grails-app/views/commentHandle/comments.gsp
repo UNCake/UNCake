@@ -13,6 +13,7 @@
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
+    <asset:javascript src="commentHandle/commentHandle.js"/>
 </head>
 
 <body>
@@ -24,7 +25,7 @@
 <% def limit=5 %>
 <div class="container-fluid">
     <ul class="list-group">
-        <g:each in="${0..limit-1}" var="t">
+        <g:each in="${limit..limit-4}" var="t">
             <g:if test="${t < comments.size()}">
                 <li class="list-group-item col-md-8 well well-sm">
                 <h3>Comentario: ${t}<br></h3>
@@ -34,14 +35,30 @@
         </g:each>
     </ul>
 </div>
-
+<br>
 <div class="container-fluid">
-<g:form class="col-md-8" action="saveComment">
-    <div class="form-group">
-    <g:textArea name="comment" placeholder="Escribir un comentario" class="form-control"></g:textArea>
-    </div>
-    <g:submitButton name="submit" value="Enviar" class="btn btn-default"></g:submitButton>
-</g:form>
+    <% def link = "${createLink(controller: 'commentHandle', action: 'saveComment')}" %>
+    <form name="submitComment" class="col-md-8" method="POST">
+        <div class="form-group">
+        <textArea id="text" placeholder="Escribir un comentario" class="form-control"></textArea>
+        </div>
+        <button onclick="ajaxTest('${link}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
+    </form>
 </div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

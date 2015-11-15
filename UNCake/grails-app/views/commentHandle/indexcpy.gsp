@@ -20,7 +20,7 @@
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="schedule.css"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
-    <asset:javascript src="courseboard/courseboard.js"/>
+    <asset:javascript src="courseboard/commentHandle.js"/>
     <asset:stylesheet src="courseboard.css"/>
     <script>
 
