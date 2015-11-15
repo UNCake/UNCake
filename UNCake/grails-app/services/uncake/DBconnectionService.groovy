@@ -52,13 +52,11 @@ class DBconnectionService {
                 if (sp.name == "INGENIERIA DE SISTEMAS Y COMPUTACION") {
                     println sp.name
                     println "found it"
-
+/*
                     html."**".find { it.@class == 'info-tabla' }.TBODY.TR.each {
-                        println it
 
                         component = it.TD[1].text().toLowerCase()
                         credits = it.TD[2].text()
-                        println component + " " + credits
 
                         if (component.indexOf('fund') >= 0) {
                             sp.fundamentalCredits = credits.toInteger()
@@ -73,19 +71,61 @@ class DBconnectionService {
                         }
 
                     }
+*/
+                    type = ["arco_5_6": ["fundamentalCredits", "B"]]
+                    def code, name
+                    type.each { key, value ->
+                        println "key "+ key
+                        html."**".find { it.@id == key }.TABLE.TBODY.each {
+                            sp[value[0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
 
-                    println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits
+                            it.TR[1].TD[0].TABLE.each {
+                                println "materias"
+                                it.TBODY.TR[0].TD[1].TABLE.each{
+                                    def var = 0
+                                    it.TBODY.TR[0].TD[1].DIV.each{
+                                        it.DIV.each {
+                                            println "materia : " + var + "\n" + it
+                                            if (it.@class == "interior") {
+                                                code = it.A.H5.text()
+                                                credits = it.A.DIV.find { it.@class == "cred" }
+                                            }
 
-                    /*
+
+                                            if (it.@class == "popup-box") {
+                                                it.DIV.find { it.@class == "popup-int" }.each {
+                                                    name = it.H4.text()
+                                                }
+                                            }
+                                        }
+                                        println name + " " + code + " " + credits
+                                    }
+                                }
+                                println "fin materias"
+                            }
+
+                            //it.@class= "right"}
+
+                            //sp.fundamentalCredits = credits
+
+                            //println 'materias ' + it.TR[1]
+                            /*
+*/
+
+                            println sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits
+                        }
+                    }
+                        /*
                     def courses = html."**".findAll { it.name().equals("H5")}
                     for(def i = 0; i < courses.size(); i++){
 
                     }*/
+                    }
+                    //println sp.name + '\n' + source.size()
+                } catch (Exception e ) {
+                    println e.stackTrace
+                    println "Programa academico $sp.name de la sede $sp.location.name no disponible"
                 }
-                //println sp.name + '\n' + source.size()
-            } catch (Exception e) {
-                println e.stackTrace
-                println "Programa academico $sp.name de la sede $sp.location.name no disponible"
             }
         }
         /*
@@ -95,7 +135,6 @@ class DBconnectionService {
             println "$sp.location.name $sp.code $sp.name $sp.faculty "
         }
         */
-    }
 
 
 }
