@@ -22,10 +22,11 @@
 
 <h4>Comentarios:</h4>
 <br>
-<% def limit=5 %>
+<%  def limit=5
+    def top = comments.size()-1 %>
 <div class="container-fluid">
-    <ul class="list-group">
-        <g:each in="${limit..limit-4}" var="t">
+    <ul class="list-group" id="commentList">
+        <g:each in="${top-4..top}" var="t">
             <g:if test="${t < comments.size()}">
                 <li class="list-group-item col-md-8 well well-sm">
                 <h3>Comentario: ${t}<br></h3>
@@ -42,7 +43,7 @@
         <div class="form-group">
         <textArea id="text" placeholder="Escribir un comentario" class="form-control"></textArea>
         </div>
-        <button onclick="ajaxTest('${link}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
+        <button onclick="ajaxTest('${link}', '${courseId}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
     </form>
 </div>
 </body>

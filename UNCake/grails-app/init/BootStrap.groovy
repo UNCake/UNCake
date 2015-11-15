@@ -35,19 +35,19 @@ class BootStrap {
         //println("course id found "+srch.name)
 
         //Adicion de comentarios de prueba
-        new Comment(code: 1, comment: "comment 1").save()
-        new Comment(code: 2, comment: "comment 2").save()
-        new Comment(code: 6, comment: "comment 6").save()
-        new Comment(code: 7, comment: "Comentario largo largo largo largo largo largo largo largo largo largo largo largo largo largo largo").save()
-        new Comment(code: 8, comment: "comment 8").save()
-        new Comment(code: 9, comment: "comment 9").save()
-        new Comment(code: 10, comment: "comment 10").save()
-        new Comment(code: 11, comment: "comment 11").save()
-        new Comment(code: 12, comment: "comment asdasdsa").save()
+        new Comment(comment: "comment 1").save()
+        new Comment(comment: "comment 2").save()
+        new Comment(comment: "comment 6").save()
+        new Comment(comment: "Comentario largo largo largo largo largo largo largo largo largo largo largo largo largo largo largo").save()
+        new Comment(comment: "comment 8").save()
+        new Comment(comment: "comment 9").save()
+        new Comment(comment: "comment 10").save()
+        new Comment(comment: "comment 11").save()
+        new Comment(comment: "comment asdasdsa").save()
         Comment.list().each {
             comm ->
-                println(comm.code)
-                if (comm.code > 5)
+                println(comm.id)
+                if (comm.id > 3)
                     Course.findByCode(1).addToComments(comm)
 
                 else

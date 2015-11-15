@@ -2,12 +2,21 @@
  * Created by santiago on 11/8/15.
  */
 
-function ajaxTest(link) {
+function ajaxTest(link, courseId) {
+    var comm=document.getElementById('text').value;
     $.ajax({url: link,
     data: {
-        comment: document.getElementById('text').value
+        comment: comm,
+        id: courseId
     }
     });
+    addComment(comm);
+}
+
+function addComment(comm) {
+    var newItem = $("<li class='list-group-item col-md-8 well well-sm'><h3>Comentario: <br></h3><p>"+comm+"<br></p></li>").hide();
+    $("#commentList").append(newItem);
+    newItem.fadeIn();
 }
 
 

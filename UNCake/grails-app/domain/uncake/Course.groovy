@@ -9,7 +9,7 @@ class Course {
     String typology
 
     static mapping = {
-        comments sort: 'code'
+        comments sort: 'id'
     }
 
     static constraints = {
