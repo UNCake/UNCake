@@ -30,15 +30,20 @@ class BootStrap {
         //Materias de prueba
         new Course(code: 1, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
         new Course(code: 2, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-        println(Course.list())
+        //println(Course.list())
         def srch = Course.findByCode(2)
-        println("course id found "+srch.name)
+        //println("course id found "+srch.name)
 
         //Adicion de comentarios de prueba
         new Comment(code: 1, comment: "comment 1").save()
         new Comment(code: 2, comment: "comment 2").save()
         new Comment(code: 6, comment: "comment 6").save()
+        new Comment(code: 7, comment: "Comentario largo largo largo largo largo largo largo largo largo largo largo largo largo largo largo").save()
         new Comment(code: 8, comment: "comment 8").save()
+        new Comment(code: 9, comment: "comment 9").save()
+        new Comment(code: 10, comment: "comment 10").save()
+        new Comment(code: 11, comment: "comment 11").save()
+        new Comment(code: 12, comment: "comment asdasdsa").save()
         Comment.list().each {
             comm ->
                 println(comm.code)

@@ -31,13 +31,14 @@
         <p>${comments[t].comment}<br></p>
         </div>
     </g:if>
-    <br>
+
 </g:each>
 </div>
+
 <div class="container-fluid">
-<g:form class="col-md-8">
+<g:form class="col-md-8" action="saveComment">
     <div class="form-group">
-    <g:textArea name="sub-comment" placeholder="Escribir un comentario" class="form-control"></g:textArea>
+    <g:textArea name="comment" placeholder="Escribir un comentario" class="form-control"></g:textArea>
     </div>
     <g:submitButton name="submit" value="Enviar" class="btn btn-default"></g:submitButton>
 </g:form>
