@@ -23,16 +23,16 @@
 <br>
 <% def limit=5 %>
 <div class="container-fluid">
-<g:each in="${0..limit}" var="t">
-
-    <g:if test="${t < comments.size()}">
-        <div class="container col-md-8 well well-sm">
-        <h3>Comentario: ${t}<br></h3>
-        <p>${comments[t].comment}<br></p>
-        </div>
-    </g:if>
-
-</g:each>
+    <ul class="list-group">
+        <g:each in="${0..limit-1}" var="t">
+            <g:if test="${t < comments.size()}">
+                <li class="list-group-item col-md-8 well well-sm">
+                <h3>Comentario: ${t}<br></h3>
+                <p>${comments[t].comment}<br></p>
+                </li>
+            </g:if>
+        </g:each>
+    </ul>
 </div>
 
 <div class="container-fluid">

@@ -5,7 +5,7 @@ class Comment {
     String comment;
     Date date;
     static belongsTo = [user: User, course: Course]
-    
+
 
     static constraints = {
         code nullable: false, unique: true
