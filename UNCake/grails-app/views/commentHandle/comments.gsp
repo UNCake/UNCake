@@ -43,7 +43,7 @@
         <div class="form-group">
         <textArea id="text" placeholder="Escribir un comentario" class="form-control"></textArea>
         </div>
-        <button onclick="ajaxTest('${link}', '${courseId}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
+        <button onclick="ajaxTest('${link}', '${code}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
     </form>
 </div>
 </body>

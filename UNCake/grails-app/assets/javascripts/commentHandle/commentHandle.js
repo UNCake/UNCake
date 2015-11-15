@@ -2,12 +2,12 @@
  * Created by santiago on 11/8/15.
  */
 
-function ajaxTest(link, courseId) {
+function ajaxTest(link, courseCode) {
     var comm=document.getElementById('text').value;
     $.ajax({url: link,
     data: {
         comment: comm,
-        id: courseId
+        code: courseCode
     }
     });
     addComment(comm);

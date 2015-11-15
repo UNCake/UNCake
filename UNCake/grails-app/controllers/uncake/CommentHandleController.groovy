@@ -11,11 +11,7 @@ class CommentHandleController {
         println("in comments")
         println(params.code)
         def course = Course.findByCode(params.code)
-        course.comments.each {
-            comm ->
-            println comm.comment
-        }
-        render(view: "comments", model:[name: course.name, comments: course.comments, courseId: course.id])
+        render(view: "comments", model:[name: course.name, comments: course.comments, code: course.code])
         new Comment(code: 1, comment: "comment 1").save()
     }
 
@@ -23,8 +19,11 @@ class CommentHandleController {
     def saveComment() {
         println("in save")
         println(params.comment)
-        println(params.id)
-        def comment = new Comment(comment: params)
+        println("code: "+params.code)
+        def comment = new Comment(comment: params.comment)
+        comment.save()
+        def course = Course.findByCode(params.code)
+        course.addToComments(comment)
 
         render ''
     }
