@@ -13,10 +13,10 @@
     <title>UNCake - Progreso</title>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <!--<asset:stylesheet src="foundation/foundation.css"/>-->
+    <!--<asset:stylesheet src="foundation/foundation.css"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:javascript src="foundation/vendor/modernizr.js"/>
-    <asset:javascript src="foundation/vendor/jquery.js"/>
+    <asset:javascript src="foundation/vendor/jquery.js"/>-->
 
 
     <asset:javascript src="jquery-2.1.3.js"/>
@@ -29,6 +29,13 @@
     <asset:stylesheet src="dialogueStyle.css"/>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet'
+          type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
     <script type="text/javascript">
     </script>
 </head>
@@ -44,7 +51,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">UNCake</a>
+            <a class="navbar-brand page-scroll" href="home">UNCake</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -55,7 +62,6 @@
                     <a href="#page-top"></a>
                 </li>
                 <li>
-
                     <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
                 </li>
 
@@ -85,17 +91,6 @@
 
 <div class="row">
     <div class="large-12 columns">
-        <!--<div class="row">
-            <div class="large-12 columns">
-                <nav class="top-bar" data-topbar>
-                    <ul class="title-area">
-                        <li class="name">
-                            <h1><a href="home">UNCake</a></h1>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>-->
         <br>
 
         <div class="row">
@@ -106,7 +101,7 @@
                             <div class="row">
                                 <br>
                                 <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
-                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-left: 50px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                                 <br><br>
                                 <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
                                 <br>
