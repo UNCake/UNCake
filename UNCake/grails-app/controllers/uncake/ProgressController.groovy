@@ -1,7 +1,5 @@
 package uncake
 
-import java.util.regex.*
-
 class ProgressController {
 
     def index() {
@@ -15,14 +13,14 @@ class ProgressController {
     }
 
     def saveAcademicRecord(){
-        def planPattern = "[0-9]+ \\| [A-Za-z·ÈÌÛ˙¸¡…Õ”⁄‹:\\.\\- ]+"
-        def subjectPattern = "[0-9][A-Z\\-0-9]*[\\t][A-Za-z·ÈÌÛ˙¸¡…Õ”⁄‹:\\.\\- ]+[\\t][0-9]+[\\t][0-9]+[\\t][0-9]+[\\t][A-Z][\\t][0-9]+[\\t][0-9]+[\\t]+[0-9]\\.?[0-9]"
+        def planPattern = "[0-9]+ \\| [A-Za-z:\\.\\- ]+"
+        def subjectPattern = "[0-9][A-Z\\-0-9]*[\\t][A-Za-z:\\.\\- ]+[\\t][0-9]+[\\t][0-9]+[\\t][0-9]+[\\t][A-Z][\\t][0-9]+[\\t][0-9]+[\\t]+[0-9]\\.?[0-9]"
         def requiredPattern = "exigidos\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9\\-]+\\t[0-9]+";
-        def periodPattern = "[0-9]+[\\t]periodo acadÈmico[ ]*\\|[ ]*[0-9\\-A-Z]+";
+        def periodPattern = "[0-9]+[\\t]periodo academico[ ]*\\|[ ]*[0-9\\-A-Z]+";
         def subjects = []
         def sumSubjects = 0.0;
         def sumCredits = 0;
-        def record = params.record
+        def record = String.valueOf( params.record )
         def codeStudyPlan = Integer.parseInt( String.valueOf( record.find(planPattern) ).split('\\|')[0].trim() )
         def studyPlan = uncake.StudyPlan.findByCode( codeStudyPlan )
 
@@ -42,19 +40,27 @@ class ProgressController {
             periodName = recordSoFar.find( periodPattern )
             periodNames.add( periodName )
             periods.add( recordSoFar.substring( 0, recordSoFar.indexOf( periodName ) ) )
+            recordSoFar = recordSoFar.substring( recordSoFar.indexOf( periodName ) )
             recordSoFar = recordSoFar.replace( periodName, "" )
+            println "\n\n"
         }
+        periods.add( recordSoFar.substring( 0 ) )
+        /*println periods.size()
+        for( int i = 0; i < periods.size(); i++ ){
+            println periodNames[i]
+            println periods[i]
+            println "\n\n ------------- - --------------- \n\n"
+        }*/
 
         for( int i = 0; i < periods.size(); i++ ){
-            def periodsText = periods[i]
+            def periodsText = String.valueOf( periods[i] )
             while( periodsText.find( subjectPattern ) ){
-                def subject = String.valueOf( record.find(subjectPattern) );
+                def subject = String.valueOf( periodsText.find(subjectPattern) );
                 subjects.add( subject )
                 def code = Integer.parseInt( (subject.split('\t')[0])[0..(subject.indexOf('-')-1)] )
                 def name = subject.split('\t')[1]
-                def credits = subject.split('\t')[6]
+                def credits = Integer.parseInt( subject.split('\t')[6] )
                 def grade = Double.parseDouble( subject.split('\t')[9] )
-
                 def typology = ""
                 if( subject.split('\t')[5] == 'B' )
                     typology = "FundamentaciÛn"
@@ -63,26 +69,29 @@ class ProgressController {
                 if( subject.split('\t')[5] == 'L' )
                     typology = "Electiva"
 
-                coursesToSave.add( new uncake.Course( code: code, name: name, typology: typology, credits: credits, grade: grade, semester: periodName[i] ) )
-                sumSubjects += Float.parseFloat( subject.split('\t')[9] ) * Integer.parseInt( subject.split('\t')[6] )
-                sumCredits += Integer.parseInt( subject.split('\t')[6] )
+                coursesToSave.add( new uncake.Course( code: code, name: name, typology: typology, credits: credits, grade: grade, semester: String.valueOf( periodNames[i]) ) )
                 periodsText = periodsText.replace( subject, "" )
             }
+        }
+
+        for( int i = 0; i < subjects.size(); i++ ){
+            sumSubjects += Float.parseFloat( subjects[i].split('\t')[9] ) * Integer.parseInt( subjects[i].split('\t')[6] );
+            sumCredits += Integer.parseInt( subjects[i].split('\t')[6] );
         }
 
         def PAPA = sumSubjects / sumCredits;
 
         def subjectsAux = subjects;
-        for( def i = 0; i < subjects.size() - 1; i++ ){
-            for( def j = i + 1; j < subjects.size(); j++ ){
-                if( String.valueOf( subjects[i].split('\t')[0] ) == String.valueOf( subjects[j].split('\t')[0] ) )
+        for( int i = 0; i < subjects.size() - 1; i++ ){
+            for( int j = i + 1; j < subjects.size(); j++ ){
+                if( String.valueOf( subjects[i].split('\t')[0] ).equals( String.valueOf( subjects[j].split('\t')[0] ) ) )
                     subjectsAux.remove(i)
             }
         }
         def totalCredits = sumCredits
         sumSubjects = 0.0;
         sumCredits = 0;
-        for( def i = 0; i < subjectsAux.size(); i++ ){
+        for( int i = 0; i < subjectsAux.size(); i++ ){
             sumSubjects += Float.parseFloat( subjectsAux[i].split('\t')[9] ) * Integer.parseInt( subjectsAux[i].split('\t')[6] );
             sumCredits += Integer.parseInt( subjectsAux[i].split('\t')[6] );
         }
@@ -96,6 +105,11 @@ class ProgressController {
                 studyPlanCreated = true
         }
 
+        println studyPlanCreated
+
+        def acadRecordToSave = new AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA, courses: coursesToSave )
+        acadRecordToSave.save()
+
         if( studyPlanCreated ){
             def delStudyPlan = []
             if( delStudyPlan != null ) {
@@ -105,12 +119,17 @@ class ProgressController {
                 }
             }
             delStudyPlan.each {
-                newUser.removeFromAcademicRecord( it )
+                newUser.removeFromAcademicRecord( (AcademicRecord)it )
+                uncake.AcademicRecord.deleteAll( (AcademicRecord)it )
             }
-            newUser.addToAcademicRecord( new uncake.AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA, courses: coursesToSave ) )
+
+            if( newUser.academicRecord.size() > 0 )
+                newUser.addToAcademicRecord( acadRecordToSave )
+            else
+                newUser.academicRecord = [ acadRecordToSave ]
         }
         else
-            newUser.addToAcademicRecord( new uncake.AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA, courses: coursesToSave ) )
+            newUser.addToAcademicRecord( acadRecordToSave )
 
         newUser.academicRecord.each {
             println it.studyPlan.code

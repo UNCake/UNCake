@@ -171,6 +171,8 @@ $(function(){
     });
     $( "#btn_save" ).button().click( function() {
         var record = document.getElementById('academicRecord').value;
+        record = removeAccent(record)
+        //alert(record)
         var response = $.ajax({
             type: 'POST',
             url: "${createLink(action: 'saveAcademicRecord')}",
@@ -283,6 +285,23 @@ $(function(){
         drawComponents( getComponents( history ) );
         drawTable( getSubjects( history ) );
     });
+    function removeAccent( input ){
+        input = input.replace(/á/g,"a");
+        input = input.replace(/é/g,"e");
+        input = input.replace(/í/g,"i");
+        input = input.replace(/ó/g,"o");
+        input = input.replace(/ú/g,"u");
+        input = input.replace(/Á/g,"A");
+        input = input.replace(/É/g,"E");
+        input = input.replace(/Í/g,"I");
+        input = input.replace(/Ó/g,"O");
+        input = input.replace(/Ú/g,"U");
+        input = input.replace(/Ü/g,"U");
+        input = input.replace(/ü/g,"u");
+        input = input.replace(/Ñ/g,"N");
+        input = input.replace(/ñ/g,"n");
+        return input;
+    }
     function getComponents( input ){
         var requiredPattern = /exigidos\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9\-]+\t[0-9]+/i;
         var passedPattern = /aprobados plan\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9\-]+\t[0-9]+/i;
@@ -300,7 +319,7 @@ $(function(){
         return percentage;
     }
     function calculatePAPA( input ){
-        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
         var subjects = [];
         var subjectsAux;
         var sumSubjects = 0.0;
@@ -334,7 +353,7 @@ $(function(){
         return averages;
     }
     function getSums( input ){
-        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
         var subjects = [];
         var subjectsAux;
         var sumSubjects = 0.0;
@@ -370,7 +389,7 @@ $(function(){
         return output;
     }
     function getSubjects( input ){
-        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
         var subjects = [];
         var subject;
         var historySoFar = input;
