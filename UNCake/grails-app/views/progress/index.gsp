@@ -13,19 +13,79 @@
     <title>UNCake - Progreso</title>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <asset:stylesheet src="foundation/foundation.css"/>
+    <!--<asset:stylesheet src="foundation/foundation.css"/>-->
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:javascript src="foundation/vendor/modernizr.js"/>
     <asset:javascript src="foundation/vendor/jquery.js"/>
+
+
+    <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
+    <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
+    <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
+
+    <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
+    <asset:stylesheet src="agency.css"/>
+    <asset:stylesheet src="dialogueStyle.css"/>
+
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
     </script>
 </head>
 <body>
 
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand page-scroll" href="#page-top">UNCake</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+
+                    <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
+                </li>
+
+                <li>
+                    <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<header>
+    <div class="container">
+        <br><br><br>
+        <!--<div class="intro-text">
+            <br><br>
+        </div>-->
+    </div>
+</header>
+
+<div class="container">
+
+
 <div class="row">
     <div class="large-12 columns">
-        <div class="row">
+        <!--<div class="row">
             <div class="large-12 columns">
                 <nav class="top-bar" data-topbar>
                     <ul class="title-area">
@@ -35,34 +95,34 @@
                     </ul>
                 </nav>
             </div>
-        </div>
+        </div>-->
         <br>
 
         <div class="row">
             <div class="large-12 columns">
-                <div class="row" >
+                <!--<div class="row" >-->
                     <div class="large-12 columns">
-                        <div class="panel" style="background-color: #f7f7f7;padding-left: 36px;padding-right: 36px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
+                        <div class="panel" style="background-color: #f7f7f7;padding-left: 34px;padding-right: 34px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                             <div class="row">
+                                <br>
                                 <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
-                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
-                                <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular"></input>
+                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                                <br><br>
+                                <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" ></input>
+                                <br>
+                                <br>
                             </div>
 
                             <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
                                 <br/>
                                 <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                                    <div id="papa_chart" style="width: 800px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px;"></div>
+                                    <div id="papa_chart" style="width: 800px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
                                 </div>
                                 <br/>
-                                <div class="large-12 columns" style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                                    <div class="large-6 columns">
-                                        <div id="percentage_chart" style="width: 450px; height: 350px"></div>
-                                    </div>
-                                    <div class="large-6 columns">
-                                        <div id="components_chart" style="width: 450px; height: 350px"></div>
-                                    </div>
-                                </div>
+                                <!--<div class="large-12 columns" style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">-->
+                                <div id="percentage_chart" style="width: 450px; height: 350px; float: left;  padding-left: 500px;"></div>
+                                <div id="components_chart" style="width: 450px; height: 350px; float: right;"></div>
+                                <!--</div>-->
                                 <br/>
                                 <div class="large-12 columns" style="text-align: center;">
                                     <br/>
@@ -107,7 +167,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                <!--</div>-->
             </div>
         </div>
         <footer class="row">
@@ -137,6 +197,8 @@
             </div>
         </footer>
     </div>
+</div>
+
 </div>
 <asset:javascript src="foundation/vendor/jquery.js"/>
 <asset:javascript src="foundation/foundation.min.js"/>

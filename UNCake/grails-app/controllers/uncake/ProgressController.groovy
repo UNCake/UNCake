@@ -42,15 +42,8 @@ class ProgressController {
             periods.add( recordSoFar.substring( 0, recordSoFar.indexOf( periodName ) ) )
             recordSoFar = recordSoFar.substring( recordSoFar.indexOf( periodName ) )
             recordSoFar = recordSoFar.replace( periodName, "" )
-            println "\n\n"
         }
         periods.add( recordSoFar.substring( 0 ) )
-        /*println periods.size()
-        for( int i = 0; i < periods.size(); i++ ){
-            println periodNames[i]
-            println periods[i]
-            println "\n\n ------------- - --------------- \n\n"
-        }*/
 
         for( int i = 0; i < periods.size(); i++ ){
             def periodsText = String.valueOf( periods[i] )
@@ -105,8 +98,6 @@ class ProgressController {
                 studyPlanCreated = true
         }
 
-        println studyPlanCreated
-
         def acadRecordToSave = new AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA, courses: coursesToSave )
         acadRecordToSave.save()
 
@@ -131,13 +122,13 @@ class ProgressController {
         else
             newUser.addToAcademicRecord( acadRecordToSave )
 
-        newUser.academicRecord.each {
+        /*newUser.academicRecord.each {
             println it.studyPlan.code
             println it.PAPA
             it.courses.each {
                 println it.code + " " + it.name + " " + it.credits + " " + it.grade + " " + it.semester
             }
-        }
+        }*/
         render ""
     }
 
