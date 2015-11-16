@@ -5,7 +5,7 @@ import groovyx.net.http.HTTPBuilder
 
 @Transactional
 class DBconnectionService {
-
+    static transactional = false
     /*
         Se encarga de poblar la base de datos con los planes de estudio
         y sus materias.
@@ -32,7 +32,7 @@ class DBconnectionService {
                             faculty = source[i]
                         } else if (i + 1 < source.size() && source[i + 1].contains('semaforo')) {
                             new StudyPlan(location: loc, faculty: faculty, code: source[i + 1].find(/[0-9]+/),
-                                    name: source[i], type: it).save()
+                                    name: source[i], type: it).save(flush: true)
                         }
                     }
 
@@ -42,7 +42,7 @@ class DBconnectionService {
             }
         }
 
-        //Se almacenan las materias de fundamentacion y disciplinar de cada plan de estudios (pregrado)
+        //Se almacenan las materias de cada plan de estudios (pregrado)
         StudyPlan.findAllByType("PRE").each { sp ->
 
             try {
@@ -56,17 +56,18 @@ class DBconnectionService {
                 html."**".findAll { it.@id.text().find(/arco_[0-9]+/) }.TABLE.TBODY.each {
 
                         def value = -1
-
+                        def component = it.TR[0].TD[0].text().toUpperCase()
                         //Se obtiene la cantidad de creditos por componente
-                        if (it.TR[0].TD[0].text().contains("Fund")) {
+                        if (component.contains("FUND")) {
                             value = type[0]
-                            sp[value[0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
-                        } else if (it.TR[0].TD[0].text().contains("Disc") || it.TR[0].TD[0].text().contains("Grad")) {
+                            sp[value[0]] = component.find(/[0-9]+/).toInteger()
+                        } else if (component.contains("DISC") || component.contains("GRAD")) {
                             value = type[1]
                             if (sp[value[0]] == null) sp[value[0]] = 0
-                            sp[value[0]] += it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
-                        }else if (it.TR[0].TD[0].text().contains("Libre")) {
-                            sp[type[2][0]] = it.TR[0].TD[0].text().find(/[0-9]+/).toInteger()
+                            sp[value[0]] += component.find(/[0-9]+/).toInteger()
+                        }else if (component.contains("LIBRE")) {
+                            value = type[2]
+                            sp[value[0]] = component.find(/[0-9]+/).toInteger()
                         }
 
                         if (value != -1) {
@@ -74,15 +75,15 @@ class DBconnectionService {
                             it.TR[1].TD[0].TABLE.each {
 
                                 it.TBODY.TR[0].TD[1].DIV.each {
-                                    pr = getCourseInfo(it, value[1])
-                                    if (pr != null && pr.id != null) sp.addToCourses(pr)
+                                    pr = getCourseInfo(it, value[1], sp)
+                                    if (pr != null) sp.addToCourses(pr)
                                 }
 
                                 it.TBODY.TR[0].TD[1].TABLE.each {
 
                                     it.TBODY.TR[0].TD[1].DIV.each {
-                                        pr = getCourseInfo(it, value[1])
-                                        if (pr != null && pr.id != null) sp.addToCourses(pr)
+                                        pr = getCourseInfo(it, value[1], sp)
+                                        if (pr != null) sp.addToCourses(pr)
                                     }
                                 }
                             }
@@ -91,8 +92,8 @@ class DBconnectionService {
                 }
 
                 /*println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
-                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")
-                sp.save()*/
+                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")*/
+                sp.save(flush: true)
 
             } catch (Exception e) {
                 println "Programa academico $sp.name de la sede $sp.location.name no disponible"
@@ -104,17 +105,27 @@ class DBconnectionService {
         Construye los objetos Prerequisite, a partir de la informacion de la materia
      */
 
-    def getCourseInfo(it, typology) {
-        def code, credits, name
+    def getCourseInfo(it, typology, plan) {
+        def fcode, credits, name
 
-        code = it.DIV[1].A.H5.text()
+        fcode = it.DIV[1].A.H5.text()
         credits = it.DIV[1].A.DIV[1].text()
         name = it.DIV[2].DIV[1].H4.text()
 
-        if (code != "") {
-            def course =  new Course(name: name, code: code, credits: credits, typology: typology)
-            course.save()
-            return new Prerequisite(course: course)
+        if (fcode !=null && fcode != "") {
+
+            def course = Course.find{code == fcode}
+
+            if (course == null) {
+                course = new Course(name: name, code: fcode, credits: credits,
+                        typology: typology, location: plan.location)
+                    course.save(flush:true)
+            }
+
+            def pre = new Prerequisite(course: course, code: plan.code+"-"+fcode)
+            pre.save(flush:true)
+
+            return pre
         }
 
         return null

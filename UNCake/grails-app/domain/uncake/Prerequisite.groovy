@@ -2,11 +2,13 @@ package uncake
 
 class Prerequisite {
 
+    String code
     Course course
     static hasMany = [prerequistes: Course]
 
     static constraints = {
-        course nullable: false
+        code nullable: true
+        course nullable: true
         prerequistes nullable: true
     }
 }
