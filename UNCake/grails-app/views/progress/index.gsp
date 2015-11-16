@@ -106,9 +106,9 @@
                             <div class="row">
                                 <br>
                                 <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
-                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-left: 50px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                                 <br><br>
-                                <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" ></input>
+                                <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
                                 <br>
                                 <br>
                             </div>
@@ -116,17 +116,17 @@
                             <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
                                 <br/>
                                 <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                                    <div id="papa_chart" style="width: 800px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
+                                    <div id="papa_chart" style="width: 900px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
                                 </div>
                                 <br/>
-                                <!--<div class="large-12 columns" style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">-->
-                                <div id="percentage_chart" style="width: 450px; height: 350px; float: left;  padding-left: 500px;"></div>
+                                <div class="large-12 columns" style="padding-right: 80px;">
+                                <div id="percentage_chart" style="width: 450px; height: 350px; float: left;  padding-left: 80px;"></div>
                                 <div id="components_chart" style="width: 450px; height: 350px; float: right;"></div>
-                                <!--</div>-->
+                                </div>
                                 <br/>
                                 <div class="large-12 columns" style="text-align: center;">
                                     <br/>
-                                    <div id="record_table" style="width: 900px; display: inline-block;"></div>
+                                    <div id="record_table" style="width: 1000px; display: inline-block;"></div>
                                     <br/><br/>
                                 </div>
                                 <g:if test="${session.user == null}">
@@ -170,7 +170,7 @@
                 <!--</div>-->
             </div>
         </div>
-        <footer class="row">
+        <!--<footer class="row">
             <div class="large-12 columns">
                 <hr>
                 <div class="row">
@@ -195,7 +195,7 @@
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer>-->
     </div>
 </div>
 
@@ -524,7 +524,7 @@ function drawPAPA( averages ) {
     );
     var options = {
         title: 'PAPA y PA',
-        width: 800,
+        width: 900,
         legend: { position: 'none' },
         chart: { },
         axes: {
