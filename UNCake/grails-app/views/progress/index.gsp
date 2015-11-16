@@ -98,7 +98,7 @@
                 <div class="large-12 columns">
                     <div class="panel" style="background-color: #f7f7f7;padding-left: 34px;padding-right: 34px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                         <div class="row" id="data_container">
-                            <br>
+                            <br/>
                             <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
                             <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                             <br><br>
@@ -108,19 +108,22 @@
                         </div>
 
                         <div class="row" id="saved_container" style="display: none">
-                            <br>
+                            <br/>
                             <p style="text-align: left; display: inline-block;">Tienes historias académicas almacenadas ¿quieres ver una previamente guardada crear una nueva?</p>
                             <g:if test="${session.user != null}">
-                                <g:if test="${uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.size() > 0}">
-
-                                    <g:each in="${uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord}">
-                                        <g:set var="records" value="${it.studyPlan}" />
+                                <g:if test="${uncake.User.findById( ((User)session.user).id ).academicRecord.size() > 0}">
+                                    <g:set var="records" value="[]"/>
+                                    <g:each in="${uncake.User.findById( ((User)session.user).id ).academicRecord}">
+                                        <g:each in="${it.studyPlan}" var="studyPlan">
+                                            <div style="display: none;">${records.add(studyPlan)}</div>
+                                        </g:each>
                                     </g:each>
-                                    <g:each in="${records}">
-                                        ${it.code}
-                                        ${it.name}
-                                    </g:each>
-
+                                    <div>
+                                        <g:select id="recordSelector" name="${records.name}" from="${records.name}" noSelection="['':'-Selecciona una historia académica-']"/>
+                                    </div>
+                                    <br/>
+                                    <input type="button" id="loadRecord" name="loadRecord" value="Cargar" />
+                                    <input type="button" id="newRecord" name="newRecord" value="Nueva" />
                                 </g:if>
                             </g:if>
                             <br>
@@ -147,12 +150,11 @@
 
                             </g:if>
                             <g:else>
-                                <g:if test="${uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.size() > 0}">
+                                <g:if test="${uncake.User.findById( ( (User)session.user ).id ).academicRecord.size() > 0}">
                                     <g:javascript>
                                         $("#data_container").hide();
                                         $("#saved_container").show();
                                     </g:javascript>
-
                                 </g:if>
                                 <div style="text-align: center">
                                     <input type="button" class="" id="btn_save" value="Guardar"/>
@@ -239,38 +241,14 @@ function validate(evt) {
     }
 }
 $(function(){
-    /*var loadRecords = function () {
-        var url = "${createLink(controller:'Progress', action:'searchRecords')}";
-        var response = $.ajax({
-            url: url,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            crossDomain: true,
-            data: { },
-            success: function ( academicRecords ) {
-                records = academicRecords
-                $('#selectable').empty();
-                $.each(records, function (key, value) {
-                    $('#selectable').append( $('<li>', { value: key } ).text( value.name ) );
-                });
-            },
-            error: function ( ) { }
-        });
-    }
-
-    $("#academicRecord").keyup(function () {
-        loadRecords();
-        var academicRecord = $(this).val().toLowerCase();
-        if (academicRecord == "") {
-            $('#selectable li').show();
-        } else {
-            $('#selectable li').each(function () {
-                var text = $(this).text().toLowerCase();
-                (text.indexOf(academicRecord) >= 0) ? $(this).show() : $(this).hide();
-            });
-        }
-        ;
-    });*/
+    $( "#newRecord" ).button().click( function() {
+        $("#data_container").show();
+    });
+    $( "#loadRecord" ).button().click( function() {
+        var record = document.getElementById('recordSelector');
+        alert( record.value );
+        alert( record.name );
+    });
     $( ".checkNota" ).on( "click", function() {
         var checkID = parseInt($(this).attr('id').replace('checkNota_',''));
         $( "#txtNota_" + checkID )[0].disabled = true;

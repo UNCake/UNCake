@@ -15,6 +15,7 @@ class ProgressController {
     }
 
     def saveAcademicRecord(){
+        println uncake.User.findById( ((User)session.user).id ).academicRecord
         def planPattern = "[0-9]+ \\| [A-Za-z:\\.\\- ]+"
         def subjectPattern = "[0-9][A-Z\\-0-9]*[\\t][A-Za-z:\\.\\- ]+[\\t][0-9]+[\\t][0-9]+[\\t][0-9]+[\\t][A-Z][\\t][0-9]+[\\t][0-9]+[\\t]+[0-9]\\.?[0-9]"
         def requiredPattern = "exigidos\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9\\-]+\\t[0-9]+";
@@ -93,7 +94,7 @@ class ProgressController {
 
         def PA = sumSubjects / sumCredits;
         def studyPlanCreated = false;
-        def newUser = uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) )
+        def newUser = uncake.User.findById( ((User)session.user).id )
 
         newUser.academicRecord.each{
             if( it.studyPlan.code == studyPlan.code )
@@ -118,19 +119,27 @@ class ProgressController {
 
             if( newUser.academicRecord.size() > 0 )
                 newUser.addToAcademicRecord( acadRecordToSave )
-            else
-                newUser.academicRecord = [ acadRecordToSave ]
+            else {
+                newUser.academicRecord = [acadRecordToSave].save(flush: true)
+                newUser.save(flush: true)
+            }
         }
-        else
-            newUser.addToAcademicRecord( acadRecordToSave )
+        else {
+            newUser.addToAcademicRecord(acadRecordToSave).save(flush: true)
+            newUser.save(flush: true)
+        }
 
-        /*newUser.academicRecord.each {
+
+
+        /*uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each {
             println it.studyPlan.code
             println it.PAPA
             it.courses.each {
                 println it.code + " " + it.name + " " + it.credits + " " + it.grade + " " + it.semester
             }
-        }*/
+        }
+        println newUser.academicRecord.size()
+        println newUser.academicRecord.size()*/
         render ""
     }
 
