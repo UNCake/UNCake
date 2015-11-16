@@ -95,74 +95,99 @@
 
         <div class="row">
             <div class="large-12 columns">
-                <!--<div class="row" >-->
-                    <div class="large-12 columns">
-                        <div class="panel" style="background-color: #f7f7f7;padding-left: 34px;padding-right: 34px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                            <div class="row">
-                                <br>
-                                <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
-                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
-                                <br><br>
-                                <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
-                                <br>
-                                <br>
-                            </div>
+                <div class="large-12 columns">
+                    <div class="panel" style="background-color: #f7f7f7;padding-left: 34px;padding-right: 34px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
+                        <div class="row" id="data_container">
+                            <br>
+                            <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
+                            <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                            <br><br>
+                            <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
+                            <br>
+                            <br>
+                        </div>
 
-                            <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
-                                <br/>
-                                <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                                    <div id="papa_chart" style="width: 900px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
-                                </div>
-                                <br/>
-                                <div class="large-12 columns" style="padding-right: 80px;">
-                                <div id="percentage_chart" style="width: 450px; height: 350px; float: left;  padding-left: 80px;"></div>
-                                <div id="components_chart" style="width: 450px; height: 350px; float: right;"></div>
-                                </div>
-                                <br/>
-                                <div class="large-12 columns" style="text-align: center;">
-                                    <br/>
-                                    <div id="record_table" style="width: 1000px; display: inline-block;"></div>
-                                    <br/><br/>
-                                </div>
-                                <g:if test="${session.user == null}">
+                        <div class="row" id="saved_container" style="display: none">
+                            <br>
+                            <p style="text-align: left; display: inline-block;">Tienes historias académicas almacenadas ¿quieres ver una previamente guardada crear una nueva?</p>
+                            <g:if test="${session.user != null}">
+                                <g:if test="${uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.size() > 0}">
+
+                                    <g:each in="${uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord}">
+                                        <g:set var="records" value="${it.studyPlan}" />
+                                    </g:each>
+                                    <g:each in="${records}">
+                                        ${it.code}
+                                        ${it.name}
+                                    </g:each>
 
                                 </g:if>
-                                <g:else>
-                                    <div style="text-align: center">
-                                        <input type="button" class="" id="btn_save" value="Guardar"/>
-                                    </div>
-                                    <br>
-                                </g:else>
-                                <div id="new_subjects_1" class="large-12 columns" style="align-content: center; text-align: center;">
-                                    <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                                    <input type="text" name="txtCredits" class="txtCredits" id="txtCredits_1" style="width: 200px; display: inline-block;" placeholder="Créditos a cursar"/>
-                                    <h5 style="line-height: 30px; display: inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nota:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                                    <input type="checkbox" id="checkNota_1" name="checkNota" class="checkNota" style="line-height: 30px; display: inline-block;" />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="text" name="txtNota" id="txtNota_1" class="txtNota" disabled="true" placeholder="Nota esperada" style=" width: 200px; display: inline-block;"/>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="button" class="btn_add" id="1" value="+" style="height: 45px; width: 50px; display: inline-block;"/>
+                            </g:if>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
+                            <br/>
+                            <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
+                                <div id="papa_chart" style="width: 900px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
+                            </div>
+                            <br/>
+                            <div class="large-12 columns" style="padding-right: 80px;">
+                            <div id="percentage_chart" style="width: 450px; height: 350px; float: left;  padding-left: 80px;"></div>
+                            <div id="components_chart" style="width: 450px; height: 350px; float: right;"></div>
+                            </div>
+                            <br/>
+                            <div class="large-12 columns" style="text-align: center;">
+                                <br/>
+                                <div id="record_table" style="width: 1000px; display: inline-block;"></div>
+                                <br/><br/>
+                            </div>
+                            <g:if test="${session.user == null}">
+
+                            </g:if>
+                            <g:else>
+                                <g:if test="${uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.size() > 0}">
+                                    <g:javascript>
+                                        $("#data_container").hide();
+                                        $("#saved_container").show();
+                                    </g:javascript>
+
+                                </g:if>
+                                <div style="text-align: center">
+                                    <input type="button" class="" id="btn_save" value="Guardar"/>
                                 </div>
-                                <div id="calculate" class="large-12 columns">
-                                    <br>
-                                    <div style="text-align: center;" >
-                                        <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Promedio esperado:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                                        <input type="text" class="txtAverage" id="txtAverage" style="width: 200px; display: inline-block;" placeholder="Promedio"/>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
-                                    </div>
-                                    <br/>
+                                <br>
+                            </g:else>
+                            <div id="new_subjects_1" class="large-12 columns" style="align-content: center; text-align: center;">
+                                <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                <input type="text" name="txtCredits" class="txtCredits" id="txtCredits_1" style="width: 200px; display: inline-block;" placeholder="Créditos a cursar"/>
+                                <h5 style="line-height: 30px; display: inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nota:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                <input type="checkbox" id="checkNota_1" name="checkNota" class="checkNota" style="line-height: 30px; display: inline-block;" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="text" name="txtNota" id="txtNota_1" class="txtNota" disabled="true" placeholder="Nota esperada" style=" width: 200px; display: inline-block;"/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="button" class="btn_add" id="1" value="+" style="height: 45px; width: 50px; display: inline-block;"/>
+                            </div>
+                            <div id="calculate" class="large-12 columns">
+                                <br>
+                                <div style="text-align: center;" >
+                                    <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Promedio esperado:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                    <input type="text" class="txtAverage" id="txtAverage" style="width: 200px; display: inline-block;" placeholder="Promedio"/>
                                 </div>
-                                <div style="text-align: center;">
-                                    <br/>
-                                    <p id="newSubjectsMessage" style="text-align: center;"></p>
-                                    <br/>
+                                <div style="text-align: right;">
+                                    <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
                                 </div>
+                                <br/>
+                            </div>
+                            <div style="text-align: center;">
+                                <br/>
+                                <p id="newSubjectsMessage" style="text-align: center;"></p>
+                                <br/>
                             </div>
                         </div>
                     </div>
-                <!--</div>-->
+                </div>
             </div>
         </div>
         <!--<footer class="row">
@@ -214,6 +239,38 @@ function validate(evt) {
     }
 }
 $(function(){
+    /*var loadRecords = function () {
+        var url = "${createLink(controller:'Progress', action:'searchRecords')}";
+        var response = $.ajax({
+            url: url,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            crossDomain: true,
+            data: { },
+            success: function ( academicRecords ) {
+                records = academicRecords
+                $('#selectable').empty();
+                $.each(records, function (key, value) {
+                    $('#selectable').append( $('<li>', { value: key } ).text( value.name ) );
+                });
+            },
+            error: function ( ) { }
+        });
+    }
+
+    $("#academicRecord").keyup(function () {
+        loadRecords();
+        var academicRecord = $(this).val().toLowerCase();
+        if (academicRecord == "") {
+            $('#selectable li').show();
+        } else {
+            $('#selectable li').each(function () {
+                var text = $(this).text().toLowerCase();
+                (text.indexOf(academicRecord) >= 0) ? $(this).show() : $(this).hide();
+            });
+        }
+        ;
+    });*/
     $( ".checkNota" ).on( "click", function() {
         var checkID = parseInt($(this).attr('id').replace('checkNota_',''));
         $( "#txtNota_" + checkID )[0].disabled = true;

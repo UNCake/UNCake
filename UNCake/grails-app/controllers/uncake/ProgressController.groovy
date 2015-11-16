@@ -1,5 +1,7 @@
 package uncake
 
+import grails.converters.JSON
+
 class ProgressController {
 
     def index() {
@@ -88,8 +90,8 @@ class ProgressController {
             sumSubjects += Float.parseFloat( subjectsAux[i].split('\t')[9] ) * Integer.parseInt( subjectsAux[i].split('\t')[6] );
             sumCredits += Integer.parseInt( subjectsAux[i].split('\t')[6] );
         }
-        def PA = sumSubjects / sumCredits;
 
+        def PA = sumSubjects / sumCredits;
         def studyPlanCreated = false;
         def newUser = uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) )
 
