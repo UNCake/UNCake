@@ -261,7 +261,9 @@
                         if (!available) {
                             $("#modalCr").modal("show");
                         } else {
-                            var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                            var colors = ["#f49595", "#f9eb97", "#c6f9ac", "#a8d9f6", "#e2bbfd", "#84d8b8",
+                                "#b4e7cf", "#eed7cb", "#eeeba1", "#f8bbf9"]
+                            var color = colors[Math.random()*10|0]
                             for (var i in gr["timeSlots"]) {
                                 var ts = gr["timeSlots"][i]
                                 if (ts.startHour > 0) {
