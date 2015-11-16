@@ -246,12 +246,20 @@
                             }
                         });
 
-                        var available = true
+                        var available = true;
+                        var crCourse = "";
                         for (var i in gr["timeSlots"]) {
                             var ts = gr["timeSlots"][i]
                             for (var s = ts.startHour; s <= ts.endHour; s++) {
                                 if ($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim() != "") {
                                     available = false;
+                                    crCourse = $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim();
+                                    crCourse = crCourse.substr(0, crCourse.indexOf("-"));
+                                    $(courses).each(function(key, value){
+                                        if(value["code"] == crCourse){
+                                            crCourse = value["name"];
+                                        }
+                                    });
                                     break;
                                 }
                             }
@@ -259,6 +267,7 @@
                         }
 
                         if (!available) {
+                            $("#modal-message").html("Existe un cruce entre la materia "+ crCourse+ " y la materia "+ name+ ".");
                             $("#modalCr").modal("show");
                         } else {
                             var colors = ["#f49595", "#f9eb97", "#c6f9ac", "#a8d9f6", "#e2bbfd", "#84d8b8",
@@ -431,7 +440,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="modalCr" role="dialog">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -439,7 +448,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <p>Selecciona otro grupo.</p>
+                        <p id="modal-message">Selecciona otro grupo.</p>
                     </div>
                 </div>
             </div>
