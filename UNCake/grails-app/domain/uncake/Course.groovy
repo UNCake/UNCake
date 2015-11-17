@@ -10,7 +10,7 @@ class Course {
     Double grade
     String semester
     static constraints = {
-        code nullable: false, unique: true
+        code nullable: false   //, unique: true
         name blank: false
         typology blank: false
         grade nullable: true
