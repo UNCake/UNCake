@@ -112,14 +112,17 @@
                             <p style="text-align: left; display: inline-block;">Tienes historias académicas almacenadas ¿quieres ver una previamente guardada crear una nueva?</p>
                             <g:if test="${session.user != null}">
                                 <g:if test="${uncake.User.findById( ((User)session.user).id ).academicRecord.size() > 0}">
+                                    ${uncake.User.findById( ((User)session.user).id ).academicRecord.size()}
                                     <g:set var="records" value="[]"/>
                                     <g:each in="${uncake.User.findById( ((User)session.user).id ).academicRecord}">
                                         <g:each in="${it.studyPlan}" var="studyPlan">
-                                            <div style="display: none;">${records.add(studyPlan)}</div>
+                                            <div style="display: none;">
+                                                ${records.add(studyPlan.code + " | " + studyPlan.name)}
+                                            </div>
                                         </g:each>
                                     </g:each>
                                     <div>
-                                        <g:select id="recordSelector" name="${records.name}" from="${records.name}" noSelection="['':'-Selecciona una historia académica-']"/>
+                                        <g:select id="recordSelector" name="${records}" from="${records}" noSelection="['':'-Selecciona una historia académica-']"/>
                                     </div>
                                     <br/>
                                     <input type="button" id="loadRecord" name="loadRecord" value="Cargar" />
@@ -245,9 +248,18 @@ $(function(){
         $("#data_container").show();
     });
     $( "#loadRecord" ).button().click( function() {
-        var record = document.getElementById('recordSelector');
-        alert( record.value );
-        alert( record.name );
+        var selectedRecord = document.getElementById('recordSelector').value;
+        alert( selectedRecord );
+        if( selectedRecord.length > 0 ){
+            var response = $.ajax({
+                type: 'POST',
+                url: "${createLink(action: 'loadAcademicRecord')}",
+                data: {selectedRecord: selectedRecord},
+                success: function( data ){
+                }
+            });
+        }else
+            alert( "Debe seleccionar una historia académica a cargar" );
     });
     $( ".checkNota" ).on( "click", function() {
         var checkID = parseInt($(this).attr('id').replace('checkNota_',''));
@@ -264,7 +276,6 @@ $(function(){
     $( "#btn_save" ).button().click( function() {
         var record = document.getElementById('academicRecord').value;
         record = removeAccent(record)
-        //alert(record)
         var response = $.ajax({
             type: 'POST',
             url: "${createLink(action: 'saveAcademicRecord')}",

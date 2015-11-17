@@ -14,8 +14,25 @@ class ProgressController {
         return*/
     }
 
+    def loadAcademicRecord(){
+        def selectedRecord = String.valueOf( params.selectedRecord )
+        def selectedCode = Integer.parseInt( selectedRecord.split('\\|')[0].trim() )
+        def selectedName = selectedRecord.split('\\|')[1].trim()
+        def academicRecordToShow
+        uncake.User.findById( ((User)session.user).id ).academicRecord.each {
+            if( it.studyPlan.code == selectedCode && it.studyPlan.name.toUpperCase().equals(selectedName) )
+                academicRecordToShow = (AcademicRecord)it
+        }
+        if( academicRecordToShow != null ){
+            println academicRecordToShow.PAPA
+            println academicRecordToShow.PA
+            println academicRecordToShow.courses
+        }
+        render ""
+    }
+
     def saveAcademicRecord(){
-        println uncake.User.findById( ((User)session.user).id ).academicRecord
+        println uncake.User.findById( ((User)session.user).id ).academicRecord.size()
         def planPattern = "[0-9]+ \\| [A-Za-z:\\.\\- ]+"
         def subjectPattern = "[0-9][A-Z\\-0-9]*[\\t][A-Za-z:\\.\\- ]+[\\t][0-9]+[\\t][0-9]+[\\t][0-9]+[\\t][A-Z][\\t][0-9]+[\\t][0-9]+[\\t]+[0-9]\\.?[0-9]"
         def requiredPattern = "exigidos\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9\\-]+\\t[0-9]+";
@@ -65,7 +82,9 @@ class ProgressController {
                 if( subject.split('\t')[5] == 'L' )
                     typology = "Electiva"
 
-                coursesToSave.add( new uncake.Course( code: code, name: name, typology: typology, credits: credits, grade: grade, semester: String.valueOf( periodNames[i]) ) )
+                def newCourse = new uncake.Course( code: code, name: name, typology: typology, credits: credits, grade: grade, semester: String.valueOf( periodNames[i]) )
+                newCourse.save(flush: true)
+                coursesToSave.add( newCourse )
                 periodsText = periodsText.replace( subject, "" )
             }
         }
@@ -100,9 +119,7 @@ class ProgressController {
             if( it.studyPlan.code == studyPlan.code )
                 studyPlanCreated = true
         }
-
-        def acadRecordToSave = new AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA, courses: coursesToSave )
-        acadRecordToSave.save()
+        println studyPlanCreated
 
         if( studyPlanCreated ){
             def delStudyPlan = []
@@ -113,33 +130,30 @@ class ProgressController {
                 }
             }
             delStudyPlan.each {
-                newUser.removeFromAcademicRecord( (AcademicRecord)it )
-                uncake.AcademicRecord.deleteAll( (AcademicRecord)it )
-            }
-
-            if( newUser.academicRecord.size() > 0 )
-                newUser.addToAcademicRecord( acadRecordToSave )
-            else {
-                newUser.academicRecord = [acadRecordToSave].save(flush: true)
-                newUser.save(flush: true)
+                newUser.removeFromAcademicRecord( AcademicRecord.findById( ((AcademicRecord)it).id ) )
             }
         }
-        else {
-            newUser.addToAcademicRecord(acadRecordToSave).save(flush: true)
-            newUser.save(flush: true)
+        def academicRecords = []
+        newUser.academicRecord.each{
+            academicRecords.add( ((AcademicRecord)it) )
+        }
+        def acadRecordToSave = new uncake.AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA, courses: coursesToSave )
+        println acadRecordToSave
+        academicRecords.add( acadRecordToSave )
+        academicRecords.each {
+            newUser.addToAcademicRecord( it ).save(failOnError: true)
         }
 
-
-
-        /*uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each {
+        uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each {
             println it.studyPlan.code
             println it.PAPA
+            println it.courses
             it.courses.each {
-                println it.code + " " + it.name + " " + it.credits + " " + it.grade + " " + it.semester
+                //println it.code + " " + it.name + " " + it.credits + " " + it.grade + " " + it.semester
+
             }
         }
         println newUser.academicRecord.size()
-        println newUser.academicRecord.size()*/
         render ""
     }
 

@@ -6,7 +6,7 @@ class AcademicRecord {
     Integer credits
     Double PAPA
     Double PA
-    static belongsTo = [user: User]
+    //static belongsTo = [user: User]
     static hasMany = [courses: Course]
 
     static constraints = {
