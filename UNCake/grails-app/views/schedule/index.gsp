@@ -107,8 +107,14 @@
                         var div = $('<ol>', {class: 'selectableItem', id: name, value: code});
                         groups[name] = group;
                         $.each(group, function (key, value) {
+                            var minSch = ""
+                            for (var i in value["timeSlots"]) {
+                                var ts = value["timeSlots"][i]
+                                if(ts.startHour > 0)
+                                    minSch += ts.day.substring(0,2) + ': ' + ts.startHour + ' - ' + ts.endHour + '\n';
+                            }
                             div.append($('<li>', {value: code, id: key})
-                                    .text(value.code + ' - ' + value.teacher));
+                                    .html(value.code + ' - ' + value.teacher+'<p style="background-color: #999999">' + minSch +'</p>'));
                         });
                         $('#accordionGroup').append(div);
 
