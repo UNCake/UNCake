@@ -15,6 +15,7 @@
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
+    <asset:javascript src="html2canvas.js"/>
     <asset:javascript src="jquery-2.1.3.js"/>
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
     <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
@@ -296,7 +297,16 @@
                 });
             });
 
-            $("#saveSchedule").button();
+            $("#saveSchedule").button().click(
+                    function() {
+                        html2canvas($('#scheduleTable'), {
+                            onrendered: function (canvas) {
+                                var img = canvas.toDataURL()
+                                window.open(img);
+                            }
+                        });
+                    }
+            );
 
         });
     </script>
@@ -437,7 +447,7 @@
                 </button>
             </div>
         </g:if>
-        
+
     </div>
 
     <div class="col-sm-3">
