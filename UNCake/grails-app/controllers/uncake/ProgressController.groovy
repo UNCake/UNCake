@@ -19,6 +19,17 @@ class ProgressController {
         def selectedCode = Integer.parseInt( selectedRecord.split('\\|')[0].trim() )
         def selectedName = selectedRecord.split('\\|')[1].trim()
         def academicRecordToShow
+        def periods = []
+        def gradesPerPeriod = []
+        def creditsPerPeriod = []
+        def subjectsPAPA = []
+        def subjectsPA
+        def PAPAPerPeriod = []
+        def PAPerPeriod = []
+        def gradesPAPASoFar = 0.0
+        def creditsPASoFar = 0.0
+        def gradesPAPASoFar = 0.0
+        def creditsPASoFar = 0.0
         uncake.User.findById( ((User)session.user).id ).academicRecord.each {
             if( it.studyPlan.code == selectedCode && it.studyPlan.name.toUpperCase().equals(selectedName) )
                 academicRecordToShow = (AcademicRecord)it
@@ -26,7 +37,44 @@ class ProgressController {
         if( academicRecordToShow != null ){
             println academicRecordToShow.PAPA
             println academicRecordToShow.PA
+            println academicRecordToShow.credits
             println academicRecordToShow.courses
+        }
+        academicRecordToShow.courses.each{
+            def periodNumber = ((uncake.Course)it).semesterNumber
+            subjectsPAPA.add( ((uncake.Course)it) )
+            if( !(periodNumber in periods) )
+                periods.add(periodNumber)
+        }
+        subjectsPA = subjectsPAPA
+        for( int i = 0; i < subjectsPAPA.size() - 1; i++ ){
+            for( int j = i + 1; j < subjectsPAPA.size(); j++ ){
+                if( ( (uncake.Course)subjectsPAPA[i] ).code == ( (uncake.Course)subjectsPAPA[j] ).code )
+                    subjectsPA.remove(i)
+            }
+        }
+        for( int i = 0; i < periods.size() - 1; i++ ){
+            gradesPerPeriod[i] = ( (uncake.Course)subjectsPAPA[i] ).grade * ( (uncake.Course)subjectsPAPA[i] ).credits
+            creditsPerPeriod[i] = ( (uncake.Course)subjectsPAPA[i] ).credits
+            for( int j = i + 1; j < periods.size(); j++ ){
+                if( ( (uncake.Course)subjectsPAPA[i] ).semesterNumber == ( (uncake.Course)subjectsPAPA[j] ).semesterNumber ) {
+                    gradesPerPeriod[i] += ( (uncake.Course)subjectsPAPA[j] ).grade * ( (uncake.Course)subjectsPAPA[j] ).credits
+                    creditsPerPeriod[i] += ( (uncake.Course)subjectsPAPA[j] ).credits
+                }
+            }
+            gradesPAPASoFar += gradesPerPeriod[i] / creditsPerPeriod[i]
+            creditsPAPASoFar
+            PAPAPerPeriod
+        }
+        academicRecordToShow.courses.each{
+            def periodNumber = ((uncake.Course)it).semesterNumber
+            gradesPerPeriod[periodNumber] = 0
+            creditsPerPeriod[periodNumber] = 0
+        }
+        academicRecordToShow.courses.each{
+            def periodNumber = ((uncake.Course)it).semesterNumber
+            gradesPerPeriod[periodNumber] += ((uncake.Course)it).grade * ((uncake.Course)it).credits
+            creditsPerPeriod[periodNumber] += ((uncake.Course)it).credits
         }
         render ""
     }
@@ -82,7 +130,7 @@ class ProgressController {
                 if( subject.split('\t')[5] == 'L' )
                     typology = "Electiva"
 
-                def newCourse = new uncake.Course( code: code, name: name, typology: typology, credits: credits, grade: grade, semester: String.valueOf( periodNames[i]) )
+                def newCourse = new uncake.Course( code: code, name: name, typology: typology, credits: credits, grade: grade, semester: String.valueOf( periodNames[i]), semesterNumber: i + 1 )
                 newCourse.save(flush: true)
                 coursesToSave.add( newCourse )
                 periodsText = periodsText.replace( subject, "" )

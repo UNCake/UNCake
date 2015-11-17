@@ -9,6 +9,7 @@ class Course {
     String typology
     Double grade
     String semester
+    Integer semesterNumber
     static constraints = {
         code nullable: false   //, unique: true
         name blank: false
@@ -17,5 +18,6 @@ class Course {
         credits nullable: true
         semester nullable: true
         groups nullable: true
+        semesterNumber nullable: true
     }
 }
