@@ -36,12 +36,6 @@ class ProgressController {
             if( it.studyPlan.code == selectedCode && it.studyPlan.name.toUpperCase().equals(selectedName) )
                 academicRecordToShow = (AcademicRecord)it
         }
-        if( academicRecordToShow != null ){
-            println academicRecordToShow.PAPA
-            println academicRecordToShow.PA
-            println academicRecordToShow.credits
-            println academicRecordToShow.courses
-        }
         academicRecordToShow.courses.each{
             def periodNumber = ((uncake.Course)it).semesterNumber
             subjectsPAPA.add( ((uncake.Course)it) )
@@ -67,9 +61,28 @@ class ProgressController {
             gradesPAPASoFar += gradesPAPAPerPeriod[i]
             creditsPAPASoFar += creditsPAPAPerPeriod[i]
             PAPAPerPeriod.add(i,gradesPAPASoFar/creditsPAPASoFar)
-
+            for( int j = i + 1; j < periods.size(); j++ ){
+                if( ( (uncake.Course)subjectsPA[i] ).semesterNumber == ( (uncake.Course)subjectsPA[j] ).semesterNumber ) {
+                    gradesPAPerPeriod[i] += ( (uncake.Course)subjectsPA[j] ).grade * ( (uncake.Course)subjectsPA[j] ).credits
+                    creditsPAPerPeriod[i] += ( (uncake.Course)subjectsPA[j] ).credits
+                }
+            }
+            gradesPASoFar += gradesPAPAPerPeriod[i]
+            creditsPASoFar += creditsPAPAPerPeriod[i]
+            PAPerPeriod.add(i,gradesPAPASoFar/creditsPAPASoFar)
         }
-        
+        println PAPAPerPeriod
+        println PAPerPeriod
+        /*academicRecordToShow.courses.each{
+            def periodNumber = ((uncake.Course)it).semesterNumber
+            gradesPerPeriod[periodNumber] = 0
+            creditsPerPeriod[periodNumber] = 0
+        }
+        academicRecordToShow.courses.each{
+            def periodNumber = ((uncake.Course)it).semesterNumber
+            gradesPerPeriod[periodNumber] += ((uncake.Course)it).grade * ((uncake.Course)it).credits
+            creditsPerPeriod[periodNumber] += ((uncake.Course)it).credits
+        }*/
         render ""
     }
 
