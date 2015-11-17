@@ -256,7 +256,7 @@
                         var crCourse = "";
                         for (var i in gr["timeSlots"]) {
                             var ts = gr["timeSlots"][i]
-                            for (var s = ts.startHour; s <= ts.endHour; s++) {
+                            for (var s = ts.startHour; s < ts.endHour; s++) {
                                 if ($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim() != "") {
                                     available = false;
                                     crCourse = $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim();
@@ -282,7 +282,7 @@
                             for (var i in gr["timeSlots"]) {
                                 var ts = gr["timeSlots"][i]
                                 if (ts.startHour > 0) {
-                                    for (var s = ts.startHour; s <= ts.endHour; s++) {
+                                    for (var s = ts.startHour; s < ts.endHour; s++) {
                                         $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code + '-' + gr["code"]);
                                         $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
                                                 color);
