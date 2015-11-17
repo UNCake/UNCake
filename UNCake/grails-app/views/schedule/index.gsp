@@ -110,11 +110,11 @@
                             var minSch = ""
                             for (var i in value["timeSlots"]) {
                                 var ts = value["timeSlots"][i]
-                                if(ts.startHour > 0)
-                                    minSch += ts.day.substring(0,2) + ': ' + ts.startHour + ' - ' + ts.endHour + '\n';
+                                if (ts.startHour > 0)
+                                    minSch += ts.day.substring(0, 2) + ': ' + ts.startHour + ' - ' + ts.endHour + '\n';
                             }
                             div.append($('<li>', {value: code, id: key})
-                                    .html(value.code + ' - ' + value.teacher+'<p style="background-color: #999999">' + minSch +'</p>'));
+                                    .html(value.code + ' - ' + value.teacher + '<p style="background-color: #999999">' + minSch + '</p>'));
                         });
                         $('#accordionGroup').append(div);
 
@@ -261,8 +261,8 @@
                                     available = false;
                                     crCourse = $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim();
                                     crCourse = crCourse.substr(0, crCourse.indexOf("-"));
-                                    $(courses).each(function(key, value){
-                                        if(value["code"] == crCourse){
+                                    $(courses).each(function (key, value) {
+                                        if (value["code"] == crCourse) {
                                             crCourse = value["name"];
                                         }
                                     });
@@ -273,12 +273,12 @@
                         }
 
                         if (!available) {
-                            $("#modal-message").html("Existe un cruce entre la materia "+ crCourse+ " y la materia "+ name+ ".");
+                            $("#modal-message").html("Existe un cruce entre la materia " + crCourse + " y la materia " + name + ".");
                             $("#modalCr").modal("show");
                         } else {
                             var colors = ["#f49595", "#f9eb97", "#c6f9ac", "#a8d9f6", "#e2bbfd", "#84d8b8",
                                 "#b4e7cf", "#eed7cb", "#eeeba1", "#f8bbf9"]
-                            var color = colors[Math.random()*10|0]
+                            var color = colors[Math.random() * 10 | 0]
                             for (var i in gr["timeSlots"]) {
                                 var ts = gr["timeSlots"][i]
                                 if (ts.startHour > 0) {
@@ -295,6 +295,8 @@
                     }
                 });
             });
+
+            $("#saveSchedule").button();
 
         });
     </script>
@@ -328,7 +330,8 @@
                     </li>
 
                     <li>
-                        <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
+                        <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme
+                        </a>
                     </li>
                     <li>
                         <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
@@ -341,7 +344,7 @@
 
         <g:if test="${session.user != null}">
 
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul class="nav navbar-nav navbar-right">
 
@@ -349,7 +352,8 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name}!</a>
+                        <a class="page-scroll" href="profile"><span
+                                class="glyphicon glyphicon-user"></span>Hola ${session.user.name}!</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Salir</a>
@@ -358,7 +362,6 @@
 
             </div>
         </g:if>
-
 
     </div>
 </nav>
@@ -426,6 +429,15 @@
             </table>
         </div>
 
+
+        <g:if test="${session.user != null}">
+            <div>
+                <button id="saveSchedule">
+                    Guardar
+                </button>
+            </div>
+        </g:if>
+        
     </div>
 
     <div class="col-sm-3">
