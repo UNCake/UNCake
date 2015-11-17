@@ -28,10 +28,10 @@ class ProgressController {
         def subjectsPA
         def PAPAPerPeriod = []
         def PAPerPeriod = []
-        def gradesPAPASoFar = 0.0
-        def creditsPAPASoFar = 0.0
-        def gradesPASoFar = 0.0
-        def creditsPASoFar = 0.0
+        def gradesPAPASoFar = 0
+        def creditsPAPASoFar = 0
+        def gradesPASoFar = 0
+        def creditsPASoFar = 0
         uncake.User.findById( ((User)session.user).id ).academicRecord.each {
             if( it.studyPlan.code == selectedCode && it.studyPlan.name.toUpperCase().equals(selectedName) )
                 academicRecordToShow = (AcademicRecord)it
@@ -49,28 +49,35 @@ class ProgressController {
                     subjectsPA.remove(i)
             }
         }
-        for( int i = 0; i < periods.size() - 1; i++ ){
-            gradesPAPAPerPeriod[i] = ( (uncake.Course)subjectsPAPA[i] ).grade * ( (uncake.Course)subjectsPAPA[i] ).credits
-            creditsPAPAPerPeriod[i] = ( (uncake.Course)subjectsPAPA[i] ).credits
-            for( int j = i + 1; j < periods.size(); j++ ){
-                if( ( (uncake.Course)subjectsPAPA[i] ).semesterNumber == ( (uncake.Course)subjectsPAPA[j] ).semesterNumber ) {
+
+        for( int i = 0; i < periods.size(); i++ ){
+            gradesPAPAPerPeriod.add(0)
+            creditsPAPAPerPeriod.add(0)
+            for( int j = 0; j < subjectsPAPA.size(); j++ ){
+                if( i + 1 == ( (uncake.Course)subjectsPAPA[j] ).semesterNumber ) {
                     gradesPAPAPerPeriod[i] += ( (uncake.Course)subjectsPAPA[j] ).grade * ( (uncake.Course)subjectsPAPA[j] ).credits
                     creditsPAPAPerPeriod[i] += ( (uncake.Course)subjectsPAPA[j] ).credits
                 }
             }
             gradesPAPASoFar += gradesPAPAPerPeriod[i]
             creditsPAPASoFar += creditsPAPAPerPeriod[i]
-            PAPAPerPeriod.add(i,gradesPAPASoFar/creditsPAPASoFar)
-            for( int j = i + 1; j < periods.size(); j++ ){
-                if( ( (uncake.Course)subjectsPA[i] ).semesterNumber == ( (uncake.Course)subjectsPA[j] ).semesterNumber ) {
+            PAPAPerPeriod.add( gradesPAPASoFar/creditsPAPASoFar )
+        }
+
+        for( int i = 0; i < periods.size(); i++ ){
+            gradesPAPerPeriod.add(0)
+            creditsPAPerPeriod.add(0)
+            for( int j = 0; j < subjectsPA.size(); j++ ){
+                if( i + 1 == ( (uncake.Course)subjectsPA[j] ).semesterNumber ) {
                     gradesPAPerPeriod[i] += ( (uncake.Course)subjectsPA[j] ).grade * ( (uncake.Course)subjectsPA[j] ).credits
                     creditsPAPerPeriod[i] += ( (uncake.Course)subjectsPA[j] ).credits
                 }
             }
-            gradesPASoFar += gradesPAPAPerPeriod[i]
-            creditsPASoFar += creditsPAPAPerPeriod[i]
-            PAPerPeriod.add(i,gradesPAPASoFar/creditsPAPASoFar)
+            gradesPASoFar += gradesPAPerPeriod[i]
+            creditsPASoFar += creditsPAPerPeriod[i]
+            PAPerPeriod.add( gradesPASoFar / creditsPASoFar )
         }
+
         println PAPAPerPeriod
         println PAPerPeriod
         /*academicRecordToShow.courses.each{
