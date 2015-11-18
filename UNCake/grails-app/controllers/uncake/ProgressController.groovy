@@ -93,6 +93,8 @@ class ProgressController {
         }
         def plan = ( (uncake.AcademicRecord)academicRecordToShow ).studyPlan
         def advance = ( (uncake.AcademicRecord)academicRecordToShow ).credits * 100 / ( ( (uncake.StudyPlan)plan ).fundamentalCredits + ( (uncake.StudyPlan)plan ).disciplinaryCredits + ( (uncake.StudyPlan)plan ).freeChoiceCredits )
+        advance = advance * 10 >= Math.floor( advance * 10 ) + 0.5 ? Math.floor( advance * 10 ) + 1 : Math.floor( advance * 10 )
+        advance /= 10
         //def advance
 
         subjectsPAPA.each{
