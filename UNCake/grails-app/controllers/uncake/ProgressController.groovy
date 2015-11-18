@@ -32,6 +32,10 @@ class ProgressController {
         def creditsPAPASoFar = 0
         def gradesPASoFar = 0
         def creditsPASoFar = 0
+        def subjectsToPrint = []
+        def creditsFundamentals = 0
+        def creditsDisciplinary = 0
+        def creditsFreeChoice = 0
         uncake.User.findById( ((User)session.user).id ).academicRecord.each {
             if( it.studyPlan.code == selectedCode && it.studyPlan.name.toUpperCase().equals(selectedName) )
                 academicRecordToShow = (AcademicRecord)it
@@ -77,20 +81,32 @@ class ProgressController {
             creditsPASoFar += creditsPAPerPeriod[i]
             PAPerPeriod.add( gradesPASoFar / creditsPASoFar )
         }
+        for( int j = 0; j < subjectsPA.size(); j++ ){
+            if( ( (uncake.Course)subjectsPA[j] ).grade > 3  ){
+                if( ( (uncake.Course)subjectsPA[j] ).typology.equals("Fundamentación") )
+                    creditsFundamentals += ( (uncake.Course)subjectsPA[j] ).credits
+                if( ( (uncake.Course)subjectsPA[j] ).typology.equals("Disciplinar") )
+                    creditsDisciplinary += ( (uncake.Course)subjectsPA[j] ).credits
+                if( ( (uncake.Course)subjectsPA[j] ).typology.equals("Electiva") )
+                    creditsFreeChoice += ( (uncake.Course)subjectsPA[j] ).credits
+            }
+        }
+        def plan = ( (uncake.AcademicRecord)academicRecordToShow ).studyPlan
+        def advance = ( (uncake.AcademicRecord)academicRecordToShow ).credits * 100 / ( ( (uncake.StudyPlan)plan ).fundamentalCredits + ( (uncake.StudyPlan)plan ).disciplinaryCredits + ( (uncake.StudyPlan)plan ).freeChoiceCredits )
+        //def advance
+
+        subjectsPAPA.each{
+            def sub = (uncake.Course)it
+            subjectsToPrint.add( String.valueOf( sub.code + '\\t' + sub.name + '\\t\\t\\t\\t\\t' + sub.credits + '\\t\\t\\t' + sub.grade ) )
+        }
 
         println PAPAPerPeriod
         println PAPerPeriod
-        /*academicRecordToShow.courses.each{
-            def periodNumber = ((uncake.Course)it).semesterNumber
-            gradesPerPeriod[periodNumber] = 0
-            creditsPerPeriod[periodNumber] = 0
-        }
-        academicRecordToShow.courses.each{
-            def periodNumber = ((uncake.Course)it).semesterNumber
-            gradesPerPeriod[periodNumber] += ((uncake.Course)it).grade * ((uncake.Course)it).credits
-            creditsPerPeriod[periodNumber] += ((uncake.Course)it).credits
-        }*/
-        render ""
+        println subjectsToPrint
+        println advance
+
+        //render( PAPAPerPeriod : PAPAPerPeriod)
+        render PAPAPerPeriod
     }
 
     def saveAcademicRecord(){
@@ -221,4 +237,5 @@ class ProgressController {
 
 
 }
+
 

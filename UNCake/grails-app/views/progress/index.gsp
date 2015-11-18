@@ -255,7 +255,13 @@ $(function(){
                 type: 'POST',
                 url: "${createLink(action: 'loadAcademicRecord')}",
                 data: {selectedRecord: selectedRecord},
-                success: function( data ){
+                success: function( input ){
+                    $("#information_container").show();
+                    alert(input);
+                    /*drawPAPA(averages);
+                    drawPercentage( getPercentage( history ) );
+                    drawComponents( getComponents( history ) );
+                    drawTable( getSubjects( history ) );*/
                 }
             });
         }else
@@ -621,6 +627,7 @@ function drawPercentage( percentaje ) {
     chart.draw(data, options);
 }
 function drawComponents( components ) {
+
     var componentTitles = ['Fundamentación','Disciplinar','Libre elección'];
     var data2 = new Array(componentTitles.length + 1);
     var componentValues = new Array(components.length);
