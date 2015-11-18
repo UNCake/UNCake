@@ -95,7 +95,9 @@ class ProgressController {
         def advance = ( (uncake.AcademicRecord)academicRecordToShow ).credits * 100 / ( ( (uncake.StudyPlan)plan ).fundamentalCredits + ( (uncake.StudyPlan)plan ).disciplinaryCredits + ( (uncake.StudyPlan)plan ).freeChoiceCredits )
         advance = advance * 10 >= Math.floor( advance * 10 ) + 0.5 ? Math.floor( advance * 10 ) + 1 : Math.floor( advance * 10 )
         advance /= 10
-        //def advance
+        def advanceFundamentals = ( (uncake.StudyPlan)plan ).fundamentalCredits
+        def advanceDisciplinary = ( (uncake.StudyPlan)plan ).disciplinaryCredits
+        def advanceFreeChoice = ( (uncake.StudyPlan)plan ).freeChoiceCredits
 
         subjectsPAPA.each{
             def sub = (uncake.Course)it
@@ -106,9 +108,13 @@ class ProgressController {
         println PAPerPeriod
         println subjectsToPrint
         println advance
+        println advanceFundamentals + " " + advanceDisciplinary + " " + advanceFreeChoice
+        def advanceComponentsToSend = []
+        advanceComponentsToSend.add("exigidos\t"+advanceFundamentals+"\t"+advanceDisciplinary+"\t"+advanceFreeChoice+"\t\t\t" )
+        advanceComponentsToSend.add("aprobados plan\t"+creditsFundamentals+"\t"+creditsDisciplinary+"\t"+creditsFreeChoice+"\t\t\t" )
 
         //render( PAPAPerPeriod : PAPAPerPeriod)
-        render PAPAPerPeriod
+        render advanceComponentsToSend
     }
 
     def saveAcademicRecord(){

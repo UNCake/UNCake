@@ -592,6 +592,7 @@ function drawPAPA( averages ) {
 }
 
 function drawPercentage( percentaje ) {
+    alert(percentaje)
     var data = new Array(3);
     for( var i = 0; i < 3; i++ ) {
         data[i] = new Array(2);
@@ -627,7 +628,6 @@ function drawPercentage( percentaje ) {
     chart.draw(data, options);
 }
 function drawComponents( components ) {
-
     var componentTitles = ['Fundamentación','Disciplinar','Libre elección'];
     var data2 = new Array(componentTitles.length + 1);
     var componentValues = new Array(components.length);
