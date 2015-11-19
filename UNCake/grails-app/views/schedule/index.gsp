@@ -29,6 +29,7 @@
         $(function () {
             var courses
             var groups = {}
+            var schedule = {}
             var days = $.parseJSON('${days.encodeAsJSON()}')
 
             for (var i = 6; i <= 21; i++) {
@@ -212,6 +213,7 @@
                 var parent = $(this).closest('h3');
                 var name = parent.attr('value');
                 var code = parent.next('ol').attr('value');
+                delete schedule[name];
                 delete groups[name];
                 $("#scheduleTable td").each(function () {
                     if ($(this).html().indexOf(code) >= 0) {
@@ -277,6 +279,7 @@
                             $("#modal-message").html("Existe un cruce entre la materia " + crCourse + " y la materia " + name + ".");
                             $("#modalCr").modal("show");
                         } else {
+                            schedule[name] = gr;
                             var colors = ["#f49595", "#f9eb97", "#c6f9ac", "#a8d9f6", "#e2bbfd", "#84d8b8",
                                 "#b4e7cf", "#eed7cb", "#eeeba1", "#f8bbf9"]
                             var color = colors[Math.random() * 10 | 0]
