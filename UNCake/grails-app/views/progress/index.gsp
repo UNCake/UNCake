@@ -104,7 +104,6 @@
                             <br><br>
                             <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
                             <br>
-                            <br>
                         </div>
 
                         <div class="row" id="saved_container" style="display: none">
@@ -258,6 +257,16 @@ $(function(){
     $( "#btn_save" ).button().click( function() {
         var record = document.getElementById('academicRecord').value;
         record = removeAccent(record)
+        var exist = $.ajax({
+            type: 'POST',
+            url: "${createLink(action: 'existAcademicRecord')}",
+            data: {record: record},
+            success: function( data ){
+
+            },
+            error: function( data ){
+            }
+        });/*
         var response = $.ajax({
             type: 'POST',
             url: "${createLink(action: 'saveAcademicRecord')}",
@@ -266,7 +275,7 @@ $(function(){
             },
             error: function( data ){
             }
-        });
+        });*/
     });
     $( "#btn_calculate_add" ).button().click( function() {
         var calculate = true;
@@ -371,20 +380,20 @@ $(function(){
         drawTable( getSubjects( history ) );
     });
     function removeAccent( input ){
-        input = input.replace(/á/g,"a");
-        input = input.replace(/é/g,"e");
-        input = input.replace(/í/g,"i");
-        input = input.replace(/ó/g,"o");
-        input = input.replace(/ú/g,"u");
-        input = input.replace(/Á/g,"A");
+        input = input.replace(/á/gi,"a");
+        input = input.replace(/é/gi,"e");
+        input = input.replace(/í/gi,"i");
+        input = input.replace(/ó/gi,"o");
+        input = input.replace(/ú/gi,"u");
+        /*input = input.replace(/Á/g,"A");
         input = input.replace(/É/g,"E");
         input = input.replace(/Í/g,"I");
         input = input.replace(/Ó/g,"O");
         input = input.replace(/Ú/g,"U");
-        input = input.replace(/Ü/g,"U");
-        input = input.replace(/ü/g,"u");
-        input = input.replace(/Ñ/g,"N");
-        input = input.replace(/ñ/g,"n");
+        input = input.replace(/Ü/g,"U");*/
+        input = input.replace(/ü/gi,"u");
+        //input = input.replace(/Ñ/g,"N");
+        input = input.replace(/ñ/gi,"n");
         return input;
     }
     function getComponents( input ){
