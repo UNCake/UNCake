@@ -112,7 +112,6 @@
                             <p style="text-align: left; display: inline-block;">Tienes historias académicas almacenadas ¿quieres ver una previamente guardada crear una nueva?</p>
                             <g:if test="${session.user != null}">
                                 <g:if test="${uncake.User.findById( ((User)session.user).id ).academicRecord.size() > 0}">
-                                    ${uncake.User.findById( ((User)session.user).id ).academicRecord.size()}
                                     <g:set var="records" value="[]"/>
                                     <g:each in="${uncake.User.findById( ((User)session.user).id ).academicRecord}">
                                         <g:each in="${it.studyPlan}" var="studyPlan">
@@ -195,32 +194,6 @@
                 </div>
             </div>
         </div>
-        <!--<footer class="row">
-            <div class="large-12 columns">
-                <hr>
-                <div class="row">
-                    <div class="large-6 columns">
-                        <p>© Copyright no one at all. Go to town.</p>
-                    </div>
-                    <div class="large-6 columns">
-                        <ul class="inline-list right">
-                            <li>
-                                <a href="#">Link 1</a>
-                            </li>
-                            <li>
-                                <a href="#">Link 2</a>
-                            </li>
-                            <li>
-                                <a href="#">Link 3</a>
-                            </li>
-                            <li>
-                                <a href="#">Link 4</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </footer>-->
     </div>
 </div>
 
@@ -249,7 +222,6 @@ $(function(){
     });
     $( "#loadRecord" ).button().click( function() {
         var selectedRecord = document.getElementById('recordSelector').value;
-        alert( selectedRecord );
         if( selectedRecord.length > 0 ){
             var response = $.ajax({
                 type: 'POST',
@@ -257,20 +229,15 @@ $(function(){
                 data: {selectedRecord: selectedRecord},
                 success: function( input ){
                     $("#information_container").show();
-
                     input = String(input).substring( 1, String(input).length );
-                    alert(input);
                     var averagesToDraw = input.split(']')[0].trim().substring(1).replace(/\[/g,"");
                     var advanceToDraw = input.split(']')[1].trim().substring(1).replace(/\[/g,"");
                     var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
-                    alert( advanceCmpToDraw );
+                    var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
                     drawPAPA( averagesToDraw.split(',') );
                     drawPercentage( parseFloat(advanceToDraw) );
                     drawComponents( advanceCmpToDraw.split(',') );
-                    /*drawPAPA(averages);
-
-                    drawComponents( getComponents( history ) );
-                    drawTable( getSubjects( history ) );*/
+                    drawTable( subjectsToDraw.split(',') );
                 }
             });
         }else
@@ -678,7 +645,6 @@ function drawComponents( components ) {
     chart2.draw(data2, options2);
 }
 function drawTable( subjects ){
-    alert(subjects)
     var orderedSubjects = new Array( subjects.length );
     for (var i = 0; i < subjects.length; i++) {
         orderedSubjects[i] = new Array(3);
