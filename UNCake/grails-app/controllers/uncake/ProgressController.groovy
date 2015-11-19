@@ -104,17 +104,18 @@ class ProgressController {
             subjectsToPrint.add( String.valueOf( sub.code + '\\t' + sub.name + '\\t\\t\\t\\t\\t' + sub.credits + '\\t\\t\\t' + sub.grade ) )
         }
 
-        println PAPAPerPeriod
-        println PAPerPeriod
-        println subjectsToPrint
-        println advance
-        println advanceFundamentals + " " + advanceDisciplinary + " " + advanceFreeChoice
+        def averagesToSend = []
+        for(int i = 0; i < PAPerPeriod.size(); i++){
+            averagesToSend.add(PAPAPerPeriod[i])
+            averagesToSend.add(PAPerPeriod[i])
+        }
         def advanceComponentsToSend = []
         advanceComponentsToSend.add("exigidos\t"+advanceFundamentals+"\t"+advanceDisciplinary+"\t"+advanceFreeChoice+"\t\t\t" )
         advanceComponentsToSend.add("aprobados plan\t"+creditsFundamentals+"\t"+creditsDisciplinary+"\t"+creditsFreeChoice+"\t\t\t" )
 
-        //render( PAPAPerPeriod : PAPAPerPeriod)
-        render advanceComponentsToSend
+        def output = [averagesToSend] + [advance] + [advanceComponentsToSend] + [subjectsToPrint]
+
+        render output
     }
 
     def saveAcademicRecord(){

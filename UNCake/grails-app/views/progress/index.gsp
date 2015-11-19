@@ -257,7 +257,12 @@ $(function(){
                 data: {selectedRecord: selectedRecord},
                 success: function( input ){
                     $("#information_container").show();
+
+                    input = String(input).substring( 1, String(input).length );
                     alert(input);
+                    var averagesToDraw = input.split(']')[0].substring(1);
+                    alert( averagesToDraw );
+                    drawPAPA( averagesToDraw.split(',') );
                     /*drawPAPA(averages);
                     drawPercentage( getPercentage( history ) );
                     drawComponents( getComponents( history ) );
@@ -592,7 +597,6 @@ function drawPAPA( averages ) {
 }
 
 function drawPercentage( percentaje ) {
-    alert(percentaje)
     var data = new Array(3);
     for( var i = 0; i < 3; i++ ) {
         data[i] = new Array(2);
@@ -670,6 +674,7 @@ function drawComponents( components ) {
     chart2.draw(data2, options2);
 }
 function drawTable( subjects ){
+    alert(subjects)
     var orderedSubjects = new Array( subjects.length );
     for (var i = 0; i < subjects.length; i++) {
         orderedSubjects[i] = new Array(3);
