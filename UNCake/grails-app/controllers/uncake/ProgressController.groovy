@@ -109,11 +109,13 @@ class ProgressController {
             averagesToSend.add(PAPAPerPeriod[i])
             averagesToSend.add(PAPerPeriod[i])
         }
+        def advanceToSend = []
         def advanceComponentsToSend = []
-        advanceComponentsToSend.add("exigidos\t"+advanceFundamentals+"\t"+advanceDisciplinary+"\t"+advanceFreeChoice+"\t\t\t" )
-        advanceComponentsToSend.add("aprobados plan\t"+creditsFundamentals+"\t"+creditsDisciplinary+"\t"+creditsFreeChoice+"\t\t\t" )
+        advanceToSend.add(advance)
+        advanceComponentsToSend.add("exigidos\\t"+advanceFundamentals+"\\t"+advanceDisciplinary+"\\t"+advanceFreeChoice+"\\t\\t\\t" )
+        advanceComponentsToSend.add("aprobados plan\\t"+creditsFundamentals+"\\t"+creditsDisciplinary+"\\t"+creditsFreeChoice+"\\t\\t\\t" )
 
-        def output = [averagesToSend] + [advance] + [advanceComponentsToSend] + [subjectsToPrint]
+        def output = [averagesToSend] + [advanceToSend] + [advanceComponentsToSend] + [subjectsToPrint]
 
         render output
     }

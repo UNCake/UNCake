@@ -260,11 +260,15 @@ $(function(){
 
                     input = String(input).substring( 1, String(input).length );
                     alert(input);
-                    var averagesToDraw = input.split(']')[0].substring(1);
-                    alert( averagesToDraw );
+                    var averagesToDraw = input.split(']')[0].trim().substring(1).replace(/\[/g,"");
+                    var advanceToDraw = input.split(']')[1].trim().substring(1).replace(/\[/g,"");
+                    var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
+                    alert( advanceCmpToDraw );
                     drawPAPA( averagesToDraw.split(',') );
+                    drawPercentage( parseFloat(advanceToDraw) );
+                    drawComponents( advanceCmpToDraw.split(',') );
                     /*drawPAPA(averages);
-                    drawPercentage( getPercentage( history ) );
+
                     drawComponents( getComponents( history ) );
                     drawTable( getSubjects( history ) );*/
                 }
