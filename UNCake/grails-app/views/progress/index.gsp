@@ -90,6 +90,9 @@
 
 
 <div class="row">
+    <div id="replace_dialog" title="¿Reemplazar el registro?">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Ya tienes una historia académica guardada de esta carrera. ¿Deseas rremplazarla?</p>
+    </div>
     <div class="large-12 columns">
         <br>
 
@@ -157,7 +160,7 @@
                                         $("#saved_container").show();
                                     </g:javascript>
                                 </g:if>
-                                <div style="text-align: center">
+                                <div style="text-align: center" id="container_save">
                                     <input type="button" class="" id="btn_save" value="Guardar"/>
                                 </div>
                                 <br>
@@ -197,6 +200,7 @@
 </div>
 
 </div>
+
 <asset:javascript src="foundation/vendor/jquery.js"/>
 <asset:javascript src="foundation/foundation.min.js"/>
 <script>
@@ -218,6 +222,7 @@ function validate(evt) {
 $(function(){
     $( "#newRecord" ).button().click( function() {
         $("#data_container").show();
+        $("#container_save").show();
     });
     $( "#loadRecord" ).button().click( function() {
         var selectedRecord = document.getElementById('recordSelector').value;
@@ -237,6 +242,7 @@ $(function(){
                     drawPercentage( parseFloat(advanceToDraw) );
                     drawComponents( advanceCmpToDraw.split(',') );
                     drawTable( subjectsToDraw.split(',') );
+                    $("#container_save").hide();
                 }
             });
         }else
@@ -261,21 +267,38 @@ $(function(){
             type: 'POST',
             url: "${createLink(action: 'existAcademicRecord')}",
             data: {record: record},
-            success: function( data ){
-
+            success: function( created ){
+                if( parseInt(created) == 1 )
+                    $( "#replace_dialog" ).dialog( "open" );
+                else{
+                    var response = $.ajax({
+                        type: 'POST',
+                        url: "${createLink(action: 'saveAcademicRecord')}",
+                        data: {record: record},
+                        success: function( data ){
+                        },
+                        error: function( data ){
+                        }
+                    });
+                }
             },
             error: function( data ){
             }
-        });/*
-        var response = $.ajax({
-            type: 'POST',
-            url: "${createLink(action: 'saveAcademicRecord')}",
-            data: {record: record},
-            success: function( data ){
+        });
+    });
+    $( "#replace_dialog" ).dialog({
+        resizable: false,
+        autoOpen: false,
+        height:200,
+        modal: true,
+        buttons: {
+            "Reemplazar": function() {
+                $( this ).dialog( "close" );
             },
-            error: function( data ){
-            }
-        });*/
+        Cancelar: function() {
+          $( this ).dialog( "close" );
+        }
+      }
     });
     $( "#btn_calculate_add" ).button().click( function() {
         var calculate = true;
