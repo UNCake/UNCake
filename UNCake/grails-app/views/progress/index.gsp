@@ -37,8 +37,8 @@
 <div id="replace_dialog" title="¿Reemplazar el registro?" style="display: none;" >
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Ya tienes una historia académica guardada de esta carrera. ¿Deseas reemplazarla?</p>
 </div>
-<div id="saved_dialog" title="Registro guardado" style="display: none;" >
-    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>La historia académica ha sido guardada</p>
+<div id="ok_dialog" style="display: none;" >
+    <p id="ok_msg"><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span></p>
 </div>
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -238,8 +238,9 @@ $(function(){
                     $("#container_save").hide();
                 }
             });
-        }else
-            alert( "Debe seleccionar una historia académica a cargar" );
+        }else{
+            showOkDialog( "Selecciona un registro", "Debe seleccionar una historia académica a cargar" );
+        }
     });
     $( ".checkNota" ).on( "click", function() {
         var checkID = parseInt($(this).attr('id').replace('checkNota_',''));
@@ -272,9 +273,7 @@ $(function(){
                         url: "${createLink(action: 'saveAcademicRecord')}",
                         data: {record: record},
                         success: function( data ){
-                            $( "#saved_dialog" ).dialog('option', 'position', { my: "center", at: "center", of: $("#mainContainer") } );
-                            $( "#saved_dialog" ).dialog( "open" );
-                            $( "#saved_dialog" ).show();
+                            showOkDialog( "Registro guardado", "La historia académica ¡ha sido guardada!." );
                         },
                         error: function( data ){
                         }
@@ -300,9 +299,7 @@ $(function(){
                     url: "${createLink(action: 'saveAcademicRecord')}",
                     data: {record: record},
                     success: function( data ){
-                        $( "#saved_dialog" ).dialog('option', 'position', { my: "center", at: "center", of: $("#mainContainer") } );
-                        $( "#saved_dialog" ).dialog( "open" );
-                        $( "#saved_dialog" ).show();
+                        showOkDialog( "Registro guardado", "La historia académica ¡ha sido guardada!." );
                     },
                     error: function( data ){
                     }
@@ -314,7 +311,14 @@ $(function(){
         }
       }
     });
-    $( "#saved_dialog" ).dialog({
+    function showOkDialog( title, msg ){
+        $( "#ok_dialog" ).dialog('option', 'position', { my: "center", at: "center", of: $("#mainContainer") } );
+        $( "#ok_dialog" ).dialog( "option", "title", title );
+        $( "#ok_msg" ).text( msg );
+        $( "#ok_dialog" ).dialog( "open" );
+        $( "#ok_dialog" ).show();
+    }
+    $( "#ok_dialog" ).dialog({
         resizable: false,
         autoOpen: false,
         height:200,

@@ -217,7 +217,6 @@ class ProgressController {
             if( it.studyPlan.code == studyPlan.code )
                 studyPlanCreated = true
         }
-        println studyPlanCreated
 
         if( studyPlanCreated ){
             def delStudyPlan = []
@@ -236,13 +235,12 @@ class ProgressController {
             academicRecords.add( ((AcademicRecord)it) )
         }
         def acadRecordToSave = new uncake.AcademicRecord( studyPlan: studyPlan, credits: totalCredits, PAPA: PAPA, PA: PA, courses: coursesToSave )
-        println acadRecordToSave
         academicRecords.add( acadRecordToSave )
         academicRecords.each {
             newUser.addToAcademicRecord( it ).save(failOnError: true)
         }
 
-        uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each {
+        /*uncake.User.findById( Integer.parseInt( String.valueOf(session.user).split(':')[1].trim() ) ).academicRecord.each {
             println it.studyPlan.code
             println it.PAPA
             println it.courses
@@ -250,8 +248,7 @@ class ProgressController {
                 //println it.code + " " + it.name + " " + it.credits + " " + it.grade + " " + it.semester
 
             }
-        }
-        println newUser.academicRecord.size()
+        }*/
         render ""
     }
 
