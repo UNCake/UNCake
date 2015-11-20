@@ -43,19 +43,14 @@ class ScheduleController {
                 json.result.asignaturas.list.each { v ->
                     list.add(["name": v.nombre, "typology": v.tipologia,
                               "code": v.codigo, "credits": v.creditos])
-/*
-                    v.each { a ->
-                        println a
-                    }*/
-/*
-                    res = new Course(params)
 
-                    if (!res.save(flush: true)) {
-                        res.errors.each {
-                            println it
+                    if(!Course.findByCode(v.codigo)) {
+                        def course = new Course(list.last())
+                        course.location = Location.findByName(params.selectedLoc)
+                        if(!course.save()){
+                            println "error guardando curso"
                         }
                     }
-*/
                 }
             }
 
@@ -140,7 +135,7 @@ class ScheduleController {
 
         user.addToSchedules(schedule)
         user.save(flush: true)
-        
+
         render schedule as JSON
     }
 }
