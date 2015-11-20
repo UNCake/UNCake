@@ -20,7 +20,7 @@
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
 
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
-    
+
     <asset:stylesheet src="agency.css"/>
     <asset:stylesheet src="dialogueStyle.css"/>
 
@@ -100,7 +100,7 @@
                         <div class="row" id="data_container">
                             <br/>
                             <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
-                            <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                            <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-top: 20px; padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                             <br><br>
                             <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
                             <br>
@@ -224,6 +224,7 @@ function validate(evt) {
 $(function(){
     $( "#newRecord" ).button().click( function() {
         $("#data_container").show();
+        $("#academicRecord").val("");
     });
     $( "#loadRecord" ).button().click( function() {
         var selectedRecord = document.getElementById('recordSelector').value;
