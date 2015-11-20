@@ -5,7 +5,7 @@
   Time: 18:55
 --%>
 
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="uncake.User" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -13,121 +13,196 @@
     <title>UNCake - Progreso</title>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <asset:stylesheet src="foundation/foundation.css"/>
+
+    <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
+    <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
-    <asset:javascript src="foundation/vendor/modernizr.js"/>
-    <asset:javascript src="foundation/vendor/jquery.js"/>
+
+    <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
+
+    <asset:stylesheet src="agency.css"/>
+    <asset:stylesheet src="dialogueStyle.css"/>
+
+
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet'
+          type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
     <script type="text/javascript">
     </script>
 </head>
-<body>
+<body id="mainContainer">
+<div id="replace_dialog" title="¿Reemplazar el registro?" style="display: none;" >
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Ya tienes una historia académica guardada de esta carrera. ¿Deseas reemplazarla?</p>
+</div>
+<div id="ok_dialog" style="display: none;" >
+    <p id="ok_msg"><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span></p>
+</div>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand page-scroll" href="home">UNCake</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
+                </li>
+
+                <li>
+                    <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<header>
+    <div class="container">
+        <br><br><br>
+        <!--<div class="intro-text">
+            <br><br>
+        </div>-->
+    </div>
+</header>
+
+<div class="container">
+
 
 <div class="row">
     <div class="large-12 columns">
-        <div class="row">
-            <div class="large-12 columns">
-                <nav class="top-bar" data-topbar>
-                    <ul class="title-area">
-                        <li class="name">
-                            <h1><a href="home">UNCake</a></h1>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
         <br>
+
         <div class="row">
             <div class="large-12 columns">
-                <div class="row" >
-                    <div class="large-12 columns">
-                        <div class="panel" style="background-color: #f7f7f7;padding-left: 36px;padding-right: 36px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                            <div class="row">
-                                <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
-                                <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" style="background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
-                                <g:submitButton name="calculatePAPA" value="Calcular" action="calculatePAPA"></g:submitButton>
-                            </div>
+                <div class="large-12 columns">
+                    <div class="panel" style="background-color: #f7f7f7;padding-left: 34px;padding-right: 34px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
+                        <div class="row" id="data_container">
+                            <br/>
+                            <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
+                            <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-top: 20px; padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                            <br><br>
+                            <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
+                            <br>
+                            <g:hiddenField name="userLogged" id="userLogged" value="0"></g:hiddenField>
+                        </div>
+                        <br>
+                        <div class="row" id="saved_container" style="display: none">
+                            <p style="text-align: left; display: inline-block;">Tienes historias académicas almacenadas ¿quieres ver una previamente guardada crear una nueva?</p>
+                            <g:if test="${session.user != null}">
+                                <g:javascript>
+                                    $("#userLogged").attr('value','1');
+                                </g:javascript>
+                                <g:if test="${uncake.User.findById( ((User)session.user).id ).academicRecord.size() > 0}">
+                                    <g:set var="records" value="[]"/>
+                                    <g:each in="${uncake.User.findById( ((User)session.user).id ).academicRecord}">
+                                        <g:each in="${it.studyPlan}" var="studyPlan">
+                                            <div style="display: none;">
+                                                ${records.add(studyPlan.code + " | " + studyPlan.name)}
+                                            </div>
+                                        </g:each>
+                                    </g:each>
+                                    <div>
+                                        <g:select id="recordSelector" name="${records}" from="${records}" noSelection="['':'-Selecciona una historia académica-']"/>
+                                    </div>
+                                    <br/>
+                                    <input type="button" id="loadRecord" name="loadRecord" value="Cargar" />
+                                    <input type="button" id="newRecord" name="newRecord" value="Nueva" />
+                                </g:if>
+                            </g:if>
+                            <br>
+                            <br>
+                        </div>
 
-                            <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
+                        <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
+                            <br/>
+                            <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
+                                <div id="papa_chart" style="width: 900px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
+                            </div>
+                            <br/>
+                            <div class="large-12 columns" style="padding-right: 80px;">
+                            <div id="percentage_chart" style="width: 450px; height: 350px; float: left;  padding-left: 80px;"></div>
+                            <div id="components_chart" style="width: 450px; height: 350px; float: right;"></div>
+                            </div>
+                            <br/>
+                            <div class="large-12 columns" style="text-align: center;">
                                 <br/>
-                                <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                                    <div id="papa_chart" style="width: 800px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px;"></div>
+                                <div id="record_table" style="width: 1000px; display: inline-block;"></div>
+                                <br/><br/>
+                            </div>
+                            <g:if test="${session.user == null}">
+                                <g:javascript>
+                                    $("#userLogged").attr('value','0');
+                                </g:javascript>
+                            </g:if>
+                            <g:else>
+                                <g:if test="${uncake.User.findById( ( (User)session.user ).id ).academicRecord.size() > 0}">
+                                    <g:javascript>
+                                        $("#data_container").hide();
+                                        $("#saved_container").show();
+                                    </g:javascript>
+                                </g:if>
+                                <div style="text-align: center" id="container_save">
+                                    <input type="button" class="" id="btn_save" value="Guardar"/>
+                                </div>
+                                <br>
+                            </g:else>
+                            <div id="new_subjects_1" class="large-12 columns" style="align-content: center; text-align: center;">
+                                <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                <input type="text" name="txtCredits" class="txtCredits" id="txtCredits_1" style="width: 200px; display: inline-block;" placeholder="Créditos a cursar"/>
+                                <h5 style="line-height: 30px; display: inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nota:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                <input type="checkbox" id="checkNota_1" name="checkNota" class="checkNota" style="line-height: 30px; display: inline-block;" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="text" name="txtNota" id="txtNota_1" class="txtNota" disabled="true" placeholder="Nota esperada" style=" width: 200px; display: inline-block;"/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="button" class="btn_add" id="1" value="+" style="height: 45px; width: 50px; display: inline-block;"/>
+                            </div>
+                            <div id="calculate" class="large-12 columns">
+                                <br>
+                                <div style="text-align: center;" >
+                                    <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Promedio esperado:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                    <input type="text" class="txtAverage" id="txtAverage" style="width: 200px; display: inline-block;" placeholder="Promedio"/>
+                                </div>
+                                <div style="text-align: right;">
+                                    <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
                                 </div>
                                 <br/>
-                                <div class="large-12 columns" style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                                    <div class="large-6 columns">
-                                        <div id="percentage_chart" style="width: 450px; height: 350px"></div>
-                                    </div>
-                                    <div class="large-6 columns">
-                                        <div id="components_chart" style="width: 450px; height: 350px"></div>
-                                    </div>
-                                </div>
+                            </div>
+                            <div style="text-align: center;">
                                 <br/>
-                                <div class="large-12 columns" style="text-align: center;">
-                                    <br/>
-                                    <div id="record_table" style="width: 900px; display: inline-block;"></div>
-                                    <br/><br/>
-                                </div>
-                                <div id="new_subjects_1" class="large-12 columns" style="align-content: center; text-align: center;">
-                                    <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                                    <input type="text" name="txtCredits" class="txtCredits" id="txtCredits_1" style="width: 200px; display: inline-block;" placeholder="Créditos a cursar"/>
-                                    <h5 style="line-height: 30px; display: inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nota:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                                    <input type="checkbox" id="checkNota_1" name="checkNota" class="checkNota" style="line-height: 30px; display: inline-block;" />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="text" name="txtNota" id="txtNota_1" class="txtNota" disabled="true" placeholder="Nota esperada" style=" width: 200px; display: inline-block;"/>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="button" class="btn_add" id="1" value="+" style="height: 45px; width: 50px; display: inline-block;"/>
-                                </div>
-                                <div id="calculate" class="large-12 columns">
-                                    <br>
-                                    <div style="text-align: center;" >
-                                        <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Promedio esperado:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                                        <input type="text" class="txtAverage" id="txtAverage" style="width: 200px; display: inline-block;" placeholder="Promedio"/>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
-                                    </div>
-                                    <br/>
-                                </div>
-                                <div style="text-align: center;">
-                                    <br/>
-                                    <p id="newSubjectsMessage" style="text-align: center;"></p>
-                                    <br/>
-                                </div>
+                                <p id="newSubjectsMessage" style="text-align: center;"></p>
+                                <br/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <footer class="row">
-            <div class="large-12 columns">
-                <hr>
-                <div class="row">
-                    <div class="large-6 columns">
-                        <p>© Copyright no one at all. Go to town.</p>
-                    </div>
-                    <div class="large-6 columns">
-                        <ul class="inline-list right">
-                            <li>
-                                <a href="#">Link 1</a>
-                            </li>
-                            <li>
-                                <a href="#">Link 2</a>
-                            </li>
-                            <li>
-                                <a href="#">Link 3</a>
-                            </li>
-                            <li>
-                                <a href="#">Link 4</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </footer>
     </div>
 </div>
+
+</div>
+
 <asset:javascript src="foundation/vendor/jquery.js"/>
 <asset:javascript src="foundation/foundation.min.js"/>
 <script>
@@ -137,7 +212,45 @@
 <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
 <asset:javascript src="foundation/foundation/foundation.js"/>
 <g:javascript>
+function validate(evt) {
+    var theEvent = evt || window.event;
+    var key = theEvent.charCode || theEvent.which;
+
+    if(key >= 32 && (theEvent.ctrlKey === undefined || !theEvent.ctrlKey)) {
+        if(theEvent.preventDefault) theEvent.preventDefault();
+        else theEvent.returnValue = false;
+    }
+}
 $(function(){
+    $( "#newRecord" ).button().click( function() {
+        $("#data_container").show();
+        $("#academicRecord").val("");
+    });
+    $( "#loadRecord" ).button().click( function() {
+        var selectedRecord = document.getElementById('recordSelector').value;
+        if( selectedRecord.length > 0 ){
+            var response = $.ajax({
+                type: 'POST',
+                url: "${createLink(action: 'loadAcademicRecord')}",
+                data: {selectedRecord: selectedRecord},
+                success: function( input ){
+                    $("#information_container").show();
+                    input = String(input).substring( 1, String(input).length );
+                    var averagesToDraw = input.split(']')[0].trim().substring(1).replace(/\[/g,"");
+                    var advanceToDraw = input.split(']')[1].trim().substring(1).replace(/\[/g,"");
+                    var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
+                    var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
+                    drawPAPA( averagesToDraw.split(',') );
+                    drawPercentage( parseFloat(advanceToDraw) );
+                    drawComponents( advanceCmpToDraw.split(',') );
+                    drawTable( subjectsToDraw.split(',') );
+                    $("#container_save").hide();
+                }
+            });
+        }else{
+            showOkDialog( "Selecciona un registro", "Debe seleccionar una historia académica a cargar" );
+        }
+    });
     $( ".checkNota" ).on( "click", function() {
         var checkID = parseInt($(this).attr('id').replace('checkNota_',''));
         $( "#txtNota_" + checkID )[0].disabled = true;
@@ -149,6 +262,82 @@ $(function(){
     $(".btn_add").button ();
     $(".btn_add").each(function (){
         $(this).bind("click",addField);
+    });
+    $( "#btn_save" ).button().click( function() {
+        var record = document.getElementById('academicRecord').value;
+        record = removeAccent(record)
+        var exist = $.ajax({
+            type: 'POST',
+            url: "${createLink(action: 'existAcademicRecord')}",
+            data: {record: record},
+            success: function( created ){
+                if( parseInt(created) == 1 ){
+                    $( "#replace_dialog" ).dialog('option', 'position', { my: "center", at: "center", of: $("#mainContainer") } );
+                    $( "#replace_dialog" ).dialog( "open" );
+                    $( "#replace_dialog" ).show();
+                }
+                else{
+                    var response = $.ajax({
+                        type: 'POST',
+                        url: "${createLink(action: 'saveAcademicRecord')}",
+                        data: {record: record},
+                        success: function( data ){
+                            showOkDialog( "Registro guardado", "La historia académica ¡ha sido guardada!." );
+                        },
+                        error: function( data ){
+                        }
+                    });
+                }
+            },
+            error: function( data ){
+            }
+        });
+    });
+    $( "#replace_dialog" ).dialog({
+        resizable: false,
+        autoOpen: false,
+        height:200,
+        modal: true,
+        sticky: true,
+        buttons: {
+            "Reemplazar": function() {
+                var record = document.getElementById('academicRecord').value;
+                record = removeAccent(record)
+                var response = $.ajax({
+                    type: 'POST',
+                    url: "${createLink(action: 'saveAcademicRecord')}",
+                    data: {record: record},
+                    success: function( data ){
+                        showOkDialog( "Registro guardado", "La historia académica ¡ha sido guardada!." );
+                    },
+                    error: function( data ){
+                    }
+                });
+                $( this ).dialog( "close" );
+            },
+        Cancelar: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+    function showOkDialog( title, msg ){
+        $( "#ok_dialog" ).dialog('option', 'position', { my: "center", at: "center", of: $("#mainContainer") } );
+        $( "#ok_dialog" ).dialog( "option", "title", title );
+        $( "#ok_msg" ).text( msg );
+        $( "#ok_dialog" ).dialog( "open" );
+        $( "#ok_dialog" ).show();
+    }
+    $( "#ok_dialog" ).dialog({
+        resizable: false,
+        autoOpen: false,
+        height:200,
+        modal: true,
+        sticky: true,
+        buttons: {
+            Aceptar: function() {
+              $( this ).dialog( "close" );
+            }
+        }
     });
     $( "#btn_calculate_add" ).button().click( function() {
         var calculate = true;
@@ -238,20 +427,45 @@ $(function(){
     });
     $( "#calculatePAPA" ).button().click( function() {
         $("#information_container").show();
+        var userLogged = document.getElementById('userLogged').value;
+        if( parseInt(userLogged) == 1 )
+            $("#container_save").show();
         var history = document.getElementById('academicRecord').value;
-        var periods = splitPeriods( history );
-        var averages = [];
-        for( var i = 0; i < periods.length; i++ ){
-            averages.push( calculatePAPA(periods[i] )[0] );
-            averages.push( calculatePAPA(periods[i] )[1] );
+        if( history == ""){
+            showOkDialog( "No hay datos", "Debes pegar una historia académica." );
         }
-        averages.push( calculatePAPA( history )[0] );
-        averages.push( calculatePAPA( history )[1] );
-        drawPAPA(averages);
-        drawPercentage( getPercentage( history ) );
-        drawComponents( getComponents( history ) );
-        drawTable( getSubjects( history ) );
+        else{
+            var periods = splitPeriods( history );
+            var averages = [];
+            for( var i = 0; i < periods.length; i++ ){
+                averages.push( calculatePAPA(periods[i] )[0] );
+                averages.push( calculatePAPA(periods[i] )[1] );
+            }
+            averages.push( calculatePAPA( history )[0] );
+            averages.push( calculatePAPA( history )[1] );
+            drawPAPA(averages);
+            drawPercentage( getPercentage( history ) );
+            drawComponents( getComponents( history ) );
+            drawTable( getSubjects( history ) );
+        }
     });
+    function removeAccent( input ){
+        input = input.replace(/á/g,"a");
+        input = input.replace(/é/g,"e");
+        input = input.replace(/í/g,"i");
+        input = input.replace(/ó/g,"o");
+        input = input.replace(/ú/g,"u");
+        input = input.replace(/Á/g,"A");
+        input = input.replace(/É/g,"E");
+        input = input.replace(/Í/g,"I");
+        input = input.replace(/Ó/g,"O");
+        input = input.replace(/Ú/g,"U");
+        input = input.replace(/Ü/g,"U");
+        input = input.replace(/ü/g,"u");
+        input = input.replace(/Ñ/g,"N");
+        input = input.replace(/ñ/g,"n");
+        return input;
+    }
     function getComponents( input ){
         var requiredPattern = /exigidos\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9\-]+\t[0-9]+/i;
         var passedPattern = /aprobados plan\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9]+\t[0-9\-]+\t[0-9]+/i;
@@ -269,7 +483,7 @@ $(function(){
         return percentage;
     }
     function calculatePAPA( input ){
-        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
         var subjects = [];
         var subjectsAux;
         var sumSubjects = 0.0;
@@ -303,7 +517,7 @@ $(function(){
         return averages;
     }
     function getSums( input ){
-        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
         var subjects = [];
         var subjectsAux;
         var sumSubjects = 0.0;
@@ -339,7 +553,7 @@ $(function(){
         return output;
     }
     function getSubjects( input ){
-        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+        var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
         var subjects = [];
         var subject;
         var historySoFar = input;
@@ -412,7 +626,7 @@ function drawPAPA( averages ) {
     );
     var options = {
         title: 'PAPA y PA',
-        width: 800,
+        width: 900,
         legend: { position: 'none' },
         chart: { },
         axes: {
