@@ -101,11 +101,15 @@
                             <br><br>
                             <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
                             <br>
+                            <g:hiddenField name="userLogged" id="userLogged" value="0"></g:hiddenField>
                         </div>
                         <br>
                         <div class="row" id="saved_container" style="display: none">
                             <p style="text-align: left; display: inline-block;">Tienes historias académicas almacenadas ¿quieres ver una previamente guardada crear una nueva?</p>
                             <g:if test="${session.user != null}">
+                                <g:javascript>
+                                    $("#userLogged").attr('value','1');
+                                </g:javascript>
                                 <g:if test="${uncake.User.findById( ((User)session.user).id ).academicRecord.size() > 0}">
                                     <g:set var="records" value="[]"/>
                                     <g:each in="${uncake.User.findById( ((User)session.user).id ).academicRecord}">
@@ -144,7 +148,9 @@
                                 <br/><br/>
                             </div>
                             <g:if test="${session.user == null}">
-
+                                <g:javascript>
+                                    $("#userLogged").attr('value','0');
+                                </g:javascript>
                             </g:if>
                             <g:else>
                                 <g:if test="${uncake.User.findById( ( (User)session.user ).id ).academicRecord.size() > 0}">
@@ -215,7 +221,6 @@ function validate(evt) {
 $(function(){
     $( "#newRecord" ).button().click( function() {
         $("#data_container").show();
-        $("#container_save").show();
     });
     $( "#loadRecord" ).button().click( function() {
         var selectedRecord = document.getElementById('recordSelector').value;
@@ -418,6 +423,9 @@ $(function(){
     });
     $( "#calculatePAPA" ).button().click( function() {
         $("#information_container").show();
+        var userLogged = document.getElementById('userLogged').value;
+        if( parseInt(userLogged) == 1 )
+            $("#container_save").show();
         var history = document.getElementById('academicRecord').value;
         var periods = splitPeriods( history );
         var averages = [];
