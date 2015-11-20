@@ -121,9 +121,16 @@ class ScheduleController {
     }
 
     def buildSchedule(){
+
+        def reqSchedule = request.JSON
+        def user = session.user
         def schedule = new Schedule(credits: 0)
-        params.schedule.each{ key, value ->
-            println key  +" value " + value
+        def course
+        reqSchedule.each {key, val ->
+            course = new Course()
+            println key + " val " + val
         }
+
+        render schedule as JSON
     }
 }

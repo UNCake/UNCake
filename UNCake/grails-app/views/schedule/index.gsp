@@ -313,19 +313,12 @@
                         console.log(schedule);
                         var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
 
-                        var response = $.ajax({
+                        $.ajax({
+                            type: "POST",
                             url: url,
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            crossDomain: true,
-                            data: {
-                                schedule: schedule
-                            },
-                            success: function () {
-
-                            },
-                            error: function (request, status, error) {
-                                alert(error)
+                            data: JSON.stringify(schedule),
+                            contentType: 'application/json',
+                            success: function(r) {
                             }
                         });
                     }
