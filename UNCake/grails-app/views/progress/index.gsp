@@ -20,6 +20,9 @@
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
 
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
+    
+    <asset:stylesheet src="agency.css"/>
+    <asset:stylesheet src="dialogueStyle.css"/>
 
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
