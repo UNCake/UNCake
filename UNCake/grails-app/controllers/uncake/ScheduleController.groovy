@@ -119,4 +119,11 @@ class ScheduleController {
                 "classroom": p[0], "day": day,
                 "building" : (p.size() > 1) ? Building.findByCode(p[1]) : null]
     }
+
+    def buildSchedule(){
+        def schedule = new Schedule(credits: 0)
+        params.schedule.each{ key, value ->
+            println key  +" value " + value
+        }
+    }
 }

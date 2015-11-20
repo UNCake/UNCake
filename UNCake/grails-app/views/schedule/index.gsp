@@ -302,10 +302,30 @@
 
             $("#saveSchedule").button().click(
                     function() {
+                        /*
                         html2canvas($('#scheduleTable'), {
                             onrendered: function (canvas) {
                                 var img = canvas.toDataURL()
                                 window.open(img);
+                            }
+                        });
+                        */
+                        console.log(schedule);
+                        var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
+
+                        var response = $.ajax({
+                            url: url,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            crossDomain: true,
+                            data: {
+                                schedule: schedule
+                            },
+                            success: function () {
+
+                            },
+                            error: function (request, status, error) {
+                                alert(error)
                             }
                         });
                     }
