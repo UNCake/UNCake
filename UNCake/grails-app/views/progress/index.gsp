@@ -13,11 +13,6 @@
     <title>UNCake - Progreso</title>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <!--<asset:stylesheet src="foundation/foundation.css"/>
-    <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
-    <asset:javascript src="foundation/vendor/modernizr.js"/>
-    <asset:javascript src="foundation/vendor/jquery.js"/>-->
-
 
     <asset:javascript src="jquery-2.1.3.js"/>
     <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
@@ -25,8 +20,7 @@
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
 
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
-    <asset:stylesheet src="agency.css"/>
-    <asset:stylesheet src="dialogueStyle.css"/>
+
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
@@ -39,8 +33,13 @@
     <script type="text/javascript">
     </script>
 </head>
-<body>
-
+<body id="mainContainer">
+<div id="replace_dialog" title="¿Reemplazar el registro?" style="display: none;" >
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Ya tienes una historia académica guardada de esta carrera. ¿Deseas reemplazarla?</p>
+</div>
+<div id="saved_dialog" title="Registro guardado" style="display: none;" >
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>La historia académica ha sido guardada</p>
+</div>
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header page-scroll">
@@ -55,9 +54,7 @@
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
             <ul class="nav navbar-nav navbar-right">
-
                 <li class="hidden">
                     <a href="#page-top"></a>
                 </li>
@@ -90,9 +87,6 @@
 
 
 <div class="row">
-    <div id="replace_dialog" title="¿Reemplazar el registro?">
-        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Ya tienes una historia académica guardada de esta carrera. ¿Deseas rremplazarla?</p>
-    </div>
     <div class="large-12 columns">
         <br>
 
@@ -108,9 +102,8 @@
                             <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
                             <br>
                         </div>
-
+                        <br>
                         <div class="row" id="saved_container" style="display: none">
-                            <br/>
                             <p style="text-align: left; display: inline-block;">Tienes historias académicas almacenadas ¿quieres ver una previamente guardada crear una nueva?</p>
                             <g:if test="${session.user != null}">
                                 <g:if test="${uncake.User.findById( ((User)session.user).id ).academicRecord.size() > 0}">
@@ -268,14 +261,20 @@ $(function(){
             url: "${createLink(action: 'existAcademicRecord')}",
             data: {record: record},
             success: function( created ){
-                if( parseInt(created) == 1 )
+                if( parseInt(created) == 1 ){
+                    $( "#replace_dialog" ).dialog('option', 'position', { my: "center", at: "center", of: $("#mainContainer") } );
                     $( "#replace_dialog" ).dialog( "open" );
+                    $( "#replace_dialog" ).show();
+                }
                 else{
                     var response = $.ajax({
                         type: 'POST',
                         url: "${createLink(action: 'saveAcademicRecord')}",
                         data: {record: record},
                         success: function( data ){
+                            $( "#saved_dialog" ).dialog('option', 'position', { my: "center", at: "center", of: $("#mainContainer") } );
+                            $( "#saved_dialog" ).dialog( "open" );
+                            $( "#saved_dialog" ).show();
                         },
                         error: function( data ){
                         }
@@ -291,14 +290,41 @@ $(function(){
         autoOpen: false,
         height:200,
         modal: true,
+        sticky: true,
         buttons: {
             "Reemplazar": function() {
+                var record = document.getElementById('academicRecord').value;
+                record = removeAccent(record)
+                var response = $.ajax({
+                    type: 'POST',
+                    url: "${createLink(action: 'saveAcademicRecord')}",
+                    data: {record: record},
+                    success: function( data ){
+                        $( "#saved_dialog" ).dialog('option', 'position', { my: "center", at: "center", of: $("#mainContainer") } );
+                        $( "#saved_dialog" ).dialog( "open" );
+                        $( "#saved_dialog" ).show();
+                    },
+                    error: function( data ){
+                    }
+                });
                 $( this ).dialog( "close" );
             },
         Cancelar: function() {
           $( this ).dialog( "close" );
         }
       }
+    });
+    $( "#saved_dialog" ).dialog({
+        resizable: false,
+        autoOpen: false,
+        height:200,
+        modal: true,
+        sticky: true,
+        buttons: {
+            Aceptar: function() {
+              $( this ).dialog( "close" );
+            }
+        }
     });
     $( "#btn_calculate_add" ).button().click( function() {
         var calculate = true;
@@ -403,20 +429,20 @@ $(function(){
         drawTable( getSubjects( history ) );
     });
     function removeAccent( input ){
-        input = input.replace(/á/gi,"a");
-        input = input.replace(/é/gi,"e");
-        input = input.replace(/í/gi,"i");
-        input = input.replace(/ó/gi,"o");
-        input = input.replace(/ú/gi,"u");
-        /*input = input.replace(/Á/g,"A");
+        input = input.replace(/á/g,"a");
+        input = input.replace(/é/g,"e");
+        input = input.replace(/í/g,"i");
+        input = input.replace(/ó/g,"o");
+        input = input.replace(/ú/g,"u");
+        input = input.replace(/Á/g,"A");
         input = input.replace(/É/g,"E");
         input = input.replace(/Í/g,"I");
         input = input.replace(/Ó/g,"O");
         input = input.replace(/Ú/g,"U");
-        input = input.replace(/Ü/g,"U");*/
-        input = input.replace(/ü/gi,"u");
-        //input = input.replace(/Ñ/g,"N");
-        input = input.replace(/ñ/gi,"n");
+        input = input.replace(/Ü/g,"U");
+        input = input.replace(/ü/g,"u");
+        input = input.replace(/Ñ/g,"N");
+        input = input.replace(/ñ/g,"n");
         return input;
     }
     function getComponents( input ){
