@@ -125,10 +125,15 @@ class ScheduleController {
         def reqSchedule = request.JSON
         def user = session.user
         def schedule = new Schedule(credits: 0)
-        def course
+        def group
         reqSchedule.each {key, val ->
-            course = new Course()
-            println key + " val " + val
+            group = new Groups(course: key, id: val.id, availableSpots: val.availableSpots,
+            teacher: val.teacher, totalSpots: val.totalSpots)
+            val.timeSlots.each { ts ->
+                group.addToTimeSlots(ts)
+            }
+
+            println group
         }
 
         render schedule as JSON
