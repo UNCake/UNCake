@@ -123,7 +123,7 @@ class ScheduleController {
     def buildSchedule(){
 
         def reqSchedule = request.JSON
-        def user = session.user
+        def user = User.find(session.user)
         def schedule = new Schedule(credits: 0)
         def group
         reqSchedule.each {key, val ->
@@ -137,11 +137,10 @@ class ScheduleController {
             schedule.addToCourses(group)
         }
         schedule.save(flush: true)
-        user.addToSchedules(schedule)
-        user.schedules.each{
-            println it
-        }
 
+        user.addToSchedules(schedule)
+        user.save(flush: true)
+        
         render schedule as JSON
     }
 }
