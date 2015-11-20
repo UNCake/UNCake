@@ -10,6 +10,7 @@ class Course {
     Double grade
     String semester
     Integer semesterNumber
+    Location location
     static constraints = {
         code nullable: true
         name nullable: true
@@ -19,6 +20,6 @@ class Course {
         semester nullable: true
         groups nullable: true
         location nullable: true
-	semesterNumber nullable: true
+	    semesterNumber nullable: true
     }
 }
