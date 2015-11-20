@@ -431,18 +431,23 @@ $(function(){
         if( parseInt(userLogged) == 1 )
             $("#container_save").show();
         var history = document.getElementById('academicRecord').value;
-        var periods = splitPeriods( history );
-        var averages = [];
-        for( var i = 0; i < periods.length; i++ ){
-            averages.push( calculatePAPA(periods[i] )[0] );
-            averages.push( calculatePAPA(periods[i] )[1] );
+        if( history == ""){
+            showOkDialog( "No hay datos", "Debes pegar una historia académica." );
         }
-        averages.push( calculatePAPA( history )[0] );
-        averages.push( calculatePAPA( history )[1] );
-        drawPAPA(averages);
-        drawPercentage( getPercentage( history ) );
-        drawComponents( getComponents( history ) );
-        drawTable( getSubjects( history ) );
+        else{
+            var periods = splitPeriods( history );
+            var averages = [];
+            for( var i = 0; i < periods.length; i++ ){
+                averages.push( calculatePAPA(periods[i] )[0] );
+                averages.push( calculatePAPA(periods[i] )[1] );
+            }
+            averages.push( calculatePAPA( history )[0] );
+            averages.push( calculatePAPA( history )[1] );
+            drawPAPA(averages);
+            drawPercentage( getPercentage( history ) );
+            drawComponents( getComponents( history ) );
+            drawTable( getSubjects( history ) );
+        }
     });
     function removeAccent( input ){
         input = input.replace(/á/g,"a");
