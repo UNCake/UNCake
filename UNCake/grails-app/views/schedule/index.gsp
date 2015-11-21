@@ -15,6 +15,7 @@
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
+    <asset:javascript src="html2canvas.js"/>
     <asset:javascript src="jquery-2.1.3.js"/>
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
     <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
@@ -28,6 +29,7 @@
         $(function () {
             var courses
             var groups = {}
+            var schedule = {}
             var days = $.parseJSON('${days.encodeAsJSON()}')
 
             for (var i = 6; i <= 21; i++) {
@@ -107,8 +109,14 @@
                         var div = $('<ol>', {class: 'selectableItem', id: name, value: code});
                         groups[name] = group;
                         $.each(group, function (key, value) {
+                            var minSch = ""
+                            for (var i in value["timeSlots"]) {
+                                var ts = value["timeSlots"][i]
+                                if (ts.startHour > 0)
+                                    minSch += ts.day.substring(0, 2) + ': ' + ts.startHour + ' - ' + ts.endHour + '\n';
+                            }
                             div.append($('<li>', {value: code, id: key})
-                                    .text(value.code + ' - ' + value.teacher));
+                                    .html(value.code + ' - ' + value.teacher + '<p style="background-color: #999999">' + minSch + '</p>'));
                         });
                         $('#accordionGroup').append(div);
 
@@ -205,6 +213,7 @@
                 var parent = $(this).closest('h3');
                 var name = parent.attr('value');
                 var code = parent.next('ol').attr('value');
+                delete schedule[name];
                 delete groups[name];
                 $("#scheduleTable td").each(function () {
                     if ($(this).html().indexOf(code) >= 0) {
@@ -246,12 +255,20 @@
                             }
                         });
 
-                        var available = true
+                        var available = true;
+                        var crCourse = "";
                         for (var i in gr["timeSlots"]) {
                             var ts = gr["timeSlots"][i]
-                            for (var s = ts.startHour; s <= ts.endHour; s++) {
+                            for (var s = ts.startHour; s < ts.endHour; s++) {
                                 if ($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim() != "") {
                                     available = false;
+                                    crCourse = $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim();
+                                    crCourse = crCourse.substr(0, crCourse.indexOf("-"));
+                                    $(courses).each(function (key, value) {
+                                        if (value["code"] == crCourse) {
+                                            crCourse = value["name"];
+                                        }
+                                    });
                                     break;
                                 }
                             }
@@ -259,13 +276,17 @@
                         }
 
                         if (!available) {
+                            $("#modal-message").html("Existe un cruce entre la materia " + crCourse + " y la materia " + name + ".");
                             $("#modalCr").modal("show");
                         } else {
-                            var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                            schedule[name] = gr;
+                            var colors = ["#f49595", "#f9eb97", "#c6f9ac", "#a8d9f6", "#e2bbfd", "#84d8b8",
+                                "#b4e7cf", "#eed7cb", "#eeeba1", "#f8bbf9"]
+                            var color = colors[Math.random() * 10 | 0]
                             for (var i in gr["timeSlots"]) {
                                 var ts = gr["timeSlots"][i]
                                 if (ts.startHour > 0) {
-                                    for (var s = ts.startHour; s <= ts.endHour; s++) {
+                                    for (var s = ts.startHour; s < ts.endHour; s++) {
                                         $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code + '-' + gr["code"]);
                                         $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
                                                 color);
@@ -278,6 +299,33 @@
                     }
                 });
             });
+
+            $("#saveSchedule").button().click(
+                    function() {
+                        console.log(schedule);
+                        var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: JSON.stringify(schedule),
+                            contentType: 'application/json',
+                            success: function(r) {
+                            }
+                        });
+                    }
+            );
+
+            $("#printSchedule").button().click(
+                    function(){
+                    html2canvas($('#scheduleTable'), {
+                        onrendered: function (canvas) {
+                            var img = canvas.toDataURL();
+                            window.open(img);
+                        }
+                    });
+                }
+            );
 
         });
     </script>
@@ -311,7 +359,8 @@
                     </li>
 
                     <li>
-                        <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
+                        <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme
+                        </a>
                     </li>
                     <li>
                         <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
@@ -324,7 +373,7 @@
 
         <g:if test="${session.user != null}">
 
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul class="nav navbar-nav navbar-right">
 
@@ -332,7 +381,8 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name}!</a>
+                        <a class="page-scroll" href="profile"><span
+                                class="glyphicon glyphicon-user"></span>Hola ${session.user.name}!</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Salir</a>
@@ -341,7 +391,6 @@
 
             </div>
         </g:if>
-
 
     </div>
 </nav>
@@ -409,6 +458,21 @@
             </table>
         </div>
 
+
+        <g:if test="${session.user != null}">
+            <div>
+                <button id="saveSchedule">
+                    Guardar
+                </button>
+            </div>
+        </g:if>
+
+        <div>
+            <button id="printSchedule">
+                Imprimir
+            </button>
+        </div>
+
     </div>
 
     <div class="col-sm-3">
@@ -429,7 +493,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="modalCr" role="dialog">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -437,7 +501,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <p>Selecciona otro grupo.</p>
+                        <p id="modal-message">Selecciona otro grupo.</p>
                     </div>
                 </div>
             </div>
