@@ -1,13 +1,18 @@
 img.avatar {
-    width: 6.0em;
-    height: 7.5em;
-}
-img.avatar_small {
-    width: 4em;
-    height: 5em;
+    width: 20%;
+    height: 20%;
 }
 
-img.avatar_tiny {
-    width: 2em;
-    height: 2.5em;
+.form-profile {
+    max-width: 600px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.small-size {
+    max-width: 800px;
+}
+
+.color-list{
+    background-color: papayawhip;
 }

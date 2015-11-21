@@ -15,7 +15,7 @@ class User {
         password blank: false
         friends nullable: true
         academicRecord nullable: true
-        avatar(nullable:true, maxSize: 16384 /* 16K */)
+        avatar(nullable:true, maxSize: 128000 /* 128k */)
         avatarType(nullable:true)
     }
 }

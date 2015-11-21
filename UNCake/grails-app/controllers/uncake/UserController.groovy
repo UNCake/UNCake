@@ -3,7 +3,7 @@ package uncake
 class UserController {
 
     def index() {
-        render (view: "show") }
+        render (view: "selectavatar") }
     private static final okcontents = ['image/png', 'image/jpeg', 'image/gif']
 
     def upload_avatar() {
@@ -15,7 +15,7 @@ class UserController {
         // List of OK mime-types
         if (!okcontents.contains(f.getContentType())) {
             flash.message = "Avatar must be one of: ${okcontents}"
-            render(view:'select_avatar', model:[user:user])
+            render(view:'selectavatar', model:[user:user])
             return
         }
 
@@ -26,11 +26,11 @@ class UserController {
 
         // Validation works, will check if the image is too big
         if (!user.save()) {
-            render(view:'select_avatar', model:[user:user])
+            render(view:'selectavatar', model:[user:user])
             return
         }
         flash.message = "Avatar (${user.avatarType}, ${user.avatar.size()} bytes) uploaded."
-        redirect(view:'show')
+        redirect(controller: "profile" )
     }
 
     def avatar_image() {

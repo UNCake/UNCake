@@ -81,10 +81,12 @@
 
 <div class="container center-contatiner">
 
-
 <g:form class="form-signin" action="doLogin" method="post" useToken="true" >
+
     <form class="form-signin">
+
         <h2 class="form-signin-heading font-uncake" align="center">UNCake</h2>
+
         <div class="form-group">
             <label >Email</label>
             <div style="display: flex">
@@ -92,6 +94,7 @@
                 <div class="error">${flash.message2}</div>
             </div>
         </div>
+
         <div class="form-group" style="margin-bottom: 0px">
             <div style="display: flex">
                 <div class="col-6">
