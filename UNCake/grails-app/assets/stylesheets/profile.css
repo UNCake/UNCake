@@ -10,9 +10,24 @@ img.avatar {
 }
 
 .small-size {
-    max-width: 800px;
+    width: 100%;
+    
+
+
 }
 
-.color-list{
-    background-color: papayawhip;
+.size-list{
+
+    margin-bottom: 5px;
+}
+
+.size-btn{
+    margin-left: 0.5%;
+
+    margin-bottom: 5px;
+}
+
+.cont{
+    display: flex;
+
 }

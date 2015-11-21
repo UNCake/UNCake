@@ -35,4 +35,9 @@ class ProfileController {
 
 
     }
+
+    def delFriend(){
+        def u = Person.get(1)
+        p.delete()
+    }
 }

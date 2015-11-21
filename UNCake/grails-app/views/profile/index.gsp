@@ -134,18 +134,25 @@
         </div>
         <a href="#" class="btn btn-primary btn-xs" >Agregar horario</a>
     </div>
-    <div class="row small-size">
+    <div class="row ">
         <h4>
             Mis Amigos
         </h4>
-        <div class="list-group ">
+        <div class="list-group " >
 
             <g:if test="${friends.size() == 0}">
                 Aun no tienes amigos
             </g:if>
-            <g:each  in="${friends}">
-                <a href="#" class="list-group-item " style="background-color: #a6e1ec">${it.email}</a>
+
+            <g:each  in="${friends}"  >
+                <div class="cont" >
+                    <a href="#" class="list-group-item small-size size-list" style="background-color: #d8d8d8 ">${it.email}</a>
+                    <button  type="submit" class="btn btn-primary btn-xs size-btn">x</button>
+
+                </div>
+
             </g:each>
+
         </div>
         <!-- <a href="#" class="btn btn-primary btn-xs" >Agregar amigos</a>-->
     </div>
