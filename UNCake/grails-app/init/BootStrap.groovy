@@ -3,11 +3,19 @@ import uncake.User
 class BootStrap {
     def DBconnectionService
     def init = { servletContext ->
-        new User(email:"santi@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santi" ).save()
-        new User(email:"alejandro@unal.com", password:"lollol12".encodeAsSHA1(), name:"Alejandro" ).save()
-        new User(email:"saniagoH@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santiago" ).save()
-        new User(email:"hugo@unal.com", password:"lollol12".encodeAsSHA1(), name:"Hugo" ).save()
-        new User(email:"ana@unal.com", password:"lollol12".encodeAsSHA1(), name:"Ana" ).save()
+        def user1=new User(email:"santi@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santi" ).save()
+        def user2=new User(email:"alejandro@unal.com", password:"lollol12".encodeAsSHA1(), name:"Alejandro" ).save()
+        def user3=new User(email:"saniagoH@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santiago" ).save()
+        def user4=new User(email:"hugo@unal.com", password:"lollol12".encodeAsSHA1(), name:"Hugo" ).save()
+        def user5=new User(email:"ana@unal.com", password:"lollol12".encodeAsSHA1(), name:"Ana" ).save()
+
+
+        user1.addToFriends(user2).save()
+        user1.addToFriends(user3).save()
+        user1.addToFriends(user4).save()
+        user1.addToFriends(user5).save()
+
+       println user1.friends
 
 
 

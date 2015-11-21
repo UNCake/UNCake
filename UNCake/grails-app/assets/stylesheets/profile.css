@@ -1,0 +1,33 @@
+img.avatar {
+    width: 20%;
+    height: 20%;
+}
+
+.form-profile {
+    max-width: 600px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.small-size {
+    width: 100%;
+    
+
+
+}
+
+.size-list{
+
+    margin-bottom: 5px;
+}
+
+.size-btn{
+    margin-left: 0.5%;
+
+    margin-bottom: 5px;
+}
+
+.cont{
+    display: flex;
+
+}
