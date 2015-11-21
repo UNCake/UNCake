@@ -302,14 +302,6 @@
 
             $("#saveSchedule").button().click(
                     function() {
-                        /*
-                        html2canvas($('#scheduleTable'), {
-                            onrendered: function (canvas) {
-                                var img = canvas.toDataURL()
-                                window.open(img);
-                            }
-                        });
-                        */
                         console.log(schedule);
                         var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
 
@@ -322,6 +314,17 @@
                             }
                         });
                     }
+            );
+
+            $("#printSchedule").button().click(
+                    function(){
+                    html2canvas($('#scheduleTable'), {
+                        onrendered: function (canvas) {
+                            var img = canvas.toDataURL();
+                            window.open(img);
+                        }
+                    });
+                }
             );
 
         });
@@ -463,6 +466,12 @@
                 </button>
             </div>
         </g:if>
+
+        <div>
+            <button id="printSchedule">
+                Imprimir
+            </button>
+        </div>
 
     </div>
 
