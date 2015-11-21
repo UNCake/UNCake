@@ -6,5 +6,6 @@ class Schedule {
     static hasMany = [courses: Course]
     static belongsTo = [user: User]
     static constraints = {
+
     }
 }

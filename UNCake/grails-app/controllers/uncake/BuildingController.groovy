@@ -24,8 +24,4 @@ class BuildingController {
         render selectedBuilding.coordinates as JSON
     }
 
-    def insertBogotaBuildings(){
-
-    }
-
 }

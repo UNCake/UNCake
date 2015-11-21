@@ -13,11 +13,11 @@
     <title>UNCake - Edificios</title>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
+    <asset:javascript src="jquery-2.1.3.js"/>
     <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
     <asset:stylesheet src="agency.css"/>
     <asset:stylesheet src="dialogueStyle.css"/>
-    <asset:javascript src="jquery-2.1.3.js"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:javascript src="foundation/vendor/modernizr.js"/>
     <script src="http://maps.googleapis.com/maps/api/js"></script>
@@ -93,11 +93,13 @@
                 <div class="row">
                     <div class="large-4 small-12 columns" style="padding-left: 50px; padding-right: 50px; padding-top: 60px;">
                         <div class="panel">
-                            <h3 style="font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive; color: #f22;">Edificio</h3>
+                            <h3 style="font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive; color: #1ab394;">Edificio</h3>
                             <br/>
                             <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre" value="" style="width: 300px;" ></g:textField>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
+                            <br/><br/>
+                            <p>Los marcadores azules indican las entradas al campus, digita el nombre o número del edificio a buscar, un marcador rojo te indicará tu destino.</p>
                         </div>
                     </div>
 
@@ -115,14 +117,24 @@
                 </div>
                 <g:hiddenField name="doorMarker" id="doorMarker" value="${resource(dir:'images',file:'maps/entry.png', absolute:'true')}"></g:hiddenField>
                 <g:hiddenField name="pointMarker" id="pointMarker" value="${resource(dir:'images',file:'maps/point2.png', absolute:'true')}"></g:hiddenField>
+                <g:if test="${session.user != null}">
+                    <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
+                        <g:set var="records" value="[]"/>
+                        <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
+                            <g:each in="${it.courses}" var="cur">
+                                <div style="display: none;">
+                                    ${records.add(cur.name)}
+                                </div>
+                            </g:each>
+                        </g:each>
+                        <div>
+                            <g:select id="recordSelector" name="${records}" from="${records}" noSelection="['':'-Selecciona un horario-']"/>
+                        </div>
+                    </g:if>
+                </g:if>
             </div>
         </div>
     </div>
-    <script>
-        document.write('<script src=js/vendor/' +
-                ('__proto__' in {} ? 'zepto' : 'jquery') +
-                '.js><\/script>')
-    </script>
     <asset:javascript src="foundation/vendor/jquery.js"/>
     <asset:javascript src="foundation/foundation.min.js"/>
     <script>
