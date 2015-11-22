@@ -24,6 +24,10 @@
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:stylesheet src="profile.css"/>
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+
+    <script>
+
+    </script>
 </head>
 
 <body>
@@ -113,11 +117,18 @@
             <g:if test="${academicRecords.size() == 0}">
                 No tienes ninguna historia academica
             </g:if>
-            <g:each  in="${academicRecords}">
-                <a href="#" class="list-group-item" style="background-color: burlywood">${it.studyPlan.name}</a>
+<g:form action="delAcademicRecord">
+            <g:each  in="${academicRecords}" status="k" var="ar">
+                <div class="cont">
+                    <a href="#" class="list-group-item small-size size-list" style="background-color: rosybrown">${ar.studyPlan.name}</a>
+                    <button name="ind2" value="${k}" type="submit" class="btn btn-primary btn-xs size-btn">x</button>
+                    <div hidden><g:textArea name="dacademicrecord" value="${ar.id}"/></div>
+                </div>
+
             </g:each>
+</g:form>
         </div>
-        <a href="#" class="btn btn-primary btn-xs" >Agregar historia academica</a>
+        <a href="progress" class="btn btn-primary btn-xs" >Agregar historia academica</a>
     </div>
     <div class="row">
         <h4>
@@ -128,11 +139,19 @@
                 Aun no tienes horarios creados
             </g:if>
 
+            <g:form action="delSchedule">
             <g:each in="${schedules}" status="i" var="schedule">
-                <a href="#" class="list-group-item" style="background-color: burlywood"> Horario ${i+1} </a>
+                <div class="cont" >
+                    <a href="#" class="list-group-item small-size size-list" style="background-color: burlywood"> Horario ${i+1} </a>
+                    <button name="ind1" value="${i}" type="submit" class="btn btn-primary btn-xs size-btn">x</button>
+                    <div hidden><g:textArea name="dschedule" value="${schedule.id}"/></div>
+                </div>
             </g:each>
+            </g:form>
         </div>
-        <a href="#" class="btn btn-primary btn-xs" >Agregar horario</a>
+
+        <a href="schedule" class="btn btn-primary btn-xs" >Agregar horario</a>
+
     </div>
     <div class="row ">
         <h4>
@@ -144,15 +163,18 @@
                 Aun no tienes amigos
             </g:if>
 
-            <g:each  in="${friends}"  >
+            <g:form action="delFriend">
+            <g:each  in="${friends}" status="j" var="ff"  >
                 <div class="cont" >
-                    <a href="#" class="list-group-item small-size size-list" style="background-color: #d8d8d8 ">${it.email}</a>
-                    <button  type="submit" class="btn btn-primary btn-xs size-btn">x</button>
+                    <a href="#" class="list-group-item small-size size-list" style="background-color: #d8d8d8 ">${ff.name}   -    ${ff.email}</a>
+                    <button name="ind" value="${j}" type="submit" class="btn btn-primary btn-xs size-btn">x</button>
+                    <div hidden><g:textArea name="dfriend" value="${ff.email}"/></div>
+
 
                 </div>
 
             </g:each>
-
+            </g:form>
         </div>
         <!-- <a href="#" class="btn btn-primary btn-xs" >Agregar amigos</a>-->
     </div>
