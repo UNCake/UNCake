@@ -5,7 +5,7 @@
   Time: 07:44 PM
 --%>
 
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="uncake.ProgressController" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title></title>
@@ -38,7 +38,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="home">UNCake</a>
+            <a class="navbar-brand page-scroll" href="/home">UNCake</a>
         </div>
         <g:if test="${session.user == null}">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -95,7 +95,6 @@
         <img class=" img-responsive img-centered " style="text-align: center" src="${createLink(controller:'user', action:'avatar_image', id:session.user.ident())}" />
         </div>
         <div class= "text-center">
-
             <div class="row">
                 <a class="text-center  " href="/changephoto" title="Cambia foto." >Cambiar o subir una foto</a>
             </div>
@@ -114,10 +113,10 @@
                 No tienes ninguna historia academica
             </g:if>
             <g:each  in="${academicRecords}">
-                <a href="#" class="list-group-item" style="background-color: burlywood">${it.studyPlan.name}</a>
+                <g:link class="list-group-item" style="background-color: burlywood" controller="progress" action="index" params="${[ plan : it.studyPlan.code + " & " + it.studyPlan.name ]}">${it.studyPlan.name}</g:link>
             </g:each>
         </div>
-        <a href="#" class="btn btn-primary btn-xs" >Agregar historia academica</a>
+        <a href="progress" class="btn btn-primary btn-xs" >Agregar historia academica</a>
     </div>
     <div class="row">
         <h4>
@@ -139,18 +138,14 @@
             Mis Amigos
         </h4>
         <div class="list-group " >
-
             <g:if test="${friends.size() == 0}">
                 Aun no tienes amigos
             </g:if>
-
             <g:each  in="${friends}"  >
                 <div class="cont" >
                     <a href="#" class="list-group-item small-size size-list" style="background-color: #d8d8d8 ">${it.email}</a>
                     <button  type="submit" class="btn btn-primary btn-xs size-btn">x</button>
-
                 </div>
-
             </g:each>
 
         </div>
