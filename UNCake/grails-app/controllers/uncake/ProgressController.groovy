@@ -26,7 +26,6 @@ class ProgressController {
     }
 
     def loadAcademicRecord(){
-        println params.selectedRecord
         def selectedRecord = String.valueOf( params.selectedRecord )
         def selectedCode = Integer.parseInt( selectedRecord.split('\\|')[0].trim() )
         def selectedName = selectedRecord.split('\\|')[1].trim()
