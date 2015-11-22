@@ -65,8 +65,9 @@ class ScheduleController {
     }
 
     def searchGroups() {
-        def url = (params.selectedLoc == 'MEDELLIN') ? Location.findByName(params.selectedLoc).url + ":9401/" :
-                Location.findByName(params.selectedLoc).url
+
+        def loc = Location.findByName(params.selectedLoc)
+        def url = (params.selectedLoc == 'MEDELLIN') ? loc.url + ":9401/" : loc.url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
 
         def groups = []
@@ -82,7 +83,7 @@ class ScheduleController {
                 json.result.list.each { a ->
                     def temp = ["teacher"       : a.nombredocente, "code": a.codigo,
                                 "availableSpots": a.cuposdisponibles, "totalSpots": a.cupostotal, "timeSlots": []]
-                    days.each { d -> temp["timeSlots"].add(setTimeSlot(d, a)) }
+                    days.each { d -> temp["timeSlots"].add(setTimeSlot(d, a, loc)) }
                     groups.add(temp)
                 }
             }
@@ -97,7 +98,7 @@ class ScheduleController {
         render groups as JSON
     }
 
-    def setTimeSlot(day, timeslot) {
+    def setTimeSlot(day, timeslot, loc) {
         def time = 'horario_' + day
 
         if (timeslot[time] == '--') {
@@ -112,7 +113,8 @@ class ScheduleController {
         return ["startHour": t[0].toInteger(),
                 "endHour"  : t[t.size() - 1].toInteger(),
                 "classroom": p[0], "day": day,
-                "building" : (p.size() > 1) ? Building.findByCode(p[1]) : null]
+                "building" : (p.size() > 1) ? Building.findByCode(p[1]) : null,
+                "location" : loc]
     }
 
     def buildSchedule(){
