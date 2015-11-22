@@ -35,6 +35,7 @@ select {
     max-height: 50%;
     overflow-y: auto;
     overflow-x: hidden;
+    cursor:  pointer;
 }
 
 .selectableItem li {
@@ -52,6 +53,7 @@ select {
 #accordionGroup {
     max-height: 80%;
     overflow-y: auto;
+    cursor:  pointer;
 }
 
 #accordionGroup h3 {
