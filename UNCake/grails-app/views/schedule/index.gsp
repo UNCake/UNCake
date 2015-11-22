@@ -27,6 +27,25 @@
 
     <script>
         $(function () {
+
+            $('.default-value').each(function () {
+                var $t = $(this),
+                        default_value = this.value;
+                $t.css('color', '#929292');
+                $t.focus(function () {
+                    if (this.value == default_value) {
+                        this.value = '';
+                        $t.css('color', 'black');
+                    }
+                });
+                $t.blur(function () {
+                    if ($.trim(this.value) == '') {
+                        $t.css('color', '#929292');
+                        this.value = default_value;
+                    }
+                });
+            });
+
             var courses
             var groups = {}
             var schedule = {}
@@ -62,7 +81,7 @@
 
             var updateCourses = function () {
                 var url = "${createLink(controller:'Schedule', action:'searchCourses')}";
-
+                $("#progressbarCourses").show();
                 var response = $.ajax({
                     url: url,
                     contentType: "application/json; charset=utf-8",
@@ -81,6 +100,7 @@
                                     .append($('<li>', {value: key})
                                             .text(value.code + " " + value.name));
                         });
+                        $("#progressbarCourses").hide();
                     },
                     error: function (request, status, error) {
                         alert(error)
@@ -158,7 +178,6 @@
 
             });
 
-
             $("#loc").autocomplete({
                 source: $.parseJSON('${locs.encodeAsJSON()}'),
                 select: function (event, ui) {
@@ -183,7 +202,7 @@
                 create: updateTypeCourse(),
                 select: function () {
                     updateTypeCourse()
-                    $("#plans").val("")
+                    $("#plans").val("Digita el plan de estudios").addClass("default-value")
                     updatePlans()
                     $("#selectable").empty()
                 }
@@ -327,6 +346,10 @@
                 }
             );
 
+            $("#progressbarCourses").progressbar({
+                value: false
+            }).hide();
+
         });
     </script>
 
@@ -400,7 +423,7 @@
         <label for="loc">Sede:</label>
 
         <div class="ui-widget">
-            <input id="loc">
+            <input id="loc" value="Digita la sede" class="default-value">
         </div>
 
         <label for="menuTypePlan">Tipo:</label>
@@ -415,7 +438,7 @@
         <label for="plans">Planes:</label>
 
         <div class="ui-widget">
-            <input id="plans">
+            <input id="plans" value="Digita el plan de estudios" class="default-value">
         </div>
 
 
@@ -429,13 +452,15 @@
         <label for="course">Materia:</label>
 
         <div class="ui-widget">
-            <input id="course">
+            <input id="course" value="Filtra los resultados por materia" class="default-value">
         </div>
 
+        <div id="progressbarCourses"></div>
         <div class="selectablemenu">
             <ol class="selectableItem" id="selectable">
             </ol>
         </div>
+
 
     </div>
 
