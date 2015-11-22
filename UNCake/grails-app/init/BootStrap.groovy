@@ -19,7 +19,6 @@ class BootStrap {
        println user1.friends
 
 
-
         //Inicializacion de Sedes
         new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co').save()
         new Location(name: 'BOGOTA', url: 'http://sia.bogota.unal.edu.co').save()

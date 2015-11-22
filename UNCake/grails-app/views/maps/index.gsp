@@ -34,7 +34,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 
 </head>
-<body>
+<body style="background: url('${resource(dir: "images", file: "fondo1.png")}'); background-repeat: no-repeat; background-size: 100% 100%;"  >
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header page-scroll">
@@ -47,6 +47,7 @@
                 </button>
                 <a class="navbar-brand page-scroll" href="home">UNCake</a>
             </div>
+
             <g:if test="${session.user != null}">
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
                     <ul class="nav navbar-nav navbar-right">
@@ -87,16 +88,18 @@
         </div>
     </header>
 
-    <div class="container">
+    <div class="container" >
         <div class="row">
             <div class="large-12 columns" >
-                <div class="row">
+                <div class="row" >
                     <div class="large-4 small-12 columns" style="padding-left: 50px; padding-right: 50px; padding-top: 60px;">
-                        <div class="panel">
-                            <h3 style="font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive; color: #1ab394;">Edificio</h3>
-                            <br/>
-                            <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre" value="" style="width: 300px;" ></g:textField>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="panel" style="background-color: transparent;">
+                            <!--<h3 style="font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive; color: #1ab394;">Edificio</h3>-->
+                            <img src="${resource(dir: 'images', file: 'nombreLogo.png')}" align="right" style="background-color: transparent; width: 26%;">
+                            <img src="${resource(dir: 'images', file: 'logo1.png')}" align="right" style="background-color: transparent; width: 16%;">
+                            <br/><br/>
+                            <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre del edificio" value="" style="width: 400px;" ></g:textField>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
                             <br/><br/>
                             <p>Los marcadores azules indican las entradas al campus, digita el nombre o número del edificio a buscar, un marcador rojo te indicará tu destino.</p>
@@ -121,10 +124,14 @@
                     <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
                         <g:set var="records" value="[]"/>
                         <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
-                            <g:each in="${it.courses}" var="cur">
-                                <div style="display: none;">
-                                    ${records.add(cur.name)}
-                                </div>
+                            <g:each in="${it.courses}">
+                                <g:each in="${it.timeSlots}" var="cur">
+                                    <div style="display: none;">
+                                    <g:if test="${cur.building != null}">
+                                        ${records.add( cur.classroom + " | " + cur.building.name + " | " + cur.building.coordinates ) }
+                                    </g:if>
+                                    </div>
+                                </g:each>
                             </g:each>
                         </g:each>
                         <div>
@@ -132,6 +139,7 @@
                         </div>
                     </g:if>
                 </g:if>
+                <br/><br/><br/><br/>
             </div>
         </div>
     </div>
