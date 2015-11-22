@@ -34,7 +34,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 
 </head>
-<body style="background: url('${resource(dir: "images", file: "fondo1.png")}'); background-repeat: no-repeat; background-size: 100% 100%;"  >
+<body style="background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: no-repeat; background-size: 100% 100%;">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header page-scroll">
@@ -97,12 +97,16 @@
                             <!--<h3 style="font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive; color: #1ab394;">Edificio</h3>-->
                             <img src="${resource(dir: 'images', file: 'nombreLogo.png')}" align="right" style="background-color: transparent; width: 26%;">
                             <img src="${resource(dir: 'images', file: 'logo1.png')}" align="right" style="background-color: transparent; width: 16%;">
-                            <br/><br/>
-                            <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre del edificio" value="" style="width: 400px;" ></g:textField>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
-                            <br/><br/>
-                            <p>Los marcadores azules indican las entradas al campus, digita el nombre o número del edificio a buscar, un marcador rojo te indicará tu destino.</p>
+                            <br/>
+                            <div style="width: 52%; background: url('${resource(dir: "images", file: "fondo1.png")}'); background-color: #f7f7f7;padding-left: 24px;padding-right: 24px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
+                                <br/><br/>
+                                <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre del edificio" value="" style="width: 400px;" ></g:textField>
+                                &nbsp;&nbsp;
+                                <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
+                                <br/><br/>
+                                <p>Los marcadores azules indican las entradas al campus, digita el nombre o número del edificio a buscar, un marcador rojo te indicará tu destino.</p>
+                                <br/>
+                            </div>
                         </div>
                     </div>
 

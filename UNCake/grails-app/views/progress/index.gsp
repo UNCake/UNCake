@@ -36,7 +36,7 @@
     <script type="text/javascript">
     </script>
 </head>
-<body id="mainContainer">
+<body id="mainContainer" style="background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: repeat; background-size: 100% ;">
 <div id="replace_dialog" title="¿Reemplazar el registro?" style="display: none;" >
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Ya tienes una historia académica guardada de esta carrera. ¿Deseas reemplazarla?</p>
 </div>
@@ -92,14 +92,23 @@
 <div class="row">
     <div class="large-12 columns">
         <br>
-
+        <div class="panel" style="background-color: transparent; text-align: right;">
+            <div class="large-6 columns" style="position: absolute; padding-top: 54px; padding-bottom: 45px;">
+                <div class="panel" style="width: 52%; background: url('${resource(dir: "images", file: "fondo1.png")}'); width: 60%;padding-left: 34px;padding-right: 34px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0; text-align: center;">
+                    <br/><br/><p style="display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p><br/><br/><br/>
+                </div>
+            </div>
+            <img src="${resource(dir: 'images', file: 'nombreLogo.png')}" style="background-color: transparent; width: 26%;">
+            <img src="${resource(dir: 'images', file: 'logo1.png')}" style="background-color: transparent; width: 16%;">
+        </div>
+        <br/>
         <div class="row">
             <div class="large-12 columns">
                 <div class="large-12 columns">
                     <div class="panel" style="background-color: #f7f7f7;padding-left: 34px;padding-right: 34px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                         <div class="row" id="data_container">
-                            <br/>
-                            <p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
+                            <br/><br/>
+                            <!--<p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>-->
                             <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-top: 20px; padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                             <br><br>
                             <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
