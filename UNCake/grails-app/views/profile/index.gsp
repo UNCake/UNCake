@@ -90,25 +90,32 @@
 </nav>
 
 <div class="container " >
-    <h1 class="row text-center " >
-        ${session.user.name}
-    </h1>
 
+    <hr>
     <div class="row">
-        <div class= "">
-        <img class=" img-responsive img-centered " style="text-align: center" src="${createLink(controller:'user', action:'avatar_image', id:session.user.ident())}" />
+        <div class= "col-md-4">
+            <g:if test="${session.user.avatar == null}">
+                <asset:image src="profile/avatar.png" alt=""/>
+            </g:if>
+            <g:if test="${session.user.avatar != null}">
+                <img class=" img-responsive  " style="text-align: center" src="${createLink(controller:'user', action:'avatar_image', id:session.user.ident())}" />
+            </g:if>
+            
         </div>
-        <div class= "text-center">
-
+        <div class= " col-md-8">
+            <p class="row font-usuario " >
+                ${session.user.name}
+            </p>
             <div class="row">
-                <a class="text-center  " href="/changephoto" title="Cambia foto." >Cambiar o subir una foto</a>
+                <a class="  " href="/changephoto" title="Cambia foto." >Cambiar o subir una foto</a>
             </div>
             <div class="row">
-                <a class="text-center  " href="/changepassword" title="Cambia tu contraseña." >Cambiar Contraseña</a>
+                <a class="  " href="/changepassword" title="Cambia tu contraseña." >Cambiar Contraseña</a>
             </div>
 
         </div>
     </div>
+    <hr>
     <div class="row">
         <div class="list-group">
             <h4>

@@ -11,7 +11,7 @@ img.avatar {
 
 .small-size {
     width: 100%;
-    
+
 
 
 }
@@ -30,4 +30,16 @@ img.avatar {
 .cont{
     display: flex;
 
+}
+
+.font-usuario{
+    font-size: 36px;
+    text-transform: uppercase;
+    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+}
+
+.size-img{
+    max-height:3%;
+    max-width: 3%;
 }
