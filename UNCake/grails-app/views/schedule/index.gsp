@@ -110,7 +110,8 @@
 
             var updateGroups = function (event, ui) {
                 var url = "${createLink(controller:'Schedule', action:'searchGroups')}";
-
+                var name = courses[$(ui.selected).attr('value')].name;
+                groups[name] = {};
                 var response = $.ajax({
                     url: url,
                     contentType: "application/json; charset=utf-8",
@@ -121,7 +122,6 @@
                         code: courses[$(ui.selected).attr('value')].code
                     },
                     success: function (group) {
-                        var name = courses[$(ui.selected).attr('value')].name;
                         var code = courses[$(ui.selected).attr('value')].code;
                         $('#accordionGroup')
                                 .append('<h3 value="' + name + '">' + code + ' ' + name + '<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
@@ -143,6 +143,7 @@
                         $('#accordionGroup').accordion("refresh");
                     },
                     error: function (request, status, error) {
+                        delete groups[name];
                         alert(error)
                     }
                 });
@@ -504,7 +505,7 @@
         <div class="panel panel-default" id="msgCol">
             <div class="panel-body">
                 <h3>Bienvenido!</h3>
-                Utiliza los filtros para empezar a crear tu horario.
+                Utiliza los filtros para crear tu horario.
             </div>
         </div>
 
