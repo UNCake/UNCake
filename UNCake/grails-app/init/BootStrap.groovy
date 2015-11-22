@@ -16,7 +16,7 @@ class BootStrap {
         user1.addToFriends(user4).save()
         user1.addToFriends(user5).save()
 
-       println user1.friends
+        println user1.friends
 
 
         //Inicializacion de Sedes
@@ -136,7 +136,35 @@ class BootStrap {
         new Building(code: '910', name: '910 - INSTITUTO COLOMBIANO DE NORMAS TECNICAS Y CERTIFICACION: ICONTEC', coordinates: '4.64431121382209&-74.08361077308655', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '935', name: '935 - SEDE SECTOR CAN     ', coordinates: '4.648011192666337&-74.09578800201416', Location: Location.findByName("BOGOTA") ).save()
 
-        DBconnectionService.initDB()
+        new Building(code: '11', name: '11 - Bloque 11', coordinates: '6.260409421942848&-75.57580947875977', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '12', name: '12 - Bloque 12', coordinates: '6.260398757087635&-75.57647466659546', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '41', name: '41 - Bloque 41', coordinates: '6.261859840223353&-75.57774066925049', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '24', name: '24 - Bloque 24', coordinates: '6.262478399735211&-75.57642102241516', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '42', name: '42 - Bloque 42', coordinates: '6.261902499523549&-75.57822346687317', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '46', name: '46 - Bloque 46', coordinates: '6.262505061766664&-75.57754755020142', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '44', name: '44 - Bloque 44', coordinates: '6.262067804278933&-75.57711839675903', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '19', name: '19 - Bloque 19', coordinates: '6.260838682184513&-75.57810008525848', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '17', name: '17 - Bloque 17', coordinates: '6.260644048702505&-75.57773530483246', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '18', name: '18 - Bloque 18', coordinates: '6.260516070483022&-75.57764947414398', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '15', name: '15 - Bloque 15', coordinates: '6.260873342933979&-75.57750463485718', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '150', name: '150 - Bloque 150', coordinates: '6.259950832971914&-75.57826638221741', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '50', name: '50 - Bloque 50', coordinates: '6.261982485702039&-75.5794894695282', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '51', name: '51 - Bloque 51', coordinates: '6.262537056202601&-75.57932317256927', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '53', name: '53 - Bloque 53', coordinates: '6.262952983691454&-75.57860434055328', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '54', name: '54 - Bloque 54', coordinates: '6.264515375016131&-75.57751536369324', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '55', name: '55 - Bloque 55', coordinates: '6.26502728378453&-75.57708621025085', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '57', name: '57 - Bloque 57', coordinates: '6.26479265899468&-75.57669997215271', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '58', name: '58 - Bloque 58', coordinates: '6.265272573224792&-75.5769681930542', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '59', name: '59 - Bloque 59', coordinates: '6.265208584686265&-75.57650685310364', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '5', name: '5 - Bloque 5', coordinates: '6.2644620511572136&-75.57459712028503', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '3', name: '3 - Bloque 3', coordinates: '6.2634595615957105&-75.5739426612854', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '4', name: '4 - Bloque 4', coordinates: '6.263128952913922&-75.57445764541626', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '7', name: '7 - Bloque 7', coordinates: '6.264014130527253&-75.57384610176086', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '8', name: '8 - Bloque 8', coordinates: '6.263619533463357&-75.5734920501709', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '6', name: '6 - Bloque 6', coordinates: '6.264376732971618&-75.57407140731812', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '2', name: '2 - Bloque 2', coordinates: '6.26347022638842&-75.57430744171143', Location: Location.findByName('MEDELLIN')).save()
+
+     DBconnectionService.initDB()
 
     }
     def destroy = {
