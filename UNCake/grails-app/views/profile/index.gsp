@@ -5,7 +5,7 @@
   Time: 07:44 PM
 --%>
 
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="uncake.ProgressController" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title></title>
@@ -114,10 +114,10 @@
                 No tienes ninguna historia academica
             </g:if>
             <g:each  in="${academicRecords}">
-                <a href="#" class="list-group-item" style="background-color: burlywood">${it.studyPlan.name}</a>
+                <g:link class="list-group-item" style="background-color: burlywood" controller="progress" action="index" params="${[ plan : it.studyPlan.code + " & " + it.studyPlan.name ]}">${it.studyPlan.name}</g:link>
             </g:each>
         </div>
-        <a href="#" class="btn btn-primary btn-xs" >Agregar historia academica</a>
+        <a href="progress" class="btn btn-primary btn-xs" >Agregar historia academica</a>
     </div>
     <div class="row">
         <h4>

@@ -122,6 +122,197 @@
                                 <g:javascript>
                                     $("#userLogged").attr('value','1');
                                 </g:javascript>
+                                <g:if test="${params.plan != null}">
+                                    <script type="text/javascript" src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1.1","packages":["bar", "corechart", "imagebarchart", "table"]}]}'></script>
+                                    <g:javascript>
+                                        function loadExternal( record ) {
+                                            record = record.replace(/&/g,"|");
+                                            if( record.length > 0 ){
+                                                var response = $.ajax({
+                                                    type: 'POST',
+                                                    url: "${createLink(action: 'loadAcademicRecord')}",
+                                                    data: {selectedRecord: record},
+                                                    success: function( input ){
+                                                        $("#information_container").show();
+                                                        input = String(input).substring( 1, String(input).length );
+                                                        var averagesToDraw = input.split(']')[0].trim().substring(1).replace(/\[/g,"");
+                                                        var advanceToDraw = input.split(']')[1].trim().substring(1).replace(/\[/g,"");
+                                                        var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
+                                                        var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
+                                                        drawPAPA( averagesToDraw.split(',') );
+                                                        drawPercentage( parseFloat(advanceToDraw) );
+                                                        drawComponents( advanceCmpToDraw.split(',') );
+                                                        drawTable( subjectsToDraw.split(',') );
+                                                        $("#container_save").hide();
+                                                    }
+                                                });
+                                            }else{
+                                                showOkDialog( "Selecciona un registro", "Debe seleccionar una historia académica a cargar" );
+                                            }
+                                        }
+                                        loadExternal( "${params.plan}" );
+
+                                        google.load("visualization", "1.1", {packages:["bar", "corechart", "imagebarchart", "table"]});
+
+                                        function drawPAPA( averages ) {
+                                            var data = new Array(averages.length/2 + 1);
+                                            var max = 0;
+                                            var min = 5;
+                                            var maxGraph;
+                                            var minGraph;
+                                            var adjustedAverages = [];
+                                            for( i = 0; i < averages.length; i++ ) {
+                                                if( averages[i]*10 - Math.floor(averages[i]*10) < 0.5 )
+                                                    adjustedAverages[i] = Math.floor( averages[i]*10 ) / 10;
+                                                else
+                                                    adjustedAverages[i] = Math.ceil( averages[i]*10 ) / 10;
+                                                if( adjustedAverages[i] > max )
+                                                    max = adjustedAverages[i];
+                                                if( adjustedAverages[i] < min )
+                                                    min = adjustedAverages[i];
+                                            }
+                                            maxGraph = max < 4.9 ? max + 0.11 : 5;
+                                            minGraph = min > 0.1 ? min - 0.1 : 0;
+                                            for( i = 0; i < averages.length/2 + 1; i++ ) {
+                                                data[i] = new Array(5);
+                                            }
+                                            data[0][0] = 'Semestre';
+                                            data[0][1] = 'PAPA';
+                                            data[0][2] = { role: 'style' };
+                                            data[0][3] = 'PA';
+                                            data[0][4] = { role: 'style' };
+
+                                            for (var i = 0; i < averages.length/2; i++){
+                                                data[i+1][0] = String( i + 1 );
+                                                data[i+1][1] = adjustedAverages[i * 2];
+                                                data[i+1][2] = 'springGreen';
+                                                data[i+1][3] = adjustedAverages[i * 2 + 1];
+                                                data[i+1][4] = 'dodgerBlue';
+                                            }
+                                            var data = new google.visualization.arrayToDataTable(
+                                                data
+                                            );
+                                            var options = {
+                                                title: 'PAPA y PA',
+                                                width: 900,
+                                                legend: { position: 'none' },
+                                                chart: { },
+                                                axes: {
+                                                    x: {
+                                                        0: { side: 'bottom', label: 'Semestre'}
+                                                    }
+                                                },
+                                                vAxis: {
+                                                    viewWindow: {
+                                                        max: maxGraph,
+                                                        min: minGraph
+                                                    },
+                                                },
+                                                bar: { groupWidth: "70%" }
+                                            };
+                                            var chart = new google.charts.Bar(document.getElementById('papa_chart'));
+                                            chart.draw(data, google.charts.Bar.convertOptions(options));
+                                        }
+
+                                        function drawPercentage( percentaje ) {
+                                            var data = new Array(3);
+                                            for( var i = 0; i < 3; i++ ) {
+                                                data[i] = new Array(2);
+                                            }
+                                            data[0][0] = 'Detalle';
+                                            data[0][1] = 'Porcentaje';
+                                            data[1][0] = 'Avance';
+                                            data[1][1] = percentaje;
+                                            data[2][0] = 'Pendiente';
+                                            data[2][1] = 100 - percentaje;
+
+                                            var data = google.visualization.arrayToDataTable(
+                                                data
+                                            );
+
+                                            var options = {
+                                                title: 'Mi avance de carrera',
+                                                pieHole: 0.1,
+                                                width: 450,
+                                                height: 350,
+                                                slices: {
+                                                    0: { color: 'springGreen' },
+                                                    1: { color: 'dodgerBlue' }
+                                                },
+                                                backgroundColor: 'transparent',
+                                                is3D: true,
+                                                pieSliceTextStyle: {
+                                                    color: 'black',
+                                                }
+                                            };
+
+                                            var chart = new google.visualization.PieChart(document.getElementById('percentage_chart'));
+                                            chart.draw(data, options);
+                                        }
+                                        function drawComponents( components ) {
+                                            var componentTitles = ['Fundamentación','Disciplinar','Libre elección'];
+                                            var data2 = new Array(componentTitles.length + 1);
+                                            var componentValues = new Array(components.length);
+                                            for (var i = 0; i < componentTitles.length + 1; i++) {
+                                                data2[i] = new Array(5);
+                                            }
+                                            for (var i = 0; i < components.length; i++) {
+                                                componentValues[i] = new Array(3);
+                                                for (var j = 0; j < componentValues[i].length; j++) {
+                                                    componentValues[i][j] = components[i].split('\t')[j+1];
+                                                }
+                                            }
+
+                                            data2[0][0] = 'Componente';
+                                            data2[0][1] = 'Aprobados';
+                                            data2[0][2] = { role: 'style' };
+                                            data2[0][3] = 'Pendientes';
+                                            data2[0][4] = { role: 'style' };
+
+                                            for (var i = 0; i < componentTitles.length; i++){
+                                                data2[i+1][0] = componentTitles[i];
+                                                data2[i+1][1] = parseInt( componentValues[1][i] );
+                                                data2[i+1][2] = 'springGreen';
+                                                data2[i+1][3] = parseInt( componentValues[0][i] - componentValues[1][i] );
+                                                data2[i+1][4] = 'dodgerBlue';
+                                            }
+                                            var data2 = google.visualization.arrayToDataTable(data2);
+
+                                            var options2 = {
+                                                title: 'Avance por componentes',
+                                                width: 450,
+                                                height: 350,
+                                                backgroundColor: 'transparent',
+                                                legend: { position: 'none' },
+                                                bar: { groupWidth: '70%' },
+                                                isStacked: 'percent',
+                                                is3D: true
+                                            };
+                                            var chart2 = new google.visualization.ColumnChart(document.getElementById('components_chart'));
+                                            chart2.draw(data2, options2);
+                                        }
+                                        function drawTable( subjects ){
+                                            var orderedSubjects = new Array( subjects.length );
+                                            for (var i = 0; i < subjects.length; i++) {
+                                                orderedSubjects[i] = new Array(3);
+                                                orderedSubjects[i][0] = subjects[i].split('\t')[1];
+                                                orderedSubjects[i][1] = parseInt( subjects[i].split('\t')[6] );
+                                                orderedSubjects[i][2] = parseFloat( subjects[i].split('\t')[9] );
+                                            }
+                                            var dataTable = new google.visualization.DataTable();
+                                            dataTable.addColumn( 'string', 'Materia', {style: 'font-style:bold; font-size:36px;'} );
+                                            dataTable.addColumn( 'number', 'Créditos', {style: 'font-style:bold; font-size:36px;'} );
+                                            dataTable.addColumn( 'number', 'Nota', {style: 'font-style:bold; font-size:36px;'} );
+                                            for (var i = 0; i < orderedSubjects.length; i++) {
+                                                dataTable.addRows([
+                                                    [ orderedSubjects[i][0], orderedSubjects[i][1], orderedSubjects[i][2] ]
+                                                ]);
+                                            }
+                                            var table = new google.visualization.Table(document.getElementById('record_table'));
+                                            table.draw(dataTable, {showRowNumber: true, width: '100%', height: '100%'});
+                                        }
+                                    </g:javascript>
+                                </g:if>
                                 <g:if test="${uncake.User.findById( ((User)session.user).id ).academicRecord.size() > 0}">
                                     <g:set var="records" value="[]"/>
                                     <g:each in="${uncake.User.findById( ((User)session.user).id ).academicRecord}">
@@ -221,6 +412,31 @@
 <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
 <asset:javascript src="foundation/foundation/foundation.js"/>
 <g:javascript>
+function loadExternal( record ) {
+    record = record.replace(/&/g,"");
+    if( record.length > 0 ){
+        var response = $.ajax({
+            type: 'POST',
+            url: "${createLink(action: 'loadAcademicRecord')}",
+            data: {selectedRecord: record},
+            success: function( input ){
+                $("#information_container").show();
+                input = String(input).substring( 1, String(input).length );
+                var averagesToDraw = input.split(']')[0].trim().substring(1).replace(/\[/g,"");
+                var advanceToDraw = input.split(']')[1].trim().substring(1).replace(/\[/g,"");
+                var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
+                var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
+                drawPAPA( averagesToDraw.split(',') );
+                drawPercentage( parseFloat(advanceToDraw) );
+                drawComponents( advanceCmpToDraw.split(',') );
+                drawTable( subjectsToDraw.split(',') );
+                $("#container_save").hide();
+            }
+        });
+    }else{
+        showOkDialog( "Selecciona un registro", "Debe seleccionar una historia académica a cargar" );
+    }
+}
 function validate(evt) {
     var theEvent = evt || window.event;
     var key = theEvent.charCode || theEvent.which;
