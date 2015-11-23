@@ -139,10 +139,10 @@
                             var porc = ( (value["totalSpots"] - value["availableSpots"]) / value["totalSpots"]) * 100;
 
                             div.append($('<li>', {value: code, id: key})
-                                    .html(value.code + ' - ' + value.teacher + '<p style="background-color: #999999">' + minSch + '</p>'+
-                                    '<div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="'+porc+
-                                    '" aria-valuemin="0" aria-valuemax="100" style="width:'+porc+'%"> <span>Cupos disponibles: '+value["availableSpots"]+
-                                    '/'+value["totalSpots"]+'</span></div> </div>'));
+                                    .html(value.code + ' - ' + value.teacher + '<p style="background-color: #999999">' + minSch + '</p>' +
+                                    '<div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="' + porc +
+                                    '" aria-valuemin="0" aria-valuemax="100" style="width:' + porc + '%"> <span>Cupos disponibles: ' + value["availableSpots"] +
+                                    '/' + value["totalSpots"] + '</span></div> </div>'));
                         });
                         $('#accordionGroup').append(div);
 
@@ -326,31 +326,38 @@
                 });
             });
 
-            $("#saveSchedule").button().click(
-                    function() {
-                        console.log(schedule);
-                        var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
+            $("#showSaveSchedule").button().click(
+                    function () {
 
+                        $("#modalSave").modal("show");
+                    });
+
+            $("#saveSchedule").submit(
+                    function () {
+                        var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
+                        console.log(schedule);
+                        schedule["name"] = $("#nameSc").val();
                         $.ajax({
                             type: "POST",
                             url: url,
                             data: JSON.stringify(schedule),
                             contentType: 'application/json',
-                            success: function(r) {
+                            success: function (r) {
                             }
                         });
+                        return false;
                     }
             );
 
             $("#printSchedule").button().click(
-                    function(){
-                    html2canvas($('#scheduleTable'), {
-                        onrendered: function (canvas) {
-                            var img = canvas.toDataURL();
-                            window.open(img);
-                        }
-                    });
-                }
+                    function () {
+                        html2canvas($('#scheduleTable'), {
+                            onrendered: function (canvas) {
+                                var img = canvas.toDataURL();
+                                window.open(img);
+                            }
+                        });
+                    }
             );
 
             $("#progressbarCourses").progressbar({
@@ -411,7 +418,8 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
+                        <a class="page-scroll" href="profile"><span
+                                class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Salir</a>
@@ -463,11 +471,11 @@
         </div>
 
         <div id="progressbarCourses"></div>
+
         <div class="selectablemenu">
             <ol class="selectableItem" id="selectable">
             </ol>
         </div>
-
 
     </div>
 
@@ -492,7 +500,7 @@
 
         <g:if test="${session.user != null}">
             <div>
-                <button id="saveSchedule">
+                <button id="showSaveSchedule">
                     Guardar
                 </button>
             </div>
@@ -538,6 +546,34 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalSave" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Guardar horario</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="saveSchedule">
+                        <div class="form-group">
+                            <label>Nombre</label>
+
+                            <div style="display: flex">
+                                <input type="text" id="nameSc" class="form-control" placeholder="Introduce un nombre"
+                                       required autofocus>
+                            </div>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='guardar'> Guardar </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 </body>

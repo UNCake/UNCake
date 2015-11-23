@@ -44,10 +44,10 @@ class ScheduleController {
                     list.add(["name": v.nombre, "typology": v.tipologia,
                               "code": v.codigo, "credits": v.creditos])
 
-                    if(!Course.findByCode(v.codigo)) {
+                    if (!Course.findByCode(v.codigo)) {
                         def course = new Course(list.last())
                         course.location = Location.findByName(params.selectedLoc)
-                        if(!course.save()){
+                        if (!course.save()) {
                             println "error guardando curso"
                         }
                     }
@@ -117,26 +117,35 @@ class ScheduleController {
                 "location" : loc]
     }
 
-    def buildSchedule(){
+    def buildSchedule() {
 
         def reqSchedule = request.JSON
-        def user = User.find(session.user)
         def schedule = new Schedule(credits: 0)
-        def group
-        reqSchedule.each {key, val ->
-            group = new Groups(course: key, code: val.code, availableSpots: val.availableSpots,
-            teacher: val.teacher, totalSpots: val.totalSpots)
-            val.timeSlots.each { ts ->
-                group.addToTimeSlots(new TimeSlot(ts).save(flush: true))
+        println reqSchedule
+
+        if (reqSchedule.size() > 1) {
+            def user = User.find(session.user)
+            def group, name
+            reqSchedule.each { key, val ->
+                if (key == "name") name = key
+                else {
+                    group = new Groups(course: key, code: val.code, availableSpots: val.availableSpots,
+                            teacher: val.teacher, totalSpots: val.totalSpots)
+                    val.timeSlots.each { ts ->
+                        group.addToTimeSlots(new TimeSlot(ts).save(flush: true))
+                    }
+
+                    group.save(flush: true)
+                    schedule.addToCourses(group)
+                }
             }
 
-            group.save(flush: true)
-            schedule.addToCourses(group)
-        }
-        schedule.save(flush: true)
+            schedule.name = name
+            schedule.save(flush: true)
 
-        user.addToSchedules(schedule)
-        user.save(flush: true)
+            user.addToSchedules(schedule)
+            user.save(flush: true)
+        }
 
         render schedule as JSON
     }
