@@ -125,6 +125,7 @@
                 </div>
                 <g:hiddenField name="doorMarker" id="doorMarker" value="${resource(dir:'images',file:'maps/entry.png', absolute:'true')}"></g:hiddenField>
                 <g:hiddenField name="pointMarker" id="pointMarker" value="${resource(dir:'images',file:'maps/point2.png', absolute:'true')}"></g:hiddenField>
+                <g:hiddenField name="subjectMarker" id="subjectMarker" value="${resource(dir:'images',file:'maps/point6.png', absolute:'true')}"></g:hiddenField>
             </div>
         </div>
     </div>
@@ -136,12 +137,12 @@
                 <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
                     <h3>Horario ${it.id}</h3>
                     <div>
-                        <g:each in="${it.courses}">
+                        <g:each in="${it.courses}" var="subj">
                             <div class="subjectArea">
-                                <p class="titleSubject">${String.valueOf(it.course)[0] + String.valueOf(it.course).toLowerCase().substring(1)}</p>
-                                <g:each in="${it.timeSlots}" var="subjectGroup">
+                                <p class="titleSubject">${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}</p>
+                                <g:each in="${subj.timeSlots}" var="subjectGroup">
                                     <g:if test="${subjectGroup.building != null}">
-                                        <div class="daySubject" data-loc="${subjectGroup.building.coordinates}">
+                                        <div class="daySubject" data-loc="${subjectGroup.building.coordinates}" data-title="${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}" data-content="${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour} ${subjectGroup.building.code}-${subjectGroup.classroom}">
                                             <p>${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour}</p>
                                             <p>${subjectGroup.building.code}-${subjectGroup.classroom}</p>
                                         </div>
@@ -165,13 +166,32 @@
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:javascript src="foundation/foundation/foundation.js"/>
     <g:javascript>
-        $( ".daySubject" ).click( function(){
-            alert($(this).data('loc'));
-        });
-        $( "#accordion" ).accordion({
-            collapsible: true
-        });
+        arrayMarkers = [];
         $(function() {
+            $( ".daySubject" ).click( function(){
+                var classMarker = String( $(this).data('loc') ).split("&");
+                var subjectMarker = new google.maps.Marker({
+                    position: new google.maps.LatLng(classMarker[0], classMarker[1]),
+                    map: map,
+                    title: String($(this).data('content')),
+                    animation: google.maps.Animation.DROP,
+                    content: String($(this).data('title')),
+                    icon: document.getElementById("subjectMarker").value
+                });
+                var infowindow = new google.maps.InfoWindow({
+                    content: String($(this).data('title'))
+                });
+                map.setCenter( new google.maps.LatLng(classMarker[0],classMarker[1]) );
+                map.setZoom(15);
+                google.maps.event.addListener(subjectMarker, 'click', function() {
+                    infowindow.open(map, subjectMarker);
+                });
+                arrayMarkers.push(subjectMarker);
+            });
+            $( "#accordion" ).accordion({
+                collapsible: true
+            });
+
             $( "#pointer" ).button().click( function(){
                 var selected = document.getElementById('selectedName').value;
                 var url="${createLink(controller:'Building', action:'getItemByName')}";
