@@ -97,7 +97,28 @@ class ProfileController {
         u.removeFromAcademicRecord(arToDelete).save()
         redirect(controller: "profile")
     }
+    def changepassword(){
 
+    }
 
+    def changePass() {
+        def u = session.user
+
+        if (u.password != params.actPass.encodeAsSHA1()) {
+            flash.message1 = "Esa no era tu contraseña"
+            redirect(action: "changepassword" )
+        } else {
+            u.password=params.pass2.encodeAsSHA1()
+            u.save()
+
+            redirect(action: "changepasswordok")
+
+        }
+
+    }
+
+    def changepasswordok(){
+
+    }
 
 }

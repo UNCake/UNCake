@@ -8,6 +8,9 @@ class UrlMappings {
         "/logout"(controller: "logout", action: "index")
         "/progress"(controller: "progress", action: "index")
         "/schedule"(controller: "schedule", action: "index")
+        "/changepasswordok"(controller: "profile", action: "changepasswordok")
+        "/changepassword"(controller: "profile", action: "changepassword")
+        "/profile"(controller: "profile", action: "index")
         "/$controller/$action?/$id?(.$format)?"{
             constraints {
                 // apply constraints here
