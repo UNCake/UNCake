@@ -102,10 +102,14 @@
             </g:if>
             
         </div>
+<<<<<<< HEAD
+        <div class= "text-center">
+=======
         <div class= " col-md-8">
             <p class="row font-usuario " >
                 ${session.user.name}
             </p>
+>>>>>>> profile
             <div class="row">
                 <a class="  " href="/changephoto" title="Cambia foto." >Cambiar o subir una foto</a>
             </div>
@@ -124,14 +128,19 @@
             <g:if test="${academicRecords.size() == 0}">
                 No tienes ninguna historia academica
             </g:if>
+<<<<<<< HEAD
+            <g:each  in="${academicRecords}">
+                <g:link class="list-group-item" style="background-color: burlywood" controller="progress" action="index" params="${[ plan : it.studyPlan.code + " & " + it.studyPlan.name ]}">${it.studyPlan.name}</g:link>
+=======
 <g:form action="delAcademicRecord">
-            <g:each  in="${academicRecords}" status="k" var="it">
-                <div class="cont">	
-		    <g:link class="list-group-item" style="background-color: burlywood" controller="progress" action="index" params="${[ plan : it.studyPlan.code + " & " + it.studyPlan.name ]}">${it.studyPlan.name}</g:link>
+            <g:each  in="${academicRecords}" status="k" var="ar">
+                <div class="cont">
+                    <a href="#" class="list-group-item small-size size-list" style="background-color: rosybrown">${ar.studyPlan.name}</a>
                     <button name="ind2" value="${k}" type="submit" class="btn btn-primary btn-xs size-btn">x</button>
-                    <div hidden><g:textArea name="dacademicrecord" value="${it.id}"/></div>
+                    <div hidden><g:textArea name="dacademicrecord" value="${ar.id}"/></div>
                 </div>
 
+>>>>>>> profile
             </g:each>
 </g:form>
         </div>
@@ -168,6 +177,12 @@
             <g:if test="${friends.size() == 0}">
                 Aun no tienes amigos
             </g:if>
+<<<<<<< HEAD
+            <g:each  in="${friends}"  >
+                <div class="cont" >
+                    <a href="#" class="list-group-item small-size size-list" style="background-color: #d8d8d8 ">${it.email}</a>
+                    <button  type="submit" class="btn btn-primary btn-xs size-btn">x</button>
+=======
 
             <g:form action="delFriend">
             <g:each  in="${friends}" status="j" var="ff"  >
@@ -177,6 +192,7 @@
                     <div hidden><g:textArea name="dfriend" value="${ff.email}"/></div>
 
 
+>>>>>>> profile
                 </div>
             </g:each>
             </g:form>
