@@ -26,6 +26,7 @@
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
     <asset:stylesheet src="agency.css"/>
     <asset:stylesheet src="dialogueStyle.css"/>
+    <asset:stylesheet src="mapsSchedule.css"/>
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
@@ -100,7 +101,7 @@
                             <br/>
                             <div style="width: 52%; background: url('${resource(dir: "images", file: "fondo1.png")}'); background-color: #f7f7f7;padding-left: 24px;padding-right: 24px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                                 <br/><br/>
-                                <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre del edificio" value="" style="width: 400px;" ></g:textField>
+                                <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre del edificio" value="" style="width: 80%;" ></g:textField>
                                 &nbsp;&nbsp;
                                 <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
                                 <br/><br/>
@@ -124,38 +125,37 @@
                 </div>
                 <g:hiddenField name="doorMarker" id="doorMarker" value="${resource(dir:'images',file:'maps/entry.png', absolute:'true')}"></g:hiddenField>
                 <g:hiddenField name="pointMarker" id="pointMarker" value="${resource(dir:'images',file:'maps/point2.png', absolute:'true')}"></g:hiddenField>
-                <g:if test="${session.user != null}">
-                    <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
-                        <g:set var="records" value="[]"/>
-                        <div id="accordion">
-                            <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
-                                <h3>Horario ${it.id}</h3>
-                                <div>
-                                    <g:each in="${it.courses}">
-                                        <div>
-                                            <p>${it.course}</p>
-                                            <g:each in="${it.timeSlots}" var="subjectGroup">
-                                                <g:if test="${subjectGroup.building != null}">
-                                                        <p>${subjectGroup.classroom}</p>
-                                                        <p>${subjectGroup.building.name}</p>
-                                                        <p>${subjectGroup.building.coordinates}</p>
-                                                </g:if>
-                                            </g:each>
-                                            <br/><br/><br/>
-                                        </div>
-                                    </g:each>
-                                </div>
-                            </g:each>
-                        </div>
-                        <div>
-
-                        </div>
-                    </g:if>
-                </g:if>
-                <br/><br/><br/><br/>
             </div>
         </div>
     </div>
+
+    <g:if test="${session.user != null}">
+        <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
+            <g:set var="records" value="[]"/>
+            <div id="accordion" class="accordionSchedules">
+                <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
+                    <h3>Horario ${it.id}</h3>
+                    <div>
+                        <g:each in="${it.courses}">
+                            <div class="subjectArea">
+                                <p class="titleSubject">${String.valueOf(it.course)[0] + String.valueOf(it.course).toLowerCase().substring(1)}</p>
+                                <g:each in="${it.timeSlots}" var="subjectGroup">
+                                    <g:if test="${subjectGroup.building != null}">
+                                        <div class="daySubject" data-loc="${subjectGroup.building.coordinates}">
+                                            <p>${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour}</p>
+                                            <p>${subjectGroup.building.code}-${subjectGroup.classroom}</p>
+                                        </div>
+                                    </g:if>
+                                </g:each>
+                            </div>
+                        </g:each>
+                    </div>
+                </g:each>
+            </div>
+        </g:if>
+    </g:if>
+    <br/><br/><br/><br/>
+
     <asset:javascript src="foundation/vendor/jquery.js"/>
     <asset:javascript src="foundation/foundation.min.js"/>
     <script>
@@ -165,8 +165,11 @@
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:javascript src="foundation/foundation/foundation.js"/>
     <g:javascript>
+        $( ".daySubject" ).click( function(){
+            alert($(this).data('loc'));
+        });
         $( "#accordion" ).accordion({
-            collapsible: false
+            collapsible: true
         });
         $(function() {
             $( "#pointer" ).button().click( function(){
