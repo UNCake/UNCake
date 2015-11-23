@@ -120,9 +120,10 @@ class ScheduleController {
     def buildSchedule() {
 
         def reqSchedule = request.JSON
-        def schedule = new Schedule(credits: 0)
+        def res = []
 
         if (reqSchedule.size() > 1) {
+            def schedule = new Schedule(credits: 0)
             def user = User.find(session.user)
             def group, name
             reqSchedule.each { key, val ->
@@ -151,8 +152,9 @@ class ScheduleController {
 
             user.addToSchedules(schedule)
             user.save(flush: true)
+            res = [1]
         }
 
-        render schedule as JSON
+        render res as JSON
     }
 }

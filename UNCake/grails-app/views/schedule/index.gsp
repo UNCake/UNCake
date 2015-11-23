@@ -302,6 +302,7 @@
                         }
 
                         if (!available) {
+                            $("#modal-title").html("Cruce de horarios");
                             $("#modal-message").html("Existe un cruce entre la materia " + crCourse + " y la materia " + name + ".");
                             $("#modalCr").modal("show");
                         } else {
@@ -335,14 +336,21 @@
             $("#saveSchedule").submit(
                     function () {
                         var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
-                        console.log(schedule);
                         schedule["name"] = $("#nameSc").val();
+                        
                         $.ajax({
                             type: "POST",
                             url: url,
                             data: JSON.stringify(schedule),
                             contentType: 'application/json',
                             success: function (r) {
+                                $("#modalSave").modal("hide");
+
+                                if(r != ""){
+                                    $("#modal-title").html("Horario");
+                                    $("#modal-message").html("Horario guardado.");
+                                    $("#modalCr").modal("show");
+                                }
                             }
                         });
                         return false;
@@ -536,7 +544,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Cruce de horarios</h4>
+                        <h4 class="modal-title" id="modal-title">Cruce de horarios</h4>
                     </div>
 
                     <div class="modal-body">
