@@ -114,25 +114,31 @@ class ScheduleController {
                 "endHour"  : t[t.size() - 1].toInteger(),
                 "classroom": p[0], "day": day,
                 "building" : (p.size() > 1) ? Building.findByCode(p[1]) : null,
-                "location" : loc]
+                "location" : loc.name]
     }
 
     def buildSchedule() {
 
         def reqSchedule = request.JSON
         def schedule = new Schedule(credits: 0)
-        println reqSchedule
 
         if (reqSchedule.size() > 1) {
             def user = User.find(session.user)
             def group, name
             reqSchedule.each { key, val ->
-                if (key == "name") name = key
+                if (key == "name") name = val
                 else {
                     group = new Groups(course: key, code: val.code, availableSpots: val.availableSpots,
                             teacher: val.teacher, totalSpots: val.totalSpots)
+
                     val.timeSlots.each { ts ->
-                        group.addToTimeSlots(new TimeSlot(ts).save(flush: true))
+
+                        if (Location.findByName(ts.location) != null) {
+                            def tempTS = new TimeSlot(building: ts.building, location: Location.findByName(ts.location),
+                                    classroom: ts.classroom, day: ts.day, endHour: ts.endHour, startHour: ts.startHour)
+                            tempTS.save(flush: true)
+                            group.addToTimeSlots(tempTS)
+                        }
                     }
 
                     group.save(flush: true)

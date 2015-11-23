@@ -128,8 +128,8 @@
                 Aun no tienes horarios creados
             </g:if>
 
-            <g:each in="${schedules}" status="i" var="schedule">
-                <a href="#" class="list-group-item" style="background-color: burlywood"> Horario ${i+1} </a>
+            <g:each in="${schedules}">
+                <a href="#" class="list-group-item" style="background-color: burlywood"> ${it.name} </a>
             </g:each>
         </div>
         <a href="#" class="btn btn-primary btn-xs" >Agregar horario</a>
