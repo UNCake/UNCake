@@ -127,19 +127,28 @@
                 <g:if test="${session.user != null}">
                     <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
                         <g:set var="records" value="[]"/>
-                        <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
-                            <g:each in="${it.courses}">
-                                <g:each in="${it.timeSlots}" var="cur">
-                                    <div style="display: none;">
-                                    <g:if test="${cur.building != null}">
-                                        ${records.add( cur.classroom + " | " + cur.building.name + " | " + cur.building.coordinates ) }
-                                    </g:if>
-                                    </div>
-                                </g:each>
+                        <div id="accordion">
+                            <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
+                                <h3>Horario ${it.id}</h3>
+                                <div>
+                                    <g:each in="${it.courses}">
+                                        <div>
+                                            <p>${it.course}</p>
+                                            <g:each in="${it.timeSlots}" var="subjectGroup">
+                                                <g:if test="${subjectGroup.building != null}">
+                                                        <p>${subjectGroup.classroom}</p>
+                                                        <p>${subjectGroup.building.name}</p>
+                                                        <p>${subjectGroup.building.coordinates}</p>
+                                                </g:if>
+                                            </g:each>
+                                            <br/><br/><br/>
+                                        </div>
+                                    </g:each>
+                                </div>
                             </g:each>
-                        </g:each>
+                        </div>
                         <div>
-                            <g:select id="recordSelector" name="${records}" from="${records}" noSelection="['':'-Selecciona un horario-']"/>
+
                         </div>
                     </g:if>
                 </g:if>
@@ -156,6 +165,9 @@
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:javascript src="foundation/foundation/foundation.js"/>
     <g:javascript>
+        $( "#accordion" ).accordion({
+            collapsible: false
+        });
         $(function() {
             $( "#pointer" ).button().click( function(){
                 var selected = document.getElementById('selectedName').value;
