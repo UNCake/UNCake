@@ -22,10 +22,11 @@ class UserController {
         // Save the image and mime type
         user.avatar = f.bytes
         user.avatarType = f.contentType
+
         log.info("File uploaded: $user.avatarType")
 
         // Validation works, will check if the image is too big
-        if (!user.save()) {
+        if (!user.save(flush: true)) {
             render(view:'selectavatar', model:[user:user])
             return
         }
