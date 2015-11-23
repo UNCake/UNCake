@@ -23,6 +23,7 @@
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="schedule.css"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
     <script>
@@ -135,8 +136,13 @@
                                 if (ts.startHour > 0)
                                     minSch += ts.day.substring(0, 2) + ': ' + ts.startHour + ' - ' + ts.endHour + '\n';
                             }
+                            var porc = ( (value["totalSpots"] - value["availableSpots"]) / value["totalSpots"]) * 100;
+
                             div.append($('<li>', {value: code, id: key})
-                                    .html(value.code + ' - ' + value.teacher + '<p style="background-color: #999999">' + minSch + '</p>'));
+                                    .html(value.code + ' - ' + value.teacher + '<p style="background-color: #999999">' + minSch + '</p>'+
+                                    '<div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="'+porc+
+                                    '" aria-valuemin="0" aria-valuemax="100" style="width:'+porc+'%"> <span>Cupos disponibles: '+value["availableSpots"]+
+                                    '/'+value["totalSpots"]+'</span></div> </div>'));
                         });
                         $('#accordionGroup').append(div);
 

@@ -2,8 +2,18 @@ body {
     padding-left: 5px;
     padding-right: 5px;
     background-color: #eee;
+    font-family: "Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.progress {
+    background: #9d9d9d;
+    position: relative;
+}
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+}
 .ui-widget input,
 .ui-widget select,
 .ui-widget textarea,
