@@ -30,7 +30,7 @@
     </script>
 </head>
 
-<body>
+<body style="background: url('${resource(dir: "images", file: "logo1.png")}'); background-repeat: no-repeat; background-size: 33% 60%; background-position: right 10%; background-color:rgba(0, 0, 0, 0.2); ">
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -91,9 +91,9 @@
 
 <div class="container " >
 
-    <hr>
+    <br>
     <div class="row">
-        <div class= "col-md-4">
+        <div class= "col-md-4 col-sm-4">
             <g:if test="${session.user.avatar == null}">
                 <asset:image src="profile/avatar.png" alt=""/>
             </g:if>
@@ -102,7 +102,7 @@
             </g:if>
             
         </div>
-        <div class= " col-md-8">
+        <div class= " col-md-8 col-sm-8">
             <p class="row font-usuario " >
                 ${session.user.name}
             </p>
@@ -115,7 +115,8 @@
 
         </div>
     </div>
-    <hr>
+    <br>
+    <br>
     <div class="row">
         <div class="list-group">
             <h4>
