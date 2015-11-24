@@ -5,7 +5,16 @@
     width: 16%;
     /*background-color: transparent;*/
 }
-
+#divAcumulate{
+    position: absolute;
+    top: 26%;
+    left: 82%;
+    width: 16%;
+    border-radius: 5px;
+    background: url(../images/fondo1.png);
+    padding: 8px;
+    /*background-color: transparent;*/
+}
 .subjectArea{
     border: 4px solid white;
     overflow: auto;

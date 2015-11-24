@@ -132,10 +132,13 @@
 
     <g:if test="${session.user != null}">
         <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
-            <g:set var="records" value="[]"/>
+            <g:set var="itemNumber" value="${1}"></g:set>
+            <div id="divAcumulate">
+                <input type="checkbox" name="acumulate" id="acumulate"/>&nbsp;&nbsp;&nbsp;Acumular
+            </div>
             <div id="accordion" class="accordionSchedules">
                 <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
-                    <h3>Horario ${it.id}</h3>
+                    <h3>Horario ${itemNumber}</h3> <!---->
                     <div>
                         <g:each in="${it.courses}" var="subj">
                             <div class="subjectArea">
@@ -150,6 +153,9 @@
                                 </g:each>
                             </div>
                         </g:each>
+                        <div style="display: none;">
+                            ${itemNumber++}
+                        </div>
                     </div>
                 </g:each>
             </div>
@@ -169,6 +175,11 @@
         arrayMarkers = [];
         $(function() {
             $( ".daySubject" ).click( function(){
+                if( $("#acumulate").is(":checked") == false ){
+                    for (var i = 0; i < arrayMarkers.length; i++) {
+                        arrayMarkers[i].setMap(null);
+                    };
+                }
                 var classMarker = String( $(this).data('loc') ).split("&");
                 var subjectMarker = new google.maps.Marker({
                     position: new google.maps.LatLng(classMarker[0], classMarker[1]),
