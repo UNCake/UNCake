@@ -128,7 +128,7 @@
 <g:form action="delAcademicRecord">
             <g:each  in="${academicRecords}" status="k" var="it">
                 <div class="cont">	
-		    <g:link class="list-group-item" style="background-color: burlywood" controller="progress" action="index" params="${[ plan : it.studyPlan.code + " & " + it.studyPlan.name ]}">${it.studyPlan.name}</g:link>
+		    <g:link class="list-group-item small-size size-list"  style="background-color: burlywood" controller="progress" action="index" params="${[ plan : it.studyPlan.code + " & " + it.studyPlan.name ]}">${it.studyPlan.name}</g:link>
                     <button name="ind2" value="${k}" type="submit" class="btn btn-primary btn-xs size-btn">x</button>
                     <div hidden><g:textArea name="dacademicrecord" value="${it.id}"/></div>
                 </div>
