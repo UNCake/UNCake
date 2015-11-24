@@ -31,8 +31,7 @@
     <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet'
-          type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' ype='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 
 </head>
@@ -133,13 +132,12 @@
 
     <g:if test="${session.user != null}">
         <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
-            <g:set var="itemNumber" value="${1}"></g:set>
             <div id="divAcumulate">
                 <input type="checkbox" name="acumulate" id="acumulate"/>&nbsp;&nbsp;&nbsp;Acumular
             </div>
             <div id="accordion" class="accordionSchedules">
                 <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
-                    <h3>Horario ${itemNumber}</h3> <!---->
+                    <h3>${it.name}</h3>
                     <div>
                         <g:each in="${it.courses}" var="subj">
                             <div class="subjectArea">
@@ -154,9 +152,6 @@
                                 </g:each>
                             </div>
                         </g:each>
-                        <div style="display: none;">
-                            ${itemNumber++}
-                        </div>
                     </div>
                 </g:each>
             </div>
