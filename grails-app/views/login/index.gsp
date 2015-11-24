@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon">
 
     <title>Entrar</title>
 
@@ -54,7 +54,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="home">UNCake</a>
+            <a class="navbar-brand page-scroll" href="/home">UNCake</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -81,10 +81,12 @@
 
 <div class="container center-contatiner">
 
-
 <g:form class="form-signin" action="doLogin" method="post" useToken="true" >
+
     <form class="form-signin">
+
         <h2 class="form-signin-heading font-uncake" align="center">UNCake</h2>
+
         <div class="form-group">
             <label >Email</label>
             <div style="display: flex">
@@ -92,6 +94,7 @@
                 <div class="error">${flash.message2}</div>
             </div>
         </div>
+
         <div class="form-group" style="margin-bottom: 0px">
             <div style="display: flex">
                 <div class="col-6">

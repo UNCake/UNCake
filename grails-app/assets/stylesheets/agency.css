@@ -16,7 +16,9 @@
 
 #page-top {
     overflow-x: hidden;
-    background-image: url(../images/home/fotoUN_2.jpg);
+    background-image: url(../images/home/fotoUN_5.jpg);
+    background-repeat: space;
+    background-size: 100% 100%;
     height: 100%;
 }
 

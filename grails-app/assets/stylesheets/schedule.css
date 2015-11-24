@@ -2,8 +2,18 @@ body {
     padding-left: 5px;
     padding-right: 5px;
     background-color: #eee;
+    font-family: "Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.progress {
+    background: #9d9d9d;
+    position: relative;
+}
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+}
 .ui-widget input,
 .ui-widget select,
 .ui-widget textarea,
@@ -24,6 +34,8 @@ select {
 
 
 .selectableItem {
+    max-height: 50%;
+    overflow-y: auto;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -33,6 +45,7 @@ select {
     max-height: 50%;
     overflow-y: auto;
     overflow-x: hidden;
+    cursor:  pointer;
 }
 
 .selectableItem li {
@@ -48,7 +61,9 @@ select {
 }
 
 #accordionGroup {
+    max-height: 80%;
     overflow-y: auto;
+    cursor:  pointer;
 }
 
 #accordionGroup h3 {
@@ -61,6 +76,10 @@ select {
 
 #scheduleTable {
     table-layout: fixed;
+}
+
+#showSaveSchedule{
+    float: right;
 }
 
 th,td
@@ -77,7 +96,6 @@ th,td
 td
 {
     padding: 5px 10px;
-    color: #e7e7e7;
     width: 90px;
     word-wrap:break-word;
 }
