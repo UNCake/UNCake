@@ -30,7 +30,7 @@
     </script>
 </head>
 
-<body>
+<body style="  background-color:rgba(0, 0, 0, 0.2); ">
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -88,23 +88,23 @@
 
     </div>
 </nav>
-
 <div class="container " >
 
-    <hr>
+    <br>
     <div class="row">
-        <div class= "col-md-4">
+        <div class= "col-md-4 col-sm-4">
             <g:if test="${session.user.avatar == null}">
-                <asset:image src="profile/avatar.png" alt=""/>
+                <img src="${resource(dir: 'images', file: 'avatar.png')}" class="img-responsive">
             </g:if>
             <g:if test="${session.user.avatar != null}">
                 <img class=" img-responsive  " style="text-align: center" src="${createLink(controller:'user', action:'avatar_image', id:session.user.ident())}" />
             </g:if>
             
         </div>
-        <div class= " col-md-8">
+        <div class= " col-md-8 col-sm-8">
             <p class="row font-usuario " >
                 ${session.user.name}
+
             </p>
             <div class="row">
                 <a class="  " href="/changephoto" title="Cambia foto." >Cambiar o subir una foto</a>
@@ -115,7 +115,8 @@
 
         </div>
     </div>
-    <hr>
+    <br>
+    <br>
     <div class="row">
         <div class="list-group">
             <h4>
@@ -149,7 +150,7 @@
             <g:form action="delSchedule">
             <g:each in="${schedules}" status="i" var="schedule">
                 <div class="cont" >
-                    <a href="#" class="list-group-item small-size size-list" style="background-color: burlywood"> ${schedule.name} </a>
+                    <a href="#" class="list-group-item small-size size-list" style="background-color: rgb(135, 190, 222)"> ${schedule.name} </a>
                     <button name="ind1" value="${i}" type="submit" class="btn btn-primary btn-xs size-btn">x</button>
                     <div hidden><g:textArea name="dschedule" value="${schedule.id}"/></div>
                 </div>
@@ -164,22 +165,28 @@
         <h4>
             Mis Amigos
         </h4>
-        <div class="list-group " >
+        <g class="list-group " >
             <g:if test="${friends.size() == 0}">
                 Aun no tienes amigos
             </g:if>
 
-            <g:form action="delFriend">
+<g:form action="delFriend">
             <g:each  in="${friends}" status="j" var="ff"  >
                 <div class="cont" >
-                    <a href="#" class="list-group-item small-size size-list" style="background-color: #d8d8d8 ">${ff.name}   -    ${ff.email}</a>
+                    <button name="indexf" value="${j}" class="list-group-item small-size size-list" style="background-color: #d8d8d8 ">${ff.name}   -    ${ff.email}</button>
+
                     <button name="ind" value="${j}" type="submit" class="btn btn-primary btn-xs size-btn">x</button>
                     <div hidden><g:textArea name="dfriend" value="${ff.email}"/></div>
 
 
                 </div>
             </g:each>
-            </g:form>
+</g:form>
+
+
+
+
+
         </div>
         <!-- <a href="#" class="btn btn-primary btn-xs" >Agregar amigos</a>-->
     </div>

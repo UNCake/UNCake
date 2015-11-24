@@ -1,9 +1,9 @@
 package uncake
 
 class ProfileController {
-
+    def friendToGo//=new User(email:"xxxxxxxxxx@unal.com", password:"lollol12".encodeAsSHA1(), name:"Pedro" ).save();
     def index() {
-
+        friendToGo=null
         def email=session.user.email
         def u=User.findWhere(email: email)
 
@@ -30,7 +30,18 @@ class ProfileController {
 
         }
 
-        [academicRecords: academicRecords,friends: friends,schedules: schedules ]
+        [academicRecords: academicRecords,friends: friends,schedules: schedules, ftg: friendToGo]
+
+
+
+    }
+
+
+    def index2() {
+        
+
+        [ ftg: friendToGo]
+
 
 
 
@@ -40,21 +51,58 @@ class ProfileController {
         def email=session.user.email
         def u=User.findWhere(email: email)
 
-        def friendToDelete
+        if(params.ind!=null){
+            def friendToDelete
 
-        if(u.friends.size()==1){
+            if(u.friends.size()==1){
 
-            friendToDelete = User.findWhere(email: params.dfriend)
+                friendToDelete = User.findWhere(email: params.dfriend)
 
+            }else{
+                friendToDelete = User.findWhere(email: params.dfriend[params.int("ind")])
+            }
+
+            u.removeFromFriends(friendToDelete).save()
+            redirect(controller: "profile")
         }else{
-            friendToDelete = User.findWhere(email: params.dfriend[params.int("ind")])
+
+
+            if(u.friends.size()==1){
+
+                friendToGo = User.findWhere(email: params.dfriend)
+
+            }else{
+                friendToGo = User.findWhere(email: params.dfriend[params.int("indexf")])
+            }
+
+            redirect( controller: "profile", action: "index2")
+
         }
 
 
 
 
-        u.removeFromFriends(friendToDelete).save()
-        redirect(controller: "profile")
+
+
+    }
+
+    def goToFriend(){
+        def email=session.user.email
+        def u=User.findWhere(email: email)
+
+        def friendToGo
+
+        if(u.friends.size()==1){
+
+            friendToGo = User.findWhere(email: params.dfriend)
+
+        }else{
+            friendToGo = User.findWhere(email: params.dfriend[params.int("indexf")])
+        }
+        println friendToGo.name
+
+redirect(controller: "profile")
+        //render(view: "index", model: [ftg: friendToGo ])
     }
 
 
@@ -97,7 +145,28 @@ class ProfileController {
         u.removeFromAcademicRecord(arToDelete).save()
         redirect(controller: "profile")
     }
+    def changepassword(){
 
+    }
 
+    def changePass() {
+        def u = session.user
+
+        if (u.password != params.actPass.encodeAsSHA1()) {
+            flash.message1 = "Esa no era tu contraseña"
+            redirect(action: "changepassword" )
+        } else {
+            u.password=params.pass2.encodeAsSHA1()
+            u.save()
+
+            redirect(action: "changepasswordok")
+
+        }
+
+    }
+
+    def changepasswordok(){
+
+    }
 
 }

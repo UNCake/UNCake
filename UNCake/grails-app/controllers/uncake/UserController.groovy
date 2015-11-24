@@ -7,31 +7,41 @@ class UserController {
     private static final okcontents = ['image/png', 'image/jpeg', 'image/gif']
 
     def upload_avatar() {
-        def user = session.user // or however you select the current user
 
-        // Get the avatar file from the multi-part request
-        def f = request.getFile('avatar')
+            def user = session.user // or however you select the current user
 
-        // List of OK mime-types
-        if (!okcontents.contains(f.getContentType())) {
-            flash.message = "Avatar must be one of: ${okcontents}"
-            render(view:'selectavatar', model:[user:user])
-            return
-        }
+            // Get the avatar file from the multi-part request
+            def f = request.getFile('avatar')
 
-        // Save the image and mime type
-        user.avatar = f.bytes
-        user.avatarType = f.contentType
+            // List of OK mime-types
+            if (!okcontents.contains(f.getContentType())) {
+                flash.message = "Formato incorrecto, la foto debe ser : ${okcontents}"
+                //render(view:'selectavatar', model:[user:user])
+                redirect(action: "index")
+                return
+            }
 
-        log.info("File uploaded: $user.avatarType")
+            // Save the image and mime type
 
-        // Validation works, will check if the image is too big
+                user.avatar = f.bytes
+                user.avatarType = f.contentType
+
+
+
+            log.info("File uploaded: $user.avatarType")
+
+            // Validation works, will check if the image is too big
+
+
         if (!user.save(flush: true)) {
-            render(view:'selectavatar', model:[user:user])
+            flash.message ="imagen muy grande"
+            redirect( action:"index" )
+            //render(view:'selectavatar', model:[user:user])
             return
         }
         flash.message = "Avatar (${user.avatarType}, ${user.avatar.size()} bytes) uploaded."
         redirect(controller: "profile" )
+
     }
 
     def avatar_image() {

@@ -16,18 +16,18 @@ class BootStrap {
         user1.addToFriends(user4).save()
         user1.addToFriends(user5).save()
 
-        println user1.friends
+
 
 
         //Inicializacion de Sedes
-        /*new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co').save()*/
+        new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co').save()
         new Location(name: 'BOGOTA', url: 'http://sia.bogota.unal.edu.co').save()
-        /*new Location(name: 'CARIBE', url: 'http://siacar.unal.edu.co').save()
+        new Location(name: 'CARIBE', url: 'http://siacar.unal.edu.co').save()
         new Location(name: 'MANIZALES', url: 'http://sia.manizales.unal.edu.co').save()
         new Location(name: 'MEDELLIN', url: 'http://sia.medellin.unal.edu.co').save()
         new Location(name: 'ORINOQUIA', url: 'http://siaori.unal.edu.co').save()
         new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co').save()
-        new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co').save()*/
+        new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co').save()
 
         new Building(code: '101', name: '101 - TORRE DE ENFERMERIA ', coordinates: '4.635181486487435&-74.08243864774704', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '102', name: '102 - BIBLIOTECA CENTRAL GABRIEL GARCIA MARQUEZ', coordinates: '4.63540605513496&-74.08303678035736', Location: Location.findByName("BOGOTA") ).save()
