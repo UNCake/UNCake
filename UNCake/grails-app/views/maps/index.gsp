@@ -26,6 +26,7 @@
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
     <asset:stylesheet src="agency.css"/>
     <asset:stylesheet src="dialogueStyle.css"/>
+    <asset:stylesheet src="mapsSchedule.css"/>
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
@@ -100,7 +101,7 @@
                             <br/>
                             <div style="width: 52%; background: url('${resource(dir: "images", file: "fondo1.png")}'); background-color: #f7f7f7;padding-left: 24px;padding-right: 24px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                                 <br/><br/>
-                                <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre del edificio" value="" style="width: 400px;" ></g:textField>
+                                <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre del edificio" value="" style="width: 80%;" ></g:textField>
                                 &nbsp;&nbsp;
                                 <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
                                 <br/><br/>
@@ -124,29 +125,44 @@
                 </div>
                 <g:hiddenField name="doorMarker" id="doorMarker" value="${resource(dir:'images',file:'maps/entry.png', absolute:'true')}"></g:hiddenField>
                 <g:hiddenField name="pointMarker" id="pointMarker" value="${resource(dir:'images',file:'maps/point2.png', absolute:'true')}"></g:hiddenField>
-                <g:if test="${session.user != null}">
-                    <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
-                        <g:set var="records" value="[]"/>
-                        <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
-                            <g:each in="${it.courses}">
-                                <g:each in="${it.timeSlots}" var="cur">
-                                    <div style="display: none;">
-                                    <g:if test="${cur.building != null}">
-                                        ${records.add( cur.classroom + " | " + cur.building.name + " | " + cur.building.coordinates ) }
-                                    </g:if>
-                                    </div>
-                                </g:each>
-                            </g:each>
-                        </g:each>
-                        <div>
-                            <g:select id="recordSelector" name="${records}" from="${records}" noSelection="['':'-Selecciona un horario-']"/>
-                        </div>
-                    </g:if>
-                </g:if>
-                <br/><br/><br/><br/>
+                <g:hiddenField name="subjectMarker" id="subjectMarker" value="${resource(dir:'images',file:'maps/point6.png', absolute:'true')}"></g:hiddenField>
             </div>
         </div>
     </div>
+
+    <g:if test="${session.user != null}">
+        <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
+            <g:set var="itemNumber" value="${1}"></g:set>
+            <div id="divAcumulate">
+                <input type="checkbox" name="acumulate" id="acumulate"/>&nbsp;&nbsp;&nbsp;Acumular
+            </div>
+            <div id="accordion" class="accordionSchedules">
+                <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
+                    <h3>Horario ${itemNumber}</h3> <!---->
+                    <div>
+                        <g:each in="${it.courses}" var="subj">
+                            <div class="subjectArea">
+                                <p class="titleSubject">${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}</p>
+                                <g:each in="${subj.timeSlots}" var="subjectGroup">
+                                    <g:if test="${subjectGroup.building != null}">
+                                        <div class="daySubject" data-loc="${subjectGroup.building.coordinates}" data-title="${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}" data-content="${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour} ${subjectGroup.building.code}-${subjectGroup.classroom}">
+                                            <p>${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour}</p>
+                                            <p>${subjectGroup.building.code}-${subjectGroup.classroom}</p>
+                                        </div>
+                                    </g:if>
+                                </g:each>
+                            </div>
+                        </g:each>
+                        <div style="display: none;">
+                            ${itemNumber++}
+                        </div>
+                    </div>
+                </g:each>
+            </div>
+        </g:if>
+    </g:if>
+    <br/><br/><br/><br/>
+
     <asset:javascript src="foundation/vendor/jquery.js"/>
     <asset:javascript src="foundation/foundation.min.js"/>
     <script>
@@ -156,7 +172,37 @@
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:javascript src="foundation/foundation/foundation.js"/>
     <g:javascript>
+        arrayMarkers = [];
         $(function() {
+            $( ".daySubject" ).click( function(){
+                if( $("#acumulate").is(":checked") == false ){
+                    for (var i = 0; i < arrayMarkers.length; i++) {
+                        arrayMarkers[i].setMap(null);
+                    };
+                }
+                var classMarker = String( $(this).data('loc') ).split("&");
+                var subjectMarker = new google.maps.Marker({
+                    position: new google.maps.LatLng(classMarker[0], classMarker[1]),
+                    map: map,
+                    title: String($(this).data('content')),
+                    animation: google.maps.Animation.DROP,
+                    content: String($(this).data('title')),
+                    icon: document.getElementById("subjectMarker").value
+                });
+                var infowindow = new google.maps.InfoWindow({
+                    content: String($(this).data('title'))
+                });
+                map.setCenter( new google.maps.LatLng(classMarker[0],classMarker[1]) );
+                map.setZoom(15);
+                google.maps.event.addListener(subjectMarker, 'click', function() {
+                    infowindow.open(map, subjectMarker);
+                });
+                arrayMarkers.push(subjectMarker);
+            });
+            $( "#accordion" ).accordion({
+                collapsible: true
+            });
+
             $( "#pointer" ).button().click( function(){
                 var selected = document.getElementById('selectedName').value;
                 var url="${createLink(controller:'Building', action:'getItemByName')}";
