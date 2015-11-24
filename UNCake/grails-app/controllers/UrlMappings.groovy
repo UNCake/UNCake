@@ -11,6 +11,7 @@ class UrlMappings {
         "/changepasswordok"(controller: "profile", action: "changepasswordok")
         "/changepassword"(controller: "profile", action: "changepassword")
         "/profile"(controller: "profile", action: "index")
+        "/profile/profile"(controller: "profile", action: "index")
         "/$controller/$action?/$id?(.$format)?"{
             constraints {
                 // apply constraints here
