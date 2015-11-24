@@ -112,7 +112,7 @@
                 </p>
             </div>
             <div class="row">
-                <a href="profile" class=" btn btn-default btn-lg" style="margin-top: 10%">Volver</a>
+                <a href="/profile" class=" btn btn-default btn-lg" style="margin-top: 10%">Volver</a>
             </div>
 
 
