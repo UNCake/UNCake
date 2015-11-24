@@ -30,7 +30,7 @@
     </script>
 </head>
 
-<body style="background: url('${resource(dir: "images", file: "logo1.png")}'); background-repeat: no-repeat; background-size: 33% 60%; background-position: right 10%; background-color:rgba(0, 0, 0, 0.2); ">
+<body style=" background-color:rgba(0, 0, 0, 0.2); ">
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -93,22 +93,28 @@
     <br>
     <div class="row">
         <div class= "col-md-4 col-sm-4">
-            <g:if test="${session.user.avatar == null}">
+            <g:if test="${ftg.avatar == null}">
+                <img src="${resource(dir: 'images', file: 'avatar.png')}" class="img-responsive">
 
-                <asset:image src="profile/avatar.png" alt=""/>
             </g:if>
-            <g:if test="${session.user.avatar != null}">
-                <img class=" img-responsive  " style="text-align: center" src="${createLink(controller:'user', action:'avatar_image', id:session.user.ident())}" />
+            <g:if test="${ftg.avatar != null}">
+                <img class=" img-responsive  " style="text-align: center" src="${createLink(controller:'user', action:'avatar_image', id:ftg.ident())}" />
             </g:if>
 
         </div>
         <div class= " col-md-8 col-sm-8">
-            <p class="row font-usuario " >
-                <g:if test="${ftg != null}">
-                    ${ftg.name}
-                </g:if>
+            <div class="row">
+                <p class="row font-usuario " style="margin-right: 0px ; margin-left: 0px" >
+                    <g:if test="${ftg != null}">
+                        ${ftg.name}
 
-            </p>
+                    </g:if>
+                </p>
+            </div>
+            <div class="row">
+                <a href="profile" class=" btn btn-default btn-lg" style="margin-top: 10%">Volver</a>
+            </div>
+
 
         </div>
     </div>
@@ -116,11 +122,10 @@
     <br>
     <div class="row">
         <div class="col-md-9 col-sm-9">
-            <asset:image src="horario.png" alt=""/>
+            <img src="${resource(dir: 'images', file: 'horario.png')}" class="img-responsive">
+
         </div>
-        <div class="col-md-2 col-sm-2">
-            <a href="profile" class="center btn btn-default btn-lg">Volver</a>
-        </div>
+
     </div>
 
 
