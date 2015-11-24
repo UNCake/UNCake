@@ -38,7 +38,7 @@ class ProfileController {
 
 
     def index2() {
-        
+
 
         [ ftg: friendToGo]
 
