@@ -66,6 +66,36 @@ h4{
         $("#searchCourse").autocomplete({
             source: availableTags
         });
+        $("#searchCourse").bind("keypress", function(e) {
+            if(e.keyCode==13){
+                //console.log(session.user)
+                var selected = document.getElementById('searchCourse').value;
+                console.log(selected)
+                if (selected != "") {
+                    //document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
+                    var url = "${createLink(controller:'CommentHandle', action:'getCourseByName')}";
+                    var response = $.ajax({
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: {
+                            selectedName: selected
+                        },
+                        success: function (courseValues) {
+                            //userValues ya tiene todos los datos del usuario. Hasta la foto :O
+                            if(courseValues.name != "null") {
+                                document.getElementById('courseNameTittle').innerHTML = courseValues.name;
+                                document.getElementById('lblid').value = courseValues.id;
+                                document.getElementById('codetxt').value = courseValues.id;
+                                el = document.getElementById("overlay");
+                                //console.log(document.getElementById("diagNombre").innerHTML);
+                                el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+                            }
+                        }
+                    });
+                }
+            }
+        });
     });
 </script>
 <script>
@@ -80,9 +110,9 @@ h4{
                 selectedName: selected
             },
             success: function (courseValues) {
-                console.log(courseValues)
+                //console.log(courseValues.comments[courseValues.comments.length-1].id)
                 document.getElementById('courseNameTittle').innerHTML = courseValues.name;
-                document.getElementById('courseLastCommentTittle').innerHTML = courseValues.name;
+                //document.getElementById('courseLastCommentTittle').innerHTML = "Comentario";
             }
         });
         document.getElementById('lblid').value = a;
@@ -100,7 +130,7 @@ h4{
             <br>
             <g:textField name="code" id="codetxt"></g:textField>
             <h5>Ultimo Comentario:</h5>
-            <h6 id="courseLastCommentTittle"></h6>
+            <h6 id="courseLastCommentTittle">"${commentList[0].comment}"</h6>
             <br>
             <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='Login'>Ver Todos  o  Comentar</button>
         </g:form>
@@ -118,7 +148,7 @@ h4{
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="home">UNCake</a>
+                <a class="navbar-brand page-scroll" href="../home">UNCake</a>
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -152,7 +182,7 @@ h4{
                     <div class="portfolio-item">
                         <br>
                         <h3 style="color: #333;">Busca materias y los comentarios que la comunidad tiene acerca de ellas.</h3>
-                        <input type="input" class="form-control " id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; background-color: #222">
+                        <input type="input" class="form-control" id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; background-color: #222">
                     </div>
                     <br><br>
                 </div>
@@ -202,13 +232,6 @@ h4{
         </div>
     </footer>
 </div>
-
-<g:form method="GET" action="comments">
-    <div class="column">
-        <g:textField name="code"></g:textField>
-        <g:submitButton name="bt1" value="Ver comentarios"></g:submitButton>
-    </div>
-</g:form>
 
 </body>
 </html>

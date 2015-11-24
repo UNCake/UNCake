@@ -213,7 +213,7 @@ h4{
                     <div class="portfolio-caption">
                         <div class="img-centered">
                             <a href="CommentHandle" >
-                                <asset:image src="home/services/icono_papa.png" alt=""/>
+                                <asset:image src="home/services/icono_buscar_materias.png" alt=""/>
                             </a>
                         </div>
                         <h4>Buscador comentarios materias</h4><br>
