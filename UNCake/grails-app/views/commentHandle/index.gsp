@@ -59,9 +59,10 @@ h4{
     $(function () {
         document.getElementById('selectedName').style.visibility = "hidden";
         document.getElementById('lblid').style.visibility = "hidden";
+        document.getElementById('codetxt').style.visibility = "hidden";
         document.getElementById('lbllogin').style.visibility = "hidden";
         document.getElementById('lblregister').style.visibility = "hidden";
-        var availableTags = $.parseJSON('${coursesList.encodeAsJSON()}');
+        var availableTags = $.parseJSON('${coursesNameList.encodeAsJSON()}');
         $("#searchCourse").autocomplete({
             source: availableTags
         });
@@ -80,10 +81,12 @@ h4{
             },
             success: function (courseValues) {
                 console.log(courseValues)
-                document.getElementById('casatest').innerHTML = courseValues.name;
+                document.getElementById('courseNameTittle').innerHTML = courseValues.name;
+                document.getElementById('courseLastCommentTittle').innerHTML = courseValues.name;
             }
         });
         document.getElementById('lblid').value = a;
+        document.getElementById('codetxt').value = a;
         el = document.getElementById("overlay");
         //console.log(document.getElementById("diagNombre").innerHTML);
         el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
@@ -91,12 +94,16 @@ h4{
 </script>
 <div id="overlay">
     <div class="container">
-        <p class="text-warning">Click aqui para [<a href='#' onclick='overlay()'>cerrar</a>]</p>
-        <h1 id="casatest"></h1>
-        <br>
-
-        <h5>Comentarios:</h5>
-        <br>
+        <g:form method="GET" action="comments">
+            <p class="text-warning">Click aqui para [<a href='#' onclick='overlay()'>cerrar</a>]</p>
+            <h1 id="courseNameTittle"></h1>
+            <br>
+            <g:textField name="code" id="codetxt"></g:textField>
+            <h5>Ultimo Comentario:</h5>
+            <h6 id="courseLastCommentTittle"></h6>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='Login'>Ver Todos  o  Comentar</button>
+        </g:form>
     </div>
 </div>
 <div id="wrapper">

@@ -6,7 +6,7 @@ import grails.converters.JSON
 class CommentHandleController {
     def index() {
         println("index")
-        [coursesList: Course.list()]
+        [coursesList: Course.list(), coursesNameList: Course.list().name]
     }
 
     def getCourseById(){
