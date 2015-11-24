@@ -8,9 +8,7 @@ class BuildingController {
 
     def getAllNames(){
         def buildings = Building.createCriteria().list([max: params.maxRows]) {
-            and{
-                ilike('name', "%${params.name_startsWith}%")
-            }
+            ilike('name', "%${params.name_startsWith}%")
         }
         render buildings.name as JSON
     }

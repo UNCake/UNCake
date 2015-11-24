@@ -136,7 +136,7 @@ class BootStrap {
         new Building(code: '910', name: '910 - INSTITUTO COLOMBIANO DE NORMAS TECNICAS Y CERTIFICACION: ICONTEC', coordinates: '4.64431121382209&-74.08361077308655', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '935', name: '935 - SEDE SECTOR CAN     ', coordinates: '4.648011192666337&-74.09578800201416', Location: Location.findByName("BOGOTA") ).save()
 
-        new Building(code: '11', name: '11 - Bloque 11', coordinates: '6.260409421942848&-75.57580947875977', Location: Location.findByName('MEDELLIN')).save()
+        /*new Building(code: '11', name: '11 - Bloque 11', coordinates: '6.260409421942848&-75.57580947875977', Location: Location.findByName('MEDELLIN')).save()
         new Building(code: '12', name: '12 - Bloque 12', coordinates: '6.260398757087635&-75.57647466659546', Location: Location.findByName('MEDELLIN')).save()
         new Building(code: '41', name: '41 - Bloque 41', coordinates: '6.261859840223353&-75.57774066925049', Location: Location.findByName('MEDELLIN')).save()
         new Building(code: '24', name: '24 - Bloque 24', coordinates: '6.262478399735211&-75.57642102241516', Location: Location.findByName('MEDELLIN')).save()
@@ -162,7 +162,7 @@ class BootStrap {
         new Building(code: '7', name: '7 - Bloque 7', coordinates: '6.264014130527253&-75.57384610176086', Location: Location.findByName('MEDELLIN')).save()
         new Building(code: '8', name: '8 - Bloque 8', coordinates: '6.263619533463357&-75.5734920501709', Location: Location.findByName('MEDELLIN')).save()
         new Building(code: '6', name: '6 - Bloque 6', coordinates: '6.264376732971618&-75.57407140731812', Location: Location.findByName('MEDELLIN')).save()
-        new Building(code: '2', name: '2 - Bloque 2', coordinates: '6.26347022638842&-75.57430744171143', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '2', name: '2 - Bloque 2', coordinates: '6.26347022638842&-75.57430744171143', Location: Location.findByName('MEDELLIN')).save()*/
 
         DBconnectionService.initDB()
 
