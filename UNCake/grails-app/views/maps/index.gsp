@@ -110,7 +110,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="large-8 columns" style="padding: 80px;">
                         <div class="row">
                             <div class="large-12 columns">

@@ -29,10 +29,8 @@
     <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet'
-          type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-
     <script type="text/javascript">
     </script>
 </head>
@@ -151,6 +149,7 @@
                                                                 var advanceToDraw = input.split(']')[1].trim().substring(1).replace(/\[/g,"");
                                                                 var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
                                                                 var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
+                                                                $("#titleRecord").text(record.replace(/\|/g,"-"));
                                                                 drawPAPA( averagesToDraw.split(',') );
                                                                 drawPercentage( parseFloat(advanceToDraw) );
                                                                 drawComponents( advanceCmpToDraw.split(',') );
@@ -348,6 +347,8 @@
 
                                 <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
                                     <br/>
+                                    <h5 id="titleRecord"></h5>
+                                    <br/>
                                     <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                                         <div id="papa_chart" style="width: 900px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
                                     </div>
@@ -465,6 +466,7 @@
             $( "#loadRecord" ).button().click( function() {
                 var selectedRecord = document.getElementById('recordSelector').value;
                 if( selectedRecord.length > 0 ){
+                    $("#titleRecord").text(selectedRecord.replace(/\|/g,"-"));
                     var response = $.ajax({
                         type: 'POST',
                         url: "${createLink(action: 'loadAcademicRecord')}",
@@ -671,8 +673,12 @@
                     showOkDialog( "No hay datos", "Debes pegar una historia académica." );
                 }
                 else{
+
                     var periods = splitPeriods( history );
+                    var planPattern = /[0-9]+ \| [A-Za-záéíóúÁÉÍÓÚñÑüÜ:\.\- ]+/i;
+                    var plan = String( planPattern.exec( history ) );
                     var averages = [];
+                    $("#titleRecord").text(plan.replace(/\|/g,"-"));
                     for( var i = 0; i < periods.length; i++ ){
                         averages.push( calculatePAPA(periods[i] )[0] );
                         averages.push( calculatePAPA(periods[i] )[1] );
