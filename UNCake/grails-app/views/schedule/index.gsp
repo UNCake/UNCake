@@ -23,10 +23,30 @@
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="schedule.css"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
     <script>
         $(function () {
+
+            $('.default-value').each(function () {
+                var $t = $(this),
+                        default_value = this.value;
+                $t.css('color', '#929292');
+                $t.focus(function () {
+                    if (this.value == default_value) {
+                        this.value = '';
+                        $t.css('color', 'black');
+                    }
+                });
+                $t.blur(function () {
+                    if ($.trim(this.value) == '') {
+                        $t.css('color', '#929292');
+                        this.value = default_value;
+                    }
+                });
+            });
+
             var courses
             var groups = {}
             var schedule = {}
@@ -62,7 +82,7 @@
 
             var updateCourses = function () {
                 var url = "${createLink(controller:'Schedule', action:'searchCourses')}";
-
+                $("#progressbarCourses").show();
                 var response = $.ajax({
                     url: url,
                     contentType: "application/json; charset=utf-8",
@@ -81,6 +101,7 @@
                                     .append($('<li>', {value: key})
                                             .text(value.code + " " + value.name));
                         });
+                        $("#progressbarCourses").hide();
                     },
                     error: function (request, status, error) {
                         alert(error)
@@ -90,7 +111,8 @@
 
             var updateGroups = function (event, ui) {
                 var url = "${createLink(controller:'Schedule', action:'searchGroups')}";
-
+                var name = courses[$(ui.selected).attr('value')].name;
+                groups[name] = {};
                 var response = $.ajax({
                     url: url,
                     contentType: "application/json; charset=utf-8",
@@ -101,7 +123,6 @@
                         code: courses[$(ui.selected).attr('value')].code
                     },
                     success: function (group) {
-                        var name = courses[$(ui.selected).attr('value')].name;
                         var code = courses[$(ui.selected).attr('value')].code;
                         $('#accordionGroup')
                                 .append('<h3 value="' + name + '">' + code + ' ' + name + '<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
@@ -115,14 +136,20 @@
                                 if (ts.startHour > 0)
                                     minSch += ts.day.substring(0, 2) + ': ' + ts.startHour + ' - ' + ts.endHour + '\n';
                             }
+                            var porc = ( (value["totalSpots"] - value["availableSpots"]) / value["totalSpots"]) * 100;
+
                             div.append($('<li>', {value: code, id: key})
-                                    .html(value.code + ' - ' + value.teacher + '<p style="background-color: #999999">' + minSch + '</p>'));
+                                    .html(value.code + ' - ' + value.teacher + '<p style="background-color: #999999">' + minSch + '</p>' +
+                                    '<div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="' + porc +
+                                    '" aria-valuemin="0" aria-valuemax="100" style="width:' + porc + '%"> <span>Cupos disponibles: ' + value["availableSpots"] +
+                                    '/' + value["totalSpots"] + '</span></div> </div>'));
                         });
                         $('#accordionGroup').append(div);
 
                         $('#accordionGroup').accordion("refresh");
                     },
                     error: function (request, status, error) {
+                        delete groups[name];
                         alert(error)
                     }
                 });
@@ -158,7 +185,6 @@
 
             });
 
-
             $("#loc").autocomplete({
                 source: $.parseJSON('${locs.encodeAsJSON()}'),
                 select: function (event, ui) {
@@ -183,7 +209,7 @@
                 create: updateTypeCourse(),
                 select: function () {
                     updateTypeCourse()
-                    $("#plans").val("")
+                    $("#plans").val("Digita el plan de estudios").addClass("default-value")
                     updatePlans()
                     $("#selectable").empty()
                 }
@@ -276,6 +302,7 @@
                         }
 
                         if (!available) {
+                            $("#modal-title").html("Cruce de horarios");
                             $("#modal-message").html("Existe un cruce entre la materia " + crCourse + " y la materia " + name + ".");
                             $("#modalCr").modal("show");
                         } else {
@@ -300,32 +327,50 @@
                 });
             });
 
-            $("#saveSchedule").button().click(
-                    function() {
-                        console.log(schedule);
-                        var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
+            $("#showSaveSchedule").button().click(
+                    function () {
 
+                        $("#modalSave").modal("show");
+                    });
+
+            $("#saveSchedule").submit(
+                    function () {
+                        var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
+                        schedule["name"] = $("#nameSc").val();
+                        
                         $.ajax({
                             type: "POST",
                             url: url,
                             data: JSON.stringify(schedule),
                             contentType: 'application/json',
-                            success: function(r) {
+                            success: function (r) {
+                                $("#modalSave").modal("hide");
+
+                                if(r != ""){
+                                    $("#modal-title").html("Horario");
+                                    $("#modal-message").html("Horario guardado.");
+                                    $("#modalCr").modal("show");
+                                }
+                            }
+                        });
+                        return false;
+                    }
+            );
+
+            $("#printSchedule").button().click(
+                    function () {
+                        html2canvas($('#scheduleTable'), {
+                            onrendered: function (canvas) {
+                                var img = canvas.toDataURL();
+                                window.open(img);
                             }
                         });
                     }
             );
 
-            $("#printSchedule").button().click(
-                    function(){
-                    html2canvas($('#scheduleTable'), {
-                        onrendered: function (canvas) {
-                            var img = canvas.toDataURL();
-                            window.open(img);
-                        }
-                    });
-                }
-            );
+            $("#progressbarCourses").progressbar({
+                value: false
+            }).hide();
 
         });
     </script>
@@ -381,7 +426,8 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
+                        <a class="page-scroll" href="profile"><span
+                                class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Salir</a>
@@ -400,7 +446,7 @@
         <label for="loc">Sede:</label>
 
         <div class="ui-widget">
-            <input id="loc">
+            <input id="loc" value="Digita la sede" class="default-value">
         </div>
 
         <label for="menuTypePlan">Tipo:</label>
@@ -415,7 +461,7 @@
         <label for="plans">Planes:</label>
 
         <div class="ui-widget">
-            <input id="plans">
+            <input id="plans" value="Digita el plan de estudios" class="default-value">
         </div>
 
 
@@ -429,8 +475,10 @@
         <label for="course">Materia:</label>
 
         <div class="ui-widget">
-            <input id="course">
+            <input id="course" value="Filtra los resultados por materia" class="default-value">
         </div>
+
+        <div id="progressbarCourses"></div>
 
         <div class="selectablemenu">
             <ol class="selectableItem" id="selectable">
@@ -460,7 +508,7 @@
 
         <g:if test="${session.user != null}">
             <div>
-                <button id="saveSchedule">
+                <button id="showSaveSchedule">
                     Guardar
                 </button>
             </div>
@@ -479,7 +527,7 @@
         <div class="panel panel-default" id="msgCol">
             <div class="panel-body">
                 <h3>Bienvenido!</h3>
-                Utiliza los filtros para empezar a crear tu horario.
+                Utiliza los filtros para crear tu horario.
             </div>
         </div>
 
@@ -496,7 +544,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Cruce de horarios</h4>
+                        <h4 class="modal-title" id="modal-title">Cruce de horarios</h4>
                     </div>
 
                     <div class="modal-body">
@@ -506,6 +554,34 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalSave" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Guardar horario</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="saveSchedule">
+                        <div class="form-group">
+                            <label>Nombre</label>
+
+                            <div style="display: flex">
+                                <input type="text" id="nameSc" class="form-control" placeholder="Introduce un nombre"
+                                       required autofocus>
+                            </div>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='guardar'> Guardar </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 </body>
