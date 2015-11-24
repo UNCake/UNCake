@@ -1,30 +1,9 @@
 body {
-    padding-top: 40px;
+    padding-top: 0;
     padding-bottom: 40px;
     background-color: #eee;
 }
 
-.column {
-    padding-top: 40px;
-    padding-left: 10px;
-    padding-right: 10px;
-    height: 100%;
-    display: inline-block;
-}
-
-.filter {
-    width: 25%;
-    float: left;
-}
-
-.schedule {
-    width: 50%;
-}
-
-.selectedC {
-    width: 25%;
-    float: right;
-}
 
 .ui-widget input,
 .ui-widget select,
@@ -52,8 +31,7 @@ select {
 }
 
 .selectablemenu {
-    height: 50%;
-    width: 100%;
+    max-height: 50%;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -70,7 +48,6 @@ select {
 }
 
 #accordionGroup {
-    height: 100%;
     overflow-y: auto;
 }
 
@@ -80,12 +57,6 @@ select {
 
 #accordionGroup a {
     float: right;
-}
-
-
-.scheduleTableD {
-    width: 100%;
-    overflow: auto;
 }
 
 th,td

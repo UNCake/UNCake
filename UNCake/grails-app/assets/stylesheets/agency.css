@@ -4,12 +4,26 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-body {
+
+.navbar-default{
+    background-color: rgba(118, 122, 128, 0.64) !important;
+}
+.navbar-default.navbar-shrink{
+    background-color: #2c8bc9 !important;
+}
+
+
+
+#page-top {
     overflow-x: hidden;
-    font-family: "Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
     background-image: url(../images/home/fotoUN_2.jpg);
     height: 100%;
 }
+
+body{
+    font-family: "Roboto Slab","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
 #wrapper {
     min-height: 100%;
     position: relative;
@@ -242,7 +256,7 @@ fieldset[disabled] .btn-xl.active {
 
 @media(min-width:768px) {
     .navbar-default {
-        padding: 25px 0;
+        padding: 5px 0;
         border: 0;
         background-color: transparent;
         -webkit-transition: padding .3s;

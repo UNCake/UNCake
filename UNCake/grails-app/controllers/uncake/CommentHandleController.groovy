@@ -1,10 +1,21 @@
 package uncake
 
+import grails.converters.JSON
 
 //BORRAR LOS PRINTLN DESPUES
 class CommentHandleController {
     def index() {
         println("index")
+        [coursesList: Course.list()]
+    }
+
+    def getCourseById(){
+        Long courseid = params.long('selectedName')
+        println courseid
+        def course = Course.findWhere(id:courseid)
+        def testL = course.comments
+        render course as JSON
+
     }
 
     def comments() {

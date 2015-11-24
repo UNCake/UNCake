@@ -14,6 +14,10 @@
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:javascript src="commentHandle/commentHandle.js"/>
+
+    <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
+    <asset:stylesheet src="agency.css"/>
+    <asset:stylesheet src="dialogueStyle.css"/>
 </head>
 
 <body>
