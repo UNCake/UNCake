@@ -112,8 +112,8 @@ class ScheduleController {
 
         return ["startHour": t[0].toInteger(),
                 "endHour"  : t[t.size() - 1].toInteger(),
-                "classroom": p[0], "day": day,
-                "building" : (p.size() > 1) ? Building.findByCode(p[1]) : null,
+                "classroom": (p.size() > 1) ? p[1] : 'no', "day": day,
+                "building" :  Building.findByCode(p[0]) ,
                 "location" : loc.name]
     }
 
