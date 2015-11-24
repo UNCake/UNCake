@@ -150,7 +150,7 @@
             <g:form action="delSchedule">
             <g:each in="${schedules}" status="i" var="schedule">
                 <div class="cont" >
-                    <a href="#" class="list-group-item small-size size-list" style="background-color: burlywood"> Horario ${i+1} </a>
+                    <a href="#" class="list-group-item small-size size-list" style="background-color: rgb(135, 190, 222)"> Horario ${i+1} </a>
                     <button name="ind1" value="${i}" type="submit" class="btn btn-primary btn-xs size-btn">x</button>
                     <div hidden><g:textArea name="dschedule" value="${schedule.id}"/></div>
                 </div>
