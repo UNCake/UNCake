@@ -8,13 +8,10 @@ class HomeController {
     }
 
     def saveFriend = {
-        def user = User.findWhere(name:params.diagNombre, email: params.diagMail)
-        def a=[]
-        if(!session.user.friends) {
-            a.add(user)
-            session.user.friends=a
-        }else
-            session.user.friends.add(user)
+        def friend = User.findWhere(name:params.diagNombre, email: params.diagMail)
+        def user= User.find(session.user)
+
+        user.addToFriends(friend)
         //redireccionar
         redirect(controller:'home',action:'index')
     }
