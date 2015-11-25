@@ -10,3 +10,5 @@ build/
 .settings
 .classpath
 .asscache
+BootStrap.groovy
+Course.groovy
