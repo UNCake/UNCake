@@ -337,7 +337,7 @@
                     function () {
                         var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
                         schedule["name"] = $("#nameSc").val();
-                        
+                        schedule["image"] = $("#scheduleDiv").html();
                         $.ajax({
                             type: "POST",
                             url: url,
