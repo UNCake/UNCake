@@ -208,6 +208,16 @@ h4{
                         <h4>Mi avance</h4><br>
                     </div>
                 </div>
+                <div class="col-md-4 col-sm-6 portfolio-item">
+                    <div class="portfolio-caption">
+                        <div class="img-centered">
+                            <a href="CommentHandle" >
+                                <asset:image src="home/services/icono_buscar_materias.png" alt=""/>
+                            </a>
+                        </div>
+                        <h4>Buscador comentarios materias</h4><br>
+                    </div>
+                </div>
             </div>
         </div>
         <br><br>
