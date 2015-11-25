@@ -13,12 +13,12 @@ class StudyPlan {
     Integer languageCredits
     static hasMany = [courses: Prerequisite]
     static constraints = {
-        code nullable: false, unique: true
-        name blank: false
+        code nullable: true, unique: true
+        name blank: false, nullable: true
         faculty blank: true, nullable: true
-        type blank: false
+        type blank: false, nullable: true
         courses nullable: true
-        location nullable: false
+        location nullable: true
         disciplinaryCredits nullable: true
         fundamentalCredits nullable: true
         freeChoiceCredits nullable: true
