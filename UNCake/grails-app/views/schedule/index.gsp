@@ -359,12 +359,29 @@
 
             $("#printSchedule").button().click(
                     function () {
+
+/*
                         html2canvas($('#scheduleTable'), {
                             onrendered: function (canvas) {
                                 var img = canvas.toDataURL();
-                                window.open(img);
+                                //window.open(img);
+
+                                return false;
+
                             }
-                        });
+                        });*/
+                        var mywindow = window.open('', 'my div', 'height=400,width=600');
+                        mywindow.document.write('<html><head><title>my div</title>');
+                        //mywindow.document.write('<asset:stylesheet src="schedule.css"/>');
+                        mywindow.document.write('</head><body >');
+                        mywindow.document.write($("#scheduleDiv").html());
+                        mywindow.document.write('</body></html>');
+
+                        mywindow.print();
+                        mywindow.close();
+
+                        return true;
+                        //return false;
                     }
             );
 
@@ -487,8 +504,8 @@
 
     </div>
 
-    <div class="col-sm-6">
-        <div class="table-responsive">
+    <div class="col-sm-6" >
+        <div class="table-responsive" id="scheduleDiv">
             <table id="scheduleTable" class="table-condensed">
                 <div id="head_nav">
                     <tr>
