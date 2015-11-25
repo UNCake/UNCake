@@ -6,15 +6,18 @@ import grails.converters.JSON
 class CommentHandleController {
     def index() {
         println("index")
-        [coursesList: Course.list(), coursesNameList: Course.list().name, commentList: Comment.list().reverse()]
+        [coursesList: Course.list(), coursesNameList: Course.list().name, coursesLen:Course.count]
+    }
+
+    def list() {
+        [coursesListList: Course.list(), coursesLenList:Course.count]
     }
 
     def getCourseById(){
         Long courseid = params.long('selectedName')
         println courseid
         def course = Course.findWhere(id:courseid)
-        def types = course.comments as grails.converters.JSON
-        [commentList: course.comments]
+        print(course.comments)
         render course as JSON
     }
 

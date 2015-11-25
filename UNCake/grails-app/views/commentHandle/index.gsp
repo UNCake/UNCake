@@ -85,6 +85,7 @@ h4{
                             //userValues ya tiene todos los datos del usuario. Hasta la foto :O
                             if(courseValues.name != "null") {
                                 document.getElementById('courseNameTittle').innerHTML = courseValues.name;
+                                document.getElementById('courseNumCommentTittle').innerHTML = courseValues.comments.length;
                                 document.getElementById('lblid').value = courseValues.id;
                                 document.getElementById('codetxt').value = courseValues.id;
                                 el = document.getElementById("overlay");
@@ -112,7 +113,7 @@ h4{
             success: function (courseValues) {
                 //console.log(courseValues.comments[courseValues.comments.length-1].id)
                 document.getElementById('courseNameTittle').innerHTML = courseValues.name;
-                //document.getElementById('courseLastCommentTittle').innerHTML = "Comentario";
+                document.getElementById('courseNumCommentTittle').innerHTML = courseValues.comments.length;
             }
         });
         document.getElementById('lblid').value = a;
@@ -129,8 +130,8 @@ h4{
             <h1 id="courseNameTittle"></h1>
             <br>
             <g:textField name="code" id="codetxt"></g:textField>
-            <h5>Ultimo Comentario:</h5>
-            <h6 id="courseLastCommentTittle">"${commentList[0].comment}"</h6>
+            <h5>Numero de comentarios:</h5>
+            <h6 id="courseNumCommentTittle"></h6>
             <br>
             <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='Login'>Ver Todos  o  Comentar</button>
         </g:form>
@@ -193,7 +194,6 @@ h4{
         <div class="container">
             <div class="row">
                 <g:each in="${coursesList}" var="p">
-                    <g:set var="testtest" value="${p.id}" />
                     <div class="col-lg-3 col-md-6">
                         <div class="panel panel-primary">
                             <div class="panel-heading" style="background-color: #222">
@@ -232,6 +232,5 @@ h4{
         </div>
     </footer>
 </div>
-
 </body>
 </html>
