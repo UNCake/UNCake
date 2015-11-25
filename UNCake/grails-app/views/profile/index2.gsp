@@ -23,9 +23,39 @@
     <asset:stylesheet src="schedule.css"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:stylesheet src="profile.css"/>
+
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
     <script>
+        $(function () {
+
+            var loadSchedule = function() {
+                var url = "${createLink(controller:'Schedule', action:'showSchedule')}";
+                $("#divImg").hide();
+                var response = $.ajax({
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: {
+                        friend: "${ftg.name}"
+                    },
+                    success: function (schedule) {
+                        if (schedule != "") {
+                            $("#divSch").html(schedule[0]);
+                        } else {
+                            $("#divImg").show();
+                        }
+                    },
+
+                    error: function (request, status, error) {
+                        alert(error)
+                    }
+                });
+            };
+
+            loadSchedule();
+
+        });
 
     </script>
 </head>
@@ -111,9 +141,7 @@
                     </g:if>
                 </p>
             </div>
-            <div class="row">
-                <a href="/profile" class=" btn btn-default btn-lg" style="margin-top: 10%">Volver</a>
-            </div>
+
 
 
         </div>
@@ -121,17 +149,15 @@
     <br>
     <br>
     <div class="row">
-        <div class="col-md-9 col-sm-9">
-            <img src="${resource(dir: 'images', file: 'horario.png')}" class="img-responsive">
-
+        <div class="col-md-9 col-sm-9" id="divSch">
         </div>
-
+        <div class="col-md-9 col-sm-9" id="divImg">
+            <asset:image src="horario.PNG" class="img-responsive"/>
+        </div>
+        <div class="row">
+            <a href="/profile" class=" btn btn-default btn-lg" style="margin-top: 10%">Volver</a>
+        </div>
     </div>
-
-
-
-
-
 
     <!-- <a href="#" class="btn btn-primary btn-xs" >Agregar amigos</a>-->
 

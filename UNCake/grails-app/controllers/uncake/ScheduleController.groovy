@@ -160,11 +160,16 @@ class ScheduleController {
     }
 
     def showSchedule(){
-        def schedule = Schedule.findByName(params.name)
-        println params.name
         def res = []
-        if(schedule != null) {
-            res.add(schedule.image)
+        if(params.friend != null){
+            def user = User.findByName(params.friend)
+            if(!user.schedules.isEmpty())
+                res.add(user.schedules.first().image)
+        }else {
+            def schedule = Schedule.findByName(params.name)
+            if (schedule != null) {
+                res.add(schedule.image)
+            }
         }
 
         render res as JSON
