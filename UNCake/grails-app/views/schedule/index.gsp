@@ -371,17 +371,15 @@
                             }
                         });*/
                         var mywindow = window.open('', 'my div', 'height=400,width=600');
-                        mywindow.document.write('<html><head><title>my div</title>');
-                        //mywindow.document.write('<asset:stylesheet src="schedule.css"/>');
-                        mywindow.document.write('</head><body >');
+                        mywindow.document.write('<html><head><title>Mi Horario</title>');
+                        mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="screen"/>');
+                        mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="print"/>');
+                        mywindow.document.write("<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>");
+                        mywindow.document.write('</head><body>');
                         mywindow.document.write($("#scheduleDiv").html());
                         mywindow.document.write('</body></html>');
-
-                        mywindow.print();
+                        mywindow.onload = mywindow.print();
                         mywindow.close();
-
-                        return true;
-                        //return false;
                     }
             );
 
