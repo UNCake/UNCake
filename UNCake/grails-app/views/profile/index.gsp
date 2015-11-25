@@ -26,6 +26,31 @@
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
     <script>
+        $(function () {
+            $(".showSchedule").click(function () {
+                var url = "${createLink(controller:'Schedule', action:'showSchedule')}";
+                console.log($(this).html())
+                var response = $.ajax({
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: {
+                        name: $(this).html().trim()
+                    },
+                    success: function (schedule) {
+                        console.log(schedule);
+                        if(schedule != "[]") {
+                            $("#divSch").html(schedule[0]);
+                        }
+                    },
+
+                    error: function (request, status, error) {
+                        alert(error)
+                    }
+                });
+                $("#modalCr").modal("show");
+            });
+        });
 
     </script>
 </head>
@@ -150,12 +175,28 @@
             <g:form action="delSchedule">
             <g:each in="${schedules}" status="i" var="schedule">
                 <div class="cont" >
-                    <a href="#" class="list-group-item small-size size-list" style="background-color: rgb(135, 190, 222)"> ${schedule.name} </a>
+                    <a val="${schedule.name}" class="showSchedule list-group-item small-size size-list" style="background-color: rgb(135, 190, 222)"> ${schedule.name} </a>
                     <button name="ind1" value="${i}" type="submit" class="btn btn-primary btn-xs size-btn">x</button>
                     <div hidden><g:textArea name="dschedule" value="${schedule.id}"/></div>
                 </div>
             </g:each>
             </g:form>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalCr" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="modal-title">Horario</h4>
+                    </div>
+
+                    <div class="modal-body" id="divSch">
+                        <p id="modal-message">Tu horario.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <a href="schedule" class="btn btn-primary btn-xs" >Agregar horario</a>
