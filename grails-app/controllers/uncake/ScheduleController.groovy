@@ -128,6 +128,7 @@ class ScheduleController {
             def group, name
             reqSchedule.each { key, val ->
                 if (key == "name") name = val
+                else if (key == "image") schedule.image = val
                 else {
                     group = new Groups(course: key, code: val.code, availableSpots: val.availableSpots,
                             teacher: val.teacher, totalSpots: val.totalSpots)
@@ -153,6 +154,22 @@ class ScheduleController {
             user.addToSchedules(schedule)
             user.save(flush: true)
             res = [1]
+        }
+
+        render res as JSON
+    }
+
+    def showSchedule(){
+        def res = []
+        if(params.friend != null){
+            def user = User.findByName(params.friend)
+            if(!user.schedules.isEmpty())
+                res.add(user.schedules.first().image)
+        }else {
+            def schedule = Schedule.findByName(params.name)
+            if (schedule != null) {
+                res.add(schedule.image)
+            }
         }
 
         render res as JSON

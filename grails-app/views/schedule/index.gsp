@@ -337,7 +337,7 @@
                     function () {
                         var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
                         schedule["name"] = $("#nameSc").val();
-                        
+                        schedule["image"] = $("#scheduleDiv").html();
                         $.ajax({
                             type: "POST",
                             url: url,
@@ -359,12 +359,27 @@
 
             $("#printSchedule").button().click(
                     function () {
+
+/*
                         html2canvas($('#scheduleTable'), {
                             onrendered: function (canvas) {
                                 var img = canvas.toDataURL();
-                                window.open(img);
+                                //window.open(img);
+
+                                return false;
+
                             }
-                        });
+                        });*/
+                        var mywindow = window.open('', 'my div', 'height=400,width=600');
+                        mywindow.document.write('<html><head><title>Mi Horario</title>');
+                        mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="screen"/>');
+                        mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="print"/>');
+                        mywindow.document.write("<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>");
+                        mywindow.document.write('</head><body>');
+                        mywindow.document.write($("#scheduleDiv").html());
+                        mywindow.document.write('</body></html>');
+                        mywindow.onload = mywindow.print();
+                        mywindow.close();
                     }
             );
 
@@ -487,8 +502,8 @@
 
     </div>
 
-    <div class="col-sm-6">
-        <div class="table-responsive">
+    <div class="col-sm-6" >
+        <div class="table-responsive" id="scheduleDiv">
             <table id="scheduleTable" class="table-condensed">
                 <div id="head_nav">
                     <tr>
