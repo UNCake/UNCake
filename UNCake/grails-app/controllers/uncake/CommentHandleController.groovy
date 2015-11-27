@@ -15,9 +15,9 @@ class CommentHandleController {
 
     def getCourseById(){
         Long courseid = params.long('selectedName')
-        println courseid
+        //println courseid
         def course = Course.findWhere(id:courseid)
-        print(course.comments)
+        //print(course.comments)
         render course as JSON
     }
 
@@ -40,10 +40,10 @@ class CommentHandleController {
 
 
     def saveComment() {
-        //println("in save")
-        //println(params.comment)
-        //println("code: "+params.code)
         def comment = new Comment(comment: params.comment)
+        def u = User.findById(params.id)
+        println("In user "+u.name)
+        comment.user = u
         comment.save()
         def course = Course.findByCode(params.code)
         course.addToComments(comment)

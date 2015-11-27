@@ -60,8 +60,14 @@
         <g:each in="${0..top}" var="t">
             <g:if test="${t >= 0}">
                 <li class="list-group-item col-md-8 well well-sm">
-                <h3>Comentario: ${t+1}<br></h3>
-                <p>${comments[t].comment}<br></p>
+                <!-- <h3>Comentario: ${t+1}<br></h3> -->
+                    <g:if test="${comments[t].user != null}">
+                        <h3>${comments[t].user.name} escribio:</h3>
+                    </g:if>
+                    <g:else>
+                        <h3>Anon escribio:</h3>
+                    </g:else>
+                    <p>${comments[t].comment}<br></p>
                 </li>
             </g:if>
         </g:each>
@@ -74,7 +80,7 @@
         <div class="form-group">
         <textArea id="text" placeholder="Escribir un comentario" class="form-control"></textArea>
         </div>
-        <button onclick="saveComment('${link}', '${code}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
+        <button onclick="saveComment('${link}', '${code}', '${session.user.id}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
     </form>
 </div>
 </g:if>
