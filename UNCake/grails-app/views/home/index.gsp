@@ -201,6 +201,13 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <br><br>
+    </section>
+    <footer>
+        <div class="container">
+            <div class="row">
                 <div>
                     <br/><h3 style="color: black;">Universidad Nacional de Colombia 2015</h3><br/>
                 </div>

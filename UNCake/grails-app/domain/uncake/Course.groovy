@@ -4,13 +4,18 @@ class Course {
 
     String code
     Integer credits
-    static hasMany = [groups: Groups]
+    static hasMany = [groups: Groups, comments: Comment]
     String name
     String typology
     Double grade
     String semester
     Integer semesterNumber
     Location location
+	
+	static mapping = {
+        comments sort: 'id'
+    }
+
     static constraints = {
         code nullable: true
         name nullable: true
