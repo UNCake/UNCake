@@ -1,5 +1,4 @@
 import uncake.Comment
-import uncake.Course
 import uncake.Building
 import uncake.Location
 import uncake.User
@@ -22,14 +21,14 @@ class BootStrap {
 
 
         //Inicializacion de Sedes
-        new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co').save()
+        //new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co').save()
         new Location(name: 'BOGOTA', url: 'http://sia.bogota.unal.edu.co').save()
-        new Location(name: 'CARIBE', url: 'http://siacar.unal.edu.co').save()
-        new Location(name: 'MANIZALES', url: 'http://sia.manizales.unal.edu.co').save()
-        new Location(name: 'MEDELLIN', url: 'http://sia.medellin.unal.edu.co').save()
-        new Location(name: 'ORINOQUIA', url: 'http://siaori.unal.edu.co').save()
-        new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co').save()
-        new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co').save()
+        //new Location(name: 'CARIBE', url: 'http://siacar.unal.edu.co').save()
+        //new Location(name: 'MANIZALES', url: 'http://sia.manizales.unal.edu.co').save()
+        //new Location(name: 'MEDELLIN', url: 'http://sia.medellin.unal.edu.co').save()
+        //new Location(name: 'ORINOQUIA', url: 'http://siaori.unal.edu.co').save()
+        //new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co').save()
+        //new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co').save()
 
         new Building(code: '101', name: '101 - TORRE DE ENFERMERIA ', coordinates: '4.635181486487435&-74.08243864774704', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '102', name: '102 - BIBLIOTECA CENTRAL GABRIEL GARCIA MARQUEZ', coordinates: '4.63540605513496&-74.08303678035736', Location: Location.findByName("BOGOTA") ).save()
@@ -139,26 +138,8 @@ class BootStrap {
         new Building(code: '935', name: '935 - SEDE SECTOR CAN     ', coordinates: '4.648011192666337&-74.09578800201416', Location: Location.findByName("BOGOTA") ).save()
 
 
-        //DBconnectionService.initDB()
-
-        //Materias de prueba
-        new Course(code: 1, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 2, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-        new Course(code: 3, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 4, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-        new Course(code: 5, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 6, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-        new Course(code: 7, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 8, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-        new Course(code: 9, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 10, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-        new Course(code: 11, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 12, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-        new Course(code: 13, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 14, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-        new Course(code: 15, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 16, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-        //println(Course.list())
+        DBconnectionService.initDB()
+        
         def srch = Course.findByCode(2)
         //println("course id found "+srch.name)
 

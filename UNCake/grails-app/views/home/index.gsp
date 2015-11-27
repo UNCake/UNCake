@@ -169,7 +169,7 @@
                         <!--<h3 style="color: #333;">Planea tu horario de clases, haz seguimiento a tu PAPA y busca edificos en el campus.</h3>-->
                     </div>
                     <div>
-                        <div class="col-md-4 col-sm-6 portfolio-item">
+                        <div class="col-md-3 col-sm-6 portfolio-item">
                             <div class="portfolio-caption">
                                 <div class="img-centered">
                                     <a href="schedule">
@@ -179,7 +179,7 @@
                                 <h4>Crear Horario</h4><br>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-6 portfolio-item">
+                        <div class="col-md-3 col-sm-6 portfolio-item">
                             <div class="portfolio-caption">
                                 <div class="img-centered">
                                     <a href="maps">
@@ -189,7 +189,7 @@
                                 <h4>Buscar edificio</h4><br>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-6 portfolio-item">
+                        <div class="col-md-3 col-sm-6 portfolio-item">
                             <div class="portfolio-caption">
                                 <div class="img-centered">
                                     <a href="progress" >
@@ -197,6 +197,16 @@
                                     </a>
                                 </div>
                                 <h4>Mi avance</h4><br>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 portfolio-item">
+                            <div class="portfolio-caption">
+                                <div class="img-centered">
+                                    <a href="CommentHandle" >
+                                        <asset:image src="home/services/icono_buscar_materias.png" alt=""/>
+                                    </a>
+                                </div>
+                                <h4>Materias</h4><br>
                             </div>
                         </div>
                     </div>
