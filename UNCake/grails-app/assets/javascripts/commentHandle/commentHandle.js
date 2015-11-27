@@ -2,7 +2,7 @@
  * Created by santiago on 11/8/15.
  */
 
-function ajaxTest(link, courseCode) {
+function saveComment(link, courseCode) {
     var comm=document.getElementById('text').value;
     $.ajax({url: link,
     data: {
@@ -26,7 +26,7 @@ function addComment(comm) {
 
     /* This flag will prevent multiple comment submits: */
     //var working = false;
-    //$("#submit").click(ajaxTest("/commentHandle/test"))
+    //$("#submit").click(saveComment("/commentHandle/test"))
 //});
 
 
