@@ -80,7 +80,7 @@
         <div class="form-group">
         <textArea id="text" placeholder="Escribir un comentario" class="form-control"></textArea>
         </div>
-        <button onclick="saveComment('${link}', '${code}', '${session.user.id}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
+        <button onclick="saveComment('${link}', '${code}', '${session.user.id}', '${session.user.name}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
     </form>
 </div>
 </g:if>

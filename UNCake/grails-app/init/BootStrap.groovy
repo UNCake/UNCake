@@ -1,6 +1,7 @@
 import uncake.Comment
 import uncake.Building
 import uncake.Location
+import uncake.Course
 import uncake.User
 class BootStrap {
     def DBconnectionService
@@ -142,6 +143,10 @@ class BootStrap {
         
         def srch = Course.findByCode(2)
         //println("course id found "+srch.name)
+
+        //Materias de prueba
+        new Course(code: 1, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
+        new Course(code: 2, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
 
         //Adicion de comentarios de prueba
         new Comment(comment: "comment 1").save()

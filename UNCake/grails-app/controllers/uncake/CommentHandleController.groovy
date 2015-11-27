@@ -5,7 +5,6 @@ import grails.converters.JSON
 //BORRAR LOS PRINTLN DESPUES
 class CommentHandleController {
     def index() {
-        println("index")
         [coursesList: Course.list(), coursesNameList: Course.list().name, coursesLen:Course.count]
     }
 

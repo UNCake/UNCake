@@ -2,7 +2,7 @@
  * Created by santiago on 11/8/15.
  */
 
-function saveComment(link, courseCode, userId) {
+function saveComment(link, courseCode, userId, name) {
     var comm=document.getElementById('text').value;
     $.ajax({url: link,
     data: {
@@ -11,11 +11,11 @@ function saveComment(link, courseCode, userId) {
         id: userId
     }
     });
-    addComment(comm);
+    addComment(comm, name);
 }
 
-function addComment(comm) {
-    var newItem = $("<li class='list-group-item col-md-8 well well-sm'><h3>Comentario: <br></h3><p>"+comm+"<br></p></li>").hide();
+function addComment(comm, name) {
+    var newItem = $("<li class='list-group-item col-md-8 well well-sm'><h3>"+name+" escribio: <br></h3><p>"+comm+"<br></p></li>").hide();
     $("#commentList").append(newItem);
     newItem.fadeIn();
 }
