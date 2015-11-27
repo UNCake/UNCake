@@ -35,6 +35,9 @@
 h4{
     color: #E9E9E9;
 }
+body{
+    background-attachment: fixed;
+}
 
 .form-control{
     margin-top: 8px;
@@ -182,8 +185,8 @@ h4{
                 <div class="row">
                     <div class="portfolio-item">
                         <br>
-                        <h3 style="color: #333;">Busca materias y los comentarios que la comunidad tiene acerca de ellas.</h3>
-                        <input type="input" class="form-control" id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; background-color: #222">
+                        <h3>Busca materias y los comentarios que la comunidad tiene acerca de ellas.</h3>
+                        <input class="form-control" id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; background-color: #1ab394;font-weight: 700; color: #fff;">
                     </div>
                     <br><br>
                 </div>
@@ -191,7 +194,7 @@ h4{
         </div>
     </header>
     <section id="portfolio">
-        <div class="container">
+        <div class="container" id="" style="overflow-y: scroll; height:400px;">
             <div class="row">
                 <g:each in="${coursesList}" var="p">
                     <div class="col-lg-3 col-md-6">
