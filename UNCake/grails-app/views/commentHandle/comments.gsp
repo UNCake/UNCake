@@ -28,6 +28,7 @@
 </head>
 
 <body>
+<g:if test="${session.user != null}">
 
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -76,6 +77,7 @@
         <button onclick="saveComment('${link}', '${code}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
     </form>
 </div>
+</g:if>
 </body>
 </html>
 

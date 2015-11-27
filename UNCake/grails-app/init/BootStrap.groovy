@@ -8,7 +8,7 @@ class BootStrap {
     def init = { servletContext ->
         def user1=new User(email:"santi@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santi" ).save()
         def user2=new User(email:"alejandro@unal.com", password:"lollol12".encodeAsSHA1(), name:"Alejandro" ).save()
-        def user3=new User(email:"saniagoH@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santiago" ).save()
+        def user3=new User(email:"santiagoH@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santiago" ).save()
         def user4=new User(email:"hugo@unal.com", password:"lollol12".encodeAsSHA1(), name:"Hugo" ).save()
         def user5=new User(email:"ana@unal.com", password:"lollol12".encodeAsSHA1(), name:"Ana" ).save()
 
