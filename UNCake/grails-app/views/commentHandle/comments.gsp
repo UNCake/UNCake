@@ -4,7 +4,6 @@
   Date: 11/11/15
   Time: 11:46 PM
 --%>
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -29,7 +28,6 @@
 
 <body>
 <g:if test="${session.user != null}">
-
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header page-scroll">
@@ -61,6 +59,9 @@
             <g:if test="${t >= 0}">
                 <li class="list-group-item col-md-8 well well-sm">
                 <!-- <h3>Comentario: ${t+1}<br></h3> -->
+                    <g:if test="${comments[t].date != null}">
+                        <small>Fecha: ${comments[t].date.format('MM/dd/yyyy - h:m:s a')}</small>
+                    </g:if>
                     <g:if test="${comments[t].user != null}">
                         <h3>${comments[t].user.name} escribio:</h3>
                     </g:if>

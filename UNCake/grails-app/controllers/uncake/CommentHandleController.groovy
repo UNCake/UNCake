@@ -34,15 +34,16 @@ class CommentHandleController {
         //println("in comments")
         //println(params.code)
         def course = Course.findByCode(params.code)
+        if (session.user == null)
+            render('El usuario no esta logeado')
         render(view: "comments", model:[name: course.name, comments: course.comments, code: course.code])
     }
 
 
     def saveComment() {
-        def comment = new Comment(comment: params.comment)
-        def u = User.findById(params.id)
-        println("In user "+u.name)
-        comment.user = u
+        def user = User.findById(params.id)
+        def comment = new Comment(comment: params.comment, date: new Date(), user: user)
+        //println("In user "+user.name+ " id "+ params.id)
         comment.save()
         def course = Course.findByCode(params.code)
         course.addToComments(comment)

@@ -2,20 +2,29 @@
  * Created by santiago on 11/8/15.
  */
 
-function saveComment(link, courseCode, userId, name) {
+function saveComment(link, courseCode, id, name) {
     var comm=document.getElementById('text').value;
     $.ajax({url: link,
     data: {
         comment: comm,
         code: courseCode,
-        id: userId
+        id: id,
     }
     });
     addComment(comm, name);
 }
 
 function addComment(comm, name) {
-    var newItem = $("<li class='list-group-item col-md-8 well well-sm'><h3>"+name+" escribio: <br></h3><p>"+comm+"<br></p></li>").hide();
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth()+1;
+    var year = date.getFullYear();
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hour >= 12 ?  'PM' : 'AM';
+    hour %= 12;
+    var newItem = $("<li class='list-group-item col-md-8 well well-sm'><small>Fecha: "+month+"/"+day+"/"+year+" - "+hour+":"+minutes+":"+seconds+" "+ampm+"</small><h3>"+name+" escribio: <br></h3><p>"+comm+"<br></p></li>").hide();
     $("#commentList").append(newItem);
     newItem.fadeIn();
 }
