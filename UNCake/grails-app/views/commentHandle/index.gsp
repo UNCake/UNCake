@@ -18,7 +18,7 @@
     <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
-
+    <asset:stylesheet src="commentsIndex.css"/>
     <title>UNCake</title>
 
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
@@ -31,31 +31,6 @@
           type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 </head>
-<style>
-h4{
-    color: #E9E9E9;
-}
-body{
-    background-attachment: fixed;
-}
-
-.form-control{
-    margin-top: 8px;
-}
-
-.ui-autocomplete {
-    max-height: 100px;
-    overflow-y: auto;
-    /* prevent horizontal scrollbar */
-    overflow-x: hidden;
-}
-/* IE 6 doesn't support max-height
-     * we use height instead, but this forces the menu to always be this tall
-     */
-* html .ui-autocomplete {
-    height: 100px;
-}
-</style>
 <body id="page-top" class="index">
 <label id="lblid"></label>
 <script>
@@ -190,11 +165,10 @@ body{
             </g:if>
         </div>
     </nav>
-
     <header>
         <div class="container">
-            <div class="intro-text">
-                <div class="row">
+            <div class="header">
+                <div class="row box well">
                     <div class="portfolio-item">
                         <br>
                         <h3>Busca materias y los comentarios que la comunidad tiene acerca de ellas.</h3>
