@@ -139,7 +139,7 @@ class BootStrap {
         new Building(code: '935', name: '935 - SEDE SECTOR CAN     ', coordinates: '4.648011192666337&-74.09578800201416', Location: Location.findByName("BOGOTA") ).save()
 
 
-        DBconnectionService.initDB()
+        //DBconnectionService.initDB()
         
         def srch = Course.findByCode(2)
         //println("course id found "+srch.name)
@@ -160,7 +160,7 @@ class BootStrap {
         new Comment(comment: "comment asdasdsa").save()
         Comment.list().each {
             comm ->
-                println(comm.id)
+                //println(comm.id)
                 if (comm.id > 3)
                     Course.findByCode(1).addToComments(comm)
 
@@ -168,8 +168,8 @@ class BootStrap {
                     Course.findByCode(2).addToComments(comm)
 
         }
-        println Course.findByCode(1).comments
-        println Course.findByCode(2).comments
+        //println Course.findByCode(1).comments
+        //println Course.findByCode(2).comments
     }
     def destroy = {
     }
