@@ -38,7 +38,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="home">UNCake</a>
+                <a class="navbar-brand page-scroll" href="${createLink(controller: 'home', action: 'index')}">UNCake</a>
             </div>
             <g:if test="${session.user != null}">
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
@@ -51,10 +51,10 @@
                         </li>
 
                         <li>
-                            <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
+                            <a class="page-scroll" href="${createLink(controller: 'profile')}"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
                         </li>
                         <li>
-                            <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Salir</a>
+                            <a class="page-scroll" href="${createLink(controller: 'logout')}"><span class="glyphicon glyphicon-log-out"></span>Salir</a>
                         </li>
                     </ul>
                 </div>
