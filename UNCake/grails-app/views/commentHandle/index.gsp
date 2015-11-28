@@ -128,7 +128,7 @@ body{
 </script>
 <div id="overlay">
     <div class="container">
-        <g:form method="GET" action="comments">
+        <g:form method="GET" action="comments" target="_blank">
             <p class="text-warning">Click aqui para [<a href='#' onclick='overlay()'>cerrar</a>]</p>
             <h1 id="courseNameTittle"></h1>
             <br>

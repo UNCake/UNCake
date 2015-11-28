@@ -12,6 +12,7 @@
     <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:javascript src="commentHandle/commentHandle.js"/>
+    <asset:stylesheet src="comments.css"/>
 
     <title>Comentarios</title>
 
@@ -26,7 +27,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 </head>
 
-<body>
+<body class="index" style="background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: no-repeat; background-size: 100% 100%;" >
 <g:if test="${session.user != null}">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -79,10 +80,12 @@
 
 
 <br><br><br><br>
-<h1 class="text-center"> ${name}:</h1>
-<br>
+    <div class="container well header">
+        <h1 class="text-center"> ${name}:</h1>
+        <br>
 
-<h4 class="text-center">Comentarios:</h4>
+        <h4 class="text-center">Comentarios:</h4>
+    </div>
 <br>
 <%
     def top = comments.size()-1
