@@ -93,7 +93,7 @@
 <div class="container-fluid">
     <ul class="list-group" id="commentList">
         <g:each in="${0..top}" var="t">
-            <g:if test="${t >= 0}">
+            <g:if test="${t >= 0 && comments[t] != null}">
                 <li class="list-group-item col-md-8 well well-sm">
                 <!-- <h3>Comentario: ${t+1}<br></h3> -->
                     <g:if test="${comments[t].date != null}">

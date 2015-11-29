@@ -60,6 +60,7 @@
     <script>
         $(function () {
             var availableTags = $.parseJSON('${userlist.encodeAsJSON()}');
+            console.log(availableTags)
             $("#selectedId").autocomplete({
                 source: availableTags
             });

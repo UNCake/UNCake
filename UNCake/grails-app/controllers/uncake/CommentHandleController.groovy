@@ -12,6 +12,11 @@ class CommentHandleController {
         [coursesListList: Course.list(), coursesLenList:Course.count]
     }
 
+    def fetchCourseById(){
+        Long courseid = params.long('selectedCourse')
+        def course = Course.findWhere(id:courseid)
+        render course as JSON
+    }
 
     def fetchCourseByName(){
         def course = Course.findWhere(name:params.selectedName)
@@ -25,8 +30,12 @@ class CommentHandleController {
 
     def comments() {
         //println("in comments")
-        //println(params.code)
-        def course = Course.findByCode(params.code)
+        def course = Course.findById(params.code)
+        println("id " + course.id)
+        println("code " + course.code)
+        println("name " + course.name)
+        println("comments " + course.comments)
+        println("test " + (0..-1))
         if (session.user == null)
             render('El usuario no esta logeado')
         else

@@ -35,12 +35,10 @@
 <label id="lblid"></label>
 <script>
     $(function () {
-        document.getElementById('selectedId').style.visibility = "hidden";
         document.getElementById('lblid').style.visibility = "hidden";
         document.getElementById('codetxt').style.visibility = "hidden";
-        document.getElementById('lbllogin').style.visibility = "hidden";
-        document.getElementById('lblregister').style.visibility = "hidden";
         var availableTags = $.parseJSON('${coursesNameList.encodeAsJSON()}');
+        console.log(availableTags)
         $("#searchCourse").autocomplete({
             source: availableTags
         });
@@ -78,20 +76,21 @@
     });
 </script>
 <script>
-    function overlay(code, id) {
-        var selected = code;
-        var url = "${createLink(controller:'CommentHandle', action:'comments')}";
+    function overlay(id) {
+        var selected = id;
+        var url = "${createLink(controller:'CommentHandle', action:'fetchCourseById')}";
         var response = $.ajax({
             url: url,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: {
-                code: selected
+                selectedCourse: selected
             },
             success: function (courseValues) {
                 //console.log(courseValues.comments[courseValues.comments.length-1].id)
                 document.getElementById('courseNameTittle').innerHTML = courseValues.name;
                 document.getElementById('courseNumCommentTittle').innerHTML = courseValues.comments.length;
+                console.log(courseValues)
             }
         });
         document.getElementById('lblid').value = id;
@@ -197,7 +196,7 @@
                                 </div>
                             </div>
                             <a href="#">
-                                <div class="panel-footer" onclick="overlay(${p.code}, ${p.id})">
+                                <div class="panel-footer" onclick="overlay(${p.id})">
                                     <span class="pull-left">Ver Detalles</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                     <div class="clearfix"></div>

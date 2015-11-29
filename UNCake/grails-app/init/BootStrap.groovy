@@ -139,8 +139,8 @@ class BootStrap {
         new Building(code: '935', name: '935 - SEDE SECTOR CAN     ', coordinates: '4.648011192666337&-74.09578800201416', Location: Location.findByName("BOGOTA") ).save()
 
 
-        //DBconnectionService.initDB()
-        
+        DBconnectionService.initDB()
+        /*
         def srch = Course.findByCode(2)
         //println("course id found "+srch.name)
 
@@ -167,7 +167,7 @@ class BootStrap {
                 else
                     Course.findByCode(2).addToComments(comm)
 
-        }
+        }/*/
         //println Course.findByCode(1).comments
         //println Course.findByCode(2).comments
     }
