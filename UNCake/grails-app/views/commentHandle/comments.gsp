@@ -26,9 +26,9 @@
           type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 </head>
-
-<body class="index" style="background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: no-repeat; background-size: 100% 100%;" >
 <g:if test="${session.user != null}">
+<body class="index" style="background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: no-repeat; background-size: 100% 100%;" >
+
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header page-scroll">
@@ -121,8 +121,8 @@
         <button onclick="saveComment('${link}', '${code}', '${session.user.id}', '${session.user.name}')" id="subbutton" type="button" class="btn btn-default">Enviar</button>
     </form>
 </div>
-</g:if>
 </body>
+</g:if>
 </html>
 
 

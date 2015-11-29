@@ -199,14 +199,14 @@
             });
 
             $( "#pointer" ).button().click( function(){
-                var selected = document.getElementById('selectedName').value;
+                var selected = document.getElementById(selectedId).value;
                 var url="${createLink(controller:'Building', action:'getItemByName')}";
                 var response = $.ajax({
                     url: url,
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: {
-                        selectedName: selected
+                        selectedId: selected
                     },
                     success:function( finalPosition ) {
                         var posMarker = String(finalPosition).split("&");
@@ -229,7 +229,7 @@
                     }
                 });
             });
-            $( "#selectedName" ).autocomplete({
+            $( selectedId ).autocomplete({
                 source: function( request, response ) {
                     $.ajax({
                         url: "${createLink(controller: 'Building', action: 'getAllNames')}",

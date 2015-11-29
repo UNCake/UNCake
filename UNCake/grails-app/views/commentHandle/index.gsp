@@ -35,7 +35,7 @@
 <label id="lblid"></label>
 <script>
     $(function () {
-        document.getElementById('selectedName').style.visibility = "hidden";
+        document.getElementById('selectedId').style.visibility = "hidden";
         document.getElementById('lblid').style.visibility = "hidden";
         document.getElementById('codetxt').style.visibility = "hidden";
         document.getElementById('lbllogin').style.visibility = "hidden";
@@ -50,14 +50,14 @@
                 var selected = document.getElementById('searchCourse').value;
                 console.log(selected)
                 if (selected != "") {
-                    //document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
-                    var url = "${createLink(controller:'CommentHandle', action:'getCourseByName')}";
+                    //document.getElementById("diagNombre").value = document.getElementById("selectedId").value;
+                    var url = "${createLink(controller:'CommentHandle', action:'fetchCourseByName')}";
                     var response = $.ajax({
                         url: url,
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         data: {
-                            selectedName: selected
+                            selectedId: selected
                         },
                         success: function (courseValues) {
                             //userValues ya tiene todos los datos del usuario. Hasta la foto :O
@@ -78,15 +78,15 @@
     });
 </script>
 <script>
-    function overlay(a) {
-        var selected = a;
-        var url = "${createLink(controller:'CommentHandle', action:'getCourseById')}";
+    function overlay(code, id) {
+        var selected = code;
+        var url = "${createLink(controller:'CommentHandle', action:'comments')}";
         var response = $.ajax({
             url: url,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: {
-                selectedName: selected
+                code: selected
             },
             success: function (courseValues) {
                 //console.log(courseValues.comments[courseValues.comments.length-1].id)
@@ -94,8 +94,8 @@
                 document.getElementById('courseNumCommentTittle').innerHTML = courseValues.comments.length;
             }
         });
-        document.getElementById('lblid').value = a;
-        document.getElementById('codetxt').value = a;
+        document.getElementById('lblid').value = id;
+        document.getElementById('codetxt').value = id;
         el = document.getElementById("overlay");
         //console.log(document.getElementById("diagNombre").innerHTML);
         el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
@@ -197,7 +197,7 @@
                                 </div>
                             </div>
                             <a href="#">
-                                <div class="panel-footer" onclick="overlay(${p.id})">
+                                <div class="panel-footer" onclick="overlay(${p.code}, ${p.id})">
                                     <span class="pull-left">Ver Detalles</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                     <div class="clearfix"></div>

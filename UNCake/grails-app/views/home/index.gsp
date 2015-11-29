@@ -60,23 +60,23 @@
     <script>
         $(function () {
             var availableTags = $.parseJSON('${userlist.encodeAsJSON()}');
-            $("#selectedName").autocomplete({
+            $("#selectedId").autocomplete({
                 source: availableTags
             });
-             $("#selectedName").bind("keypress", function(e) {
+             $("#selectedId").bind("keypress", function(e) {
                  if(e.keyCode==13){
                      //console.log(session.user)
-                     var selected = document.getElementById('selectedName').value;
+                     var selected = document.getElementById('selectedId').value;
                      console.log(selected)
                      if (selected != "") {
-                         //document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
+                         //document.getElementById("diagNombre").value = document.getElementById("selectedId").value;
                          var url = "${createLink(controller:'Home', action:'getUserByName')}";
                          var response = $.ajax({
                              url: url,
                              contentType: "application/json; charset=utf-8",
                              dataType: "json",
                              data: {
-                                 selectedName: selected
+                                 selectedId: selected
                              },
                              success: function (userValues) {
                                  //userValues ya tiene todos los datos del usuario. Hasta la foto :O
