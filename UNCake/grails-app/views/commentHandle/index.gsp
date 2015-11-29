@@ -31,10 +31,26 @@
           type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 </head>
+<style>
+
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+     * we use height instead, but this forces the menu to always be this tall
+     */
+* html .ui-autocomplete {
+    height: 100px;
+}
+</style>
 <body id="page-top" class="index">
 <label id="lblid"></label>
 <script>
     $(function () {
+        document.getElementById('selectedName').style.visibility = "hidden";
         document.getElementById('lblid').style.visibility = "hidden";
         document.getElementById('codetxt').style.visibility = "hidden";
         var availableTags = $.parseJSON('${coursesNameList.encodeAsJSON()}');
@@ -55,11 +71,11 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         data: {
-                            selectedId: selected
+                            selectedName: selected
                         },
                         success: function (courseValues) {
-                            //userValues ya tiene todos los datos del usuario. Hasta la foto :O
-                            if(courseValues.name != "null") {
+                            console.log(courseValues)
+                            if(courseValues.name != null) {
                                 document.getElementById('courseNameTittle').innerHTML = courseValues.name;
                                 document.getElementById('courseNumCommentTittle').innerHTML = courseValues.comments.length;
                                 document.getElementById('lblid').value = courseValues.id;
@@ -171,7 +187,7 @@
                     <div class="portfolio-item">
                         <br>
                         <h3>Busca materias y los comentarios que la comunidad tiene acerca de ellas.</h3>
-                        <input class="form-control" id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; background-color: #1ab394;font-weight: 700; color: #fff;">
+                        <input type="input" class="form-control" id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; background-color: #1ab394;font-weight: 700; color: #fff;">
                     </div>
                     <br><br>
                 </div>
@@ -179,12 +195,12 @@
         </div>
     </header>
     <section id="portfolio">
-        <div class="container" id="" style="overflow-y: scroll; height:400px;">
+        <div class="container" id="divMaterias" style="overflow-y: scroll; height:400px;">
             <div class="row">
                 <g:each in="${coursesList}" var="p">
                     <div class="col-lg-3 col-md-6">
                         <div class="panel panel-primary">
-                            <div class="panel-heading" style="background-color: #222">
+                            <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <i class="fa fa-comments fa-5x"></i>

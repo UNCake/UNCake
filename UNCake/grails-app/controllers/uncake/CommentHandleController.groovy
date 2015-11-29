@@ -5,7 +5,9 @@ import grails.converters.JSON
 //BORRAR LOS PRINTLN DESPUES
 class CommentHandleController {
     def index() {
-        [coursesList: Course.list(), coursesNameList: Course.list().name, coursesLen:Course.count]
+        List<String> cursos = Course.list().name
+        cursos.removeAll(Collections.singleton(null));
+        [coursesList: Course.list(), coursesNameList: cursos, coursesLen:Course.count]
     }
 
     def list() {
@@ -19,11 +21,13 @@ class CommentHandleController {
     }
 
     def fetchCourseByName(){
+        println(params.selectedName)
         def course = Course.findWhere(name:params.selectedName)
+        println(course)
         if(course != null) {
             render course as JSON
         }else{
-            def nulluser = new User(email:"nullmail", password:"nullpass", name:"null" )
+            def nulluser = new User(email:"nullmail", password:"nullpass", name:null )
             render nulluser as JSON
         }
     }
@@ -31,11 +35,6 @@ class CommentHandleController {
     def comments() {
         //println("in comments")
         def course = Course.findById(params.code)
-        println("id " + course.id)
-        println("code " + course.code)
-        println("name " + course.name)
-        println("comments " + course.comments)
-        println("test " + (0..-1))
         if (session.user == null)
             render('El usuario no esta logeado')
         else

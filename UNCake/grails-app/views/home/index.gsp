@@ -132,7 +132,7 @@
                                 <a href="#page-top"></a>
                             </li>
                             <li>
-                                <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
+                                <input type="input" class="form-control" id="selectedId" name="selectedId" placeholder="Digita Nombre" style="text-align:center">
                             </li>
 
                             <li>
