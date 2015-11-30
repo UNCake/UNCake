@@ -187,7 +187,7 @@
                     <div class="portfolio-item">
                         <br>
                         <h3>Busca materias y los comentarios que la comunidad tiene acerca de ellas.</h3>
-                        <input type="input" class="form-control" id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; background-color: #1ab394;font-weight: 700; color: #fff;">
+                        <input type="input" class="form-control" id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; font-weight: 700; color: #fff;">
                     </div>
                     <br><br>
                 </div>

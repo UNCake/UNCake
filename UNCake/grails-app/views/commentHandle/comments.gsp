@@ -94,7 +94,7 @@
     <ul class="list-group" id="commentList">
         <g:each in="${0..top}" var="t">
             <g:if test="${t >= 0 && comments[t] != null}">
-                <li class="list-group-item col-md-8 well well-sm">
+                <li class="list-group-item col-md-8 well well-sm col-md-offset-2">
                 <!-- <h3>Comentario: ${t+1}<br></h3> -->
                     <g:if test="${comments[t].date != null}">
                         <small>Fecha: ${comments[t].date.format('MM/dd/yyyy - h:m:s a')}</small>
@@ -114,7 +114,7 @@
 <br>
 <div class="container-fluid">
     <% def link = "${createLink(controller: 'commentHandle', action: 'saveComment')}" %>
-    <form name="submitComment" class="col-md-8" method="POST">
+    <form name="submitComment" class="col-md-8 col-md-offset-2" method="POST">
         <div class="form-group">
         <textArea id="text" placeholder="Escribir un comentario" class="form-control"></textArea>
         </div>
