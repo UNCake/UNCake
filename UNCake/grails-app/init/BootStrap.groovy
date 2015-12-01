@@ -140,6 +140,8 @@ class BootStrap {
 
 
         DBconnectionService.initDB()
+
+        println(Building.list().size())
         /*
         def srch = Course.findByCode(2)
         //println("course id found "+srch.name)
