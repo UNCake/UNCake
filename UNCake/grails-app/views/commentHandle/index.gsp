@@ -50,7 +50,6 @@
 <label id="lblid"></label>
 <script>
     $(function () {
-        document.getElementById('selectedName').style.visibility = "hidden";
         document.getElementById('lblid').style.visibility = "hidden";
         document.getElementById('codetxt').style.visibility = "hidden";
         var availableTags = $.parseJSON('${coursesNameList.encodeAsJSON()}');
@@ -151,10 +150,6 @@
                             <a href="#page-top"></a>
                         </li>
                         <li>
-                            <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
-                        </li>
-
-                        <li>
                             <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
                         </li>
                         <li>
@@ -187,7 +182,7 @@
                     <div class="portfolio-item">
                         <br>
                         <h3>Busca materias y los comentarios que la comunidad tiene acerca de ellas.</h3>
-                        <input type="input" class="form-control" id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; font-weight: 700; color: #fff;">
+                        <input type="input" class="form-control" id="searchCourse" name="searchCourse" placeholder="Busca materias" style="text-align:center;border-color: transparent; font-weight: 700;">
                     </div>
                     <br><br>
                 </div>
