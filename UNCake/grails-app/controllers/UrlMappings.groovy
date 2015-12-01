@@ -21,7 +21,7 @@ class UrlMappings {
         }
 
         "/"(controller: 'home', action: 'index')
-        "500"(view:'/error')
-        "404"(view:'/error')
+        "500"(view:'/error1')
+        "404"(view:'/error1')
     }
 }

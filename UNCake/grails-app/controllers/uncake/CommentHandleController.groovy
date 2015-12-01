@@ -22,9 +22,9 @@ class CommentHandleController {
     }
 
     def fetchCourseByName(){
-        println(params.selectedName)
+        //println(params.selectedName)
         def course = Course.findWhere(name:params.selectedName)
-        println(course)
+        //println(course)
         if(course != null) {
             render course as JSON
         }else{
