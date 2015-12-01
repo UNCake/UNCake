@@ -114,11 +114,15 @@
         //console.log(document.getElementById("diagNombre").innerHTML);
         el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
     }
+    function hide() {
+        el = document.getElementById("overlay");
+        el.style.visibility = "hidden";
+    }
 </script>
 <div id="overlay">
     <div class="container">
         <g:form method="GET" action="comments" target="_blank">
-            <p class="text-warning">Click aqui para [<a href='#' onclick='overlay()'>cerrar</a>]</p>
+            <p class="text-warning">Click aqui para [<a href='#' onclick='hide()'>cerrar</a>]</p>
             <h1 id="courseNameTittle"></h1>
             <br>
             <g:textField name="code" id="codetxt"></g:textField>

@@ -15,6 +15,7 @@ class CommentHandleController {
     }
 
     def fetchCourseById(){
+        //println("course "+params.selectedCourse)
         Long courseid = params.long('selectedCourse')
         def course = Course.findWhere(id:courseid)
         render course as JSON
