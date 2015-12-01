@@ -24,7 +24,7 @@ function addComment(comm, name) {
     var seconds = date.getSeconds();
     var ampm = hour >= 12 ?  'PM' : 'AM';
     hour %= 12;
-    var newItem = $("<li class='list-group-item col-md-8 well well-sm'><small>Fecha: "+month+"/"+day+"/"+year+" - "+hour+":"+minutes+":"+seconds+" "+ampm+"</small><h3>"+name+" escribio: <br></h3><p>"+comm+"<br></p></li>").hide();
+    var newItem = $("<li class='list-group-item col-md-8 well well-sm col-md-offset-2'><small>Fecha: "+month+"/"+day+"/"+year+" - "+hour+":"+minutes+":"+seconds+" "+ampm+"</small><h3>"+name+" escribio: <br></h3><p>"+comm+"<br></p></li>").hide();
     $("#commentList").append(newItem);
     newItem.fadeIn();
 }
