@@ -1,0 +1,9 @@
+.header {
+    position: relative;
+    top: 30px;
+    background: url('/assets/fondo1.png');
+    border: solid 1px;
+    width: 52%
+    background-color: #f7f7f7;
+    border-color: #a0a0a0;
+}
