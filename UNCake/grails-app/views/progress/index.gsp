@@ -97,8 +97,6 @@
     </header>
 
     <div class="container">
-
-
         <div class="row">
             <div class="large-12 columns">
                 <br>
@@ -119,7 +117,7 @@
                                 <div class="row" id="data_container">
                                     <br/><br/>
                                     <!--<p style="text-align: left; display: inline-block;">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>-->
-                                    <g:textArea name="academicHistory" id="academicRecord" value="" rows="8" cols="40" onkeypress='validate(event)' style="padding-top: 20px; padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
+                                    <g:textArea name="academicHistory" id="academicRecord" value="${recordText}" rows="8" cols="40" onkeypress='validate(event)' style="padding-top: 20px; padding-left: 20px; width: 100%; background-color: #ffffff; border-radius: 5px; border: solid 1px; border-color: #a0a0a0"></g:textArea>
                                     <br><br>
                                     <input type="button" id="calculatePAPA" name="calculatePAPA" value="Calcular" />
                                     <br>
@@ -725,7 +723,7 @@
                 return percentage;
             }
             function calculatePAPA( input ){
-                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:()\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
                 var subjects = [];
                 var subjectsAux;
                 var sumSubjects = 0.0;
@@ -759,7 +757,7 @@
                 return averages;
             }
             function getSums( input ){
-                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:()\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
                 var subjects = [];
                 var subjectsAux;
                 var sumSubjects = 0.0;
@@ -795,7 +793,7 @@
                 return output;
             }
             function getSubjects( input ){
-                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:()\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
                 var subjects = [];
                 var subject;
                 var historySoFar = input;
