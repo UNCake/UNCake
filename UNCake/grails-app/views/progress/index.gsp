@@ -345,7 +345,7 @@
                                 <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
                                     <br/>
                                     <h5 id="titleRecord"></h5>
-                                    <br/>
+                                    <p id="PAPAMessage" style="text-align: left;"></p>
                                     <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                                         <div id="papa_chart" style="width: 900px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
                                     </div>
@@ -712,6 +712,7 @@
                             var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
                             var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
                             drawPAPA( averagesToDraw.split(',') );
+                            $("#PAPAMessage").text( "Tu PAPA exacto es: " + averagesToDraw.split(',')[ averagesToDraw.split(',').length - 2 ]  + " y  tu PA es: " + averagesToDraw.split(',')[ averagesToDraw.split(',').length - 1 ]);
                             drawPercentage( parseFloat(advanceToDraw) );
                             drawComponents( advanceCmpToDraw.split(',') );
                             drawTable( subjectsToDraw.split(',') );
@@ -924,6 +925,7 @@
                     averages.push( calculatePAPA( history )[0] );
                     averages.push( calculatePAPA( history )[1] );
                     drawPAPA(averages);
+                    $("#PAPAMessage").text( "Tu PAPA exacto es: " + averages[ averages.length - 2 ] + " y  tu PA es: " + averages[ averages.length - 1 ] );
                     drawPercentage( getPercentage( history ) );
                     drawComponents( getComponents( history ) );
                     drawTable( getSubjects( history ) );
