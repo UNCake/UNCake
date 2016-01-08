@@ -60,24 +60,23 @@
     <script>
         $(function () {
             var availableTags = $.parseJSON('${userlist.encodeAsJSON()}');
-            console.log(availableTags)
-            $("#selectedId").autocomplete({
+            $("#selectedName").autocomplete({
                 source: availableTags
             });
-             $("#selectedId").bind("keypress", function(e) {
+             $("#selectedName").bind("keypress", function(e) {
                  if(e.keyCode==13){
                      //console.log(session.user)
-                     var selected = document.getElementById('selectedId').value;
+                     var selected = document.getElementById('selectedName').value;
                      console.log(selected)
                      if (selected != "") {
-                         //document.getElementById("diagNombre").value = document.getElementById("selectedId").value;
+                         //document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
                          var url = "${createLink(controller:'Home', action:'getUserByName')}";
                          var response = $.ajax({
                              url: url,
                              contentType: "application/json; charset=utf-8",
                              dataType: "json",
                              data: {
-                                 selectedId: selected
+                                 selectedName: selected
                              },
                              success: function (userValues) {
                                  //userValues ya tiene todos los datos del usuario. Hasta la foto :O
@@ -132,7 +131,7 @@
                                 <a href="#page-top"></a>
                             </li>
                             <li>
-                                <input type="input" class="form-control" id="selectedId" name="selectedId" placeholder="Digita Nombre" style="text-align:center">
+                                <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
                             </li>
 
                             <li>
@@ -170,7 +169,7 @@
                         <!--<h3 style="color: #333;">Planea tu horario de clases, haz seguimiento a tu PAPA y busca edificos en el campus.</h3>-->
                     </div>
                     <div>
-                        <div class="col-md-3 col-sm-6 portfolio-item">
+                        <div class="col-md-4 col-sm-6 portfolio-item">
                             <div class="portfolio-caption">
                                 <div class="img-centered">
                                     <a href="schedule">
@@ -180,7 +179,7 @@
                                 <h4>Crear Horario</h4><br>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 portfolio-item">
+                        <div class="col-md-4 col-sm-6 portfolio-item">
                             <div class="portfolio-caption">
                                 <div class="img-centered">
                                     <a href="maps">
@@ -190,7 +189,7 @@
                                 <h4>Buscar edificio</h4><br>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 portfolio-item">
+                        <div class="col-md-4 col-sm-6 portfolio-item">
                             <div class="portfolio-caption">
                                 <div class="img-centered">
                                     <a href="progress" >
@@ -200,25 +199,8 @@
                                 <h4>Mi avance</h4><br>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 portfolio-item">
-                            <div class="portfolio-caption">
-                                <div class="img-centered">
-                                    <a href="CommentHandle" >
-                                        <asset:image src="home/services/icono_buscar_materias.png" alt=""/>
-                                    </a>
-                                </div>
-                                <h4>Materias</h4><br>
-                            </div>
-                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <br><br>
-    </section>
-    <footer>
-        <div class="container">
-            <div class="row">
                 <div>
                     <br/><h3 style="color: black;">Universidad Nacional de Colombia 2015</h3><br/>
                 </div>

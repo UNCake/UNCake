@@ -1,14 +1,12 @@
-import uncake.Comment
 import uncake.Building
 import uncake.Location
-import uncake.Course
 import uncake.User
 class BootStrap {
     def DBconnectionService
     def init = { servletContext ->
         def user1=new User(email:"santi@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santi" ).save()
         def user2=new User(email:"alejandro@unal.com", password:"lollol12".encodeAsSHA1(), name:"Alejandro" ).save()
-        def user3=new User(email:"santiagoH@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santiago" ).save()
+        def user3=new User(email:"saniagoH@unal.com", password:"lollol12".encodeAsSHA1(), name:"Santiago" ).save()
         def user4=new User(email:"hugo@unal.com", password:"lollol12".encodeAsSHA1(), name:"Hugo" ).save()
         def user5=new User(email:"ana@unal.com", password:"lollol12".encodeAsSHA1(), name:"Ana" ).save()
 
@@ -22,14 +20,14 @@ class BootStrap {
 
 
         //Inicializacion de Sedes
-        //new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co').save()
+        new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co').save()
         new Location(name: 'BOGOTA', url: 'http://sia.bogota.unal.edu.co').save()
-        //new Location(name: 'CARIBE', url: 'http://siacar.unal.edu.co').save()
-        //new Location(name: 'MANIZALES', url: 'http://sia.manizales.unal.edu.co').save()
-        //new Location(name: 'MEDELLIN', url: 'http://sia.medellin.unal.edu.co').save()
-        //new Location(name: 'ORINOQUIA', url: 'http://siaori.unal.edu.co').save()
-        //new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co').save()
-        //new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co').save()
+        new Location(name: 'CARIBE', url: 'http://siacar.unal.edu.co').save()
+        new Location(name: 'MANIZALES', url: 'http://sia.manizales.unal.edu.co').save()
+        new Location(name: 'MEDELLIN', url: 'http://sia.medellin.unal.edu.co').save()
+        new Location(name: 'ORINOQUIA', url: 'http://siaori.unal.edu.co').save()
+        new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co').save()
+        new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co').save()
 
         new Building(code: '101', name: '101 - TORRE DE ENFERMERIA ', coordinates: '4.635181486487435&-74.08243864774704', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '102', name: '102 - BIBLIOTECA CENTRAL GABRIEL GARCIA MARQUEZ', coordinates: '4.63540605513496&-74.08303678035736', Location: Location.findByName("BOGOTA") ).save()
@@ -96,7 +94,7 @@ class BootStrap {
         new Building(code: '500J', name: '500J - INVERNADERO DE CRECIMIENTO     ', coordinates: '4.636189371406396&-74.08853530883789', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '500K', name: '500K - INVERNADERO DE CRECIMIENTO     ', coordinates: '4.636189371406396&-74.08853530883789', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '500L', name: '500L - CENTRO DE COMPOSTAJE     ', coordinates: '4.636189371406396&-74.08853530883789', Location: Location.findByName("BOGOTA") ).save()
-        new Building(code: '500M', name: '500M - INVERNADERO DE CRECIMIENTOÂ´     ', coordinates: '4.636189371406396&-74.08853530883789', Location: Location.findByName("BOGOTA") ).save()
+        new Building(code: '500M', name: '500M - INVERNADERO DE CRECIMIENTO´     ', coordinates: '4.636189371406396&-74.08853530883789', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '500N', name: '500N - INVERNADERO DE CRECIMIENTO     ', coordinates: '4.636189371406396&-74.08853530883789', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '500O', name: '500O - INVERNADERO DE CRECIMIENTO     ', coordinates: '4.636189371406396&-74.08853530883789', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '500P', name: '500P - INVERNADERO DE CRECIMIENTO     ', coordinates: '4.636189371406396&-74.08853530883789', Location: Location.findByName("BOGOTA") ).save()
@@ -138,39 +136,36 @@ class BootStrap {
         new Building(code: '910', name: '910 - INSTITUTO COLOMBIANO DE NORMAS TECNICAS Y CERTIFICACION: ICONTEC', coordinates: '4.64431121382209&-74.08361077308655', Location: Location.findByName("BOGOTA") ).save()
         new Building(code: '935', name: '935 - SEDE SECTOR CAN     ', coordinates: '4.648011192666337&-74.09578800201416', Location: Location.findByName("BOGOTA") ).save()
 
+        /*new Building(code: '11', name: '11 - Bloque 11', coordinates: '6.260409421942848&-75.57580947875977', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '12', name: '12 - Bloque 12', coordinates: '6.260398757087635&-75.57647466659546', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '41', name: '41 - Bloque 41', coordinates: '6.261859840223353&-75.57774066925049', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '24', name: '24 - Bloque 24', coordinates: '6.262478399735211&-75.57642102241516', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '42', name: '42 - Bloque 42', coordinates: '6.261902499523549&-75.57822346687317', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '46', name: '46 - Bloque 46', coordinates: '6.262505061766664&-75.57754755020142', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '44', name: '44 - Bloque 44', coordinates: '6.262067804278933&-75.57711839675903', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '19', name: '19 - Bloque 19', coordinates: '6.260838682184513&-75.57810008525848', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '17', name: '17 - Bloque 17', coordinates: '6.260644048702505&-75.57773530483246', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '18', name: '18 - Bloque 18', coordinates: '6.260516070483022&-75.57764947414398', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '15', name: '15 - Bloque 15', coordinates: '6.260873342933979&-75.57750463485718', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '150', name: '150 - Bloque 150', coordinates: '6.259950832971914&-75.57826638221741', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '50', name: '50 - Bloque 50', coordinates: '6.261982485702039&-75.5794894695282', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '51', name: '51 - Bloque 51', coordinates: '6.262537056202601&-75.57932317256927', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '53', name: '53 - Bloque 53', coordinates: '6.262952983691454&-75.57860434055328', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '54', name: '54 - Bloque 54', coordinates: '6.264515375016131&-75.57751536369324', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '55', name: '55 - Bloque 55', coordinates: '6.26502728378453&-75.57708621025085', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '57', name: '57 - Bloque 57', coordinates: '6.26479265899468&-75.57669997215271', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '58', name: '58 - Bloque 58', coordinates: '6.265272573224792&-75.5769681930542', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '59', name: '59 - Bloque 59', coordinates: '6.265208584686265&-75.57650685310364', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '5', name: '5 - Bloque 5', coordinates: '6.2644620511572136&-75.57459712028503', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '3', name: '3 - Bloque 3', coordinates: '6.2634595615957105&-75.5739426612854', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '4', name: '4 - Bloque 4', coordinates: '6.263128952913922&-75.57445764541626', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '7', name: '7 - Bloque 7', coordinates: '6.264014130527253&-75.57384610176086', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '8', name: '8 - Bloque 8', coordinates: '6.263619533463357&-75.5734920501709', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '6', name: '6 - Bloque 6', coordinates: '6.264376732971618&-75.57407140731812', Location: Location.findByName('MEDELLIN')).save()
+        new Building(code: '2', name: '2 - Bloque 2', coordinates: '6.26347022638842&-75.57430744171143', Location: Location.findByName('MEDELLIN')).save()*/
 
         DBconnectionService.initDB()
 
-        /*
-        def srch = Course.findByCode(2)
-        //println("course id found "+srch.name)
-
-        //Materias de prueba
-        new Course(code: 1, credits: 4, name: "Calculo diferencial", typology: "Fundamentacion").save()
-        new Course(code: 2, credits: 3, name: "Teoria de la informacion y sistemas de comunicacion", typology: "Disciplinar").save()
-
-        //Adicion de comentarios de prueba
-        new Comment(comment: "comment 1").save()
-        new Comment(comment: "comment 2").save()
-        new Comment(comment: "comment 6").save()
-        new Comment(comment: "Comentario largo largo largo largo largo largo largo largo largo largo largo largo largo largo largo").save()
-        new Comment(comment: "comment 8").save()
-        new Comment(comment: "comment 9").save()
-        new Comment(comment: "comment 10").save()
-        new Comment(comment: "comment 11").save()
-        new Comment(comment: "comment asdasdsa").save()
-        Comment.list().each {
-            comm ->
-                //println(comm.id)
-                if (comm.id > 3)
-                    Course.findByCode(1).addToComments(comm)
-
-                else
-                    Course.findByCode(2).addToComments(comm)
-
-        }/*/
-        //println Course.findByCode(1).comments
-        //println Course.findByCode(2).comments
     }
     def destroy = {
     }
