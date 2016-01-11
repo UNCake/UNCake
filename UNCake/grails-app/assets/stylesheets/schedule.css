@@ -13,14 +13,13 @@ body {
     text-align: center;
 }
 
-.progress {
-    background: #9d9d9d;
-    position: relative;
+#progressbarGroups {
+    text-align: center;
 }
-.progress span {
-    position: absolute;
-    display: block;
+
+progress {
     width: 100%;
+    display: block;
 }
 
 .selectableItem li:hover{
@@ -33,7 +32,6 @@ body {
 }
 
 .selectableItem {
-    max-height: 50%;
     overflow-y: auto;
     list-style-type: none;
     margin: 0;
@@ -51,13 +49,9 @@ body {
     margin: 1px;
     font-size: 1em;
     border-radius: 2px;
-    background-color: #b2dba1;
 }
 
 
-#accordionGroup  .ui-accordion-content{
-    padding: 10px;
-}
 
 #accordionGroup {
     max-height: 80%;
@@ -65,12 +59,17 @@ body {
     cursor:  pointer;
 }
 
-#accordionGroup h3 {
-    overflow: auto;
+#accordionGroup ol{
+    max-height: 50%;
+    overflow-y: auto;
+}
+
+#accordionGroup li{
+    overflow-x: hidden;
 }
 
 #accordionGroup a {
-    float: right;
+    float: left;
 }
 
 #scheduleTable {

@@ -72,7 +72,6 @@
             }
 
             $("#loc").change(function () {
-                console.log("prueba");
                 updatePlans();
                 $('#listCourses').empty();
             });
@@ -100,7 +99,11 @@
                         });
                         $("#progressbarCourses").hide();
                         $("#listCourses li").click(function() {
-                            alert(this.value); // id of clicked li by directly accessing DOMElement property
+                            $("#selectedCoursesCol").removeClass('hidden');
+                            $("#msgCol").addClass('hidden');
+                            if (!(courses[this.value].name in groups)) {
+                                updateGroups(this.value);
+                            }
                         });
 
                     },
@@ -109,10 +112,13 @@
                     }
                 });
             }
-/*
-            var updateGroups = function (event, ui) {
+
+            var updateGroups = function (code) {
+
                 var url = "${createLink(controller:'Schedule', action:'searchGroups')}";
-                var name = courses[$(ui.selected).attr('value')].name;
+                var name = courses[code].name;
+                var code = courses[code].code;
+                $("#progressbarGroups").show();
                 groups[name] = {};
                 var response = $.ajax({
                     url: url,
@@ -121,12 +127,13 @@
                     crossDomain: true,
                     data: {
                         selectedLoc: $("#loc").val(),
-                        code: courses[$(ui.selected).attr('value')].code
+                        code: code
                     },
                     success: function (group) {
-                        var code = courses[$(ui.selected).attr('value')].code;
-                        $('#accordionGroup')
-                                .append('<h3 value="' + name + '">' + code + ' ' + name + '<a id="deleteCourse" class="ui-icon ui-icon-close"/> </h3>')
+
+                        var content = $('<li>', {value: name, id: code});
+                        content.append('<div class="collapsible-header"> <a id="deleteCourse" > <i class="tiny material-icons">not_interested</i></a>'+ code + ' ' + name +'</div>')
+                        var item = $('<div>', {class:"collapsible-body"});
 
                         var div = $('<ol>', {class: 'selectableItem', id: name, value: code});
                         groups[name] = group;
@@ -135,19 +142,26 @@
                             for (var i in value["timeSlots"]) {
                                 var ts = value["timeSlots"][i]
                                 if (ts.startHour > 0)
-                                    minSch += ts.day.substring(0, 2) + ': ' + ts.startHour + ' - ' + ts.endHour + '\n';
+                                    minSch += ts.day.substring(0, 2) + ': ' + ts.startHour + ' - ' + ts.endHour + '  ';
                             }
-                            var porc = ( (value["totalSpots"] - value["availableSpots"]) / value["totalSpots"]) * 100;
 
                             div.append($('<li>', {value: code, id: key})
-                                    .html(value.code + ' - ' + value.teacher + '<p style="background-color: #999999">' + minSch + '</p>' +
-                                    '<div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="' + porc +
-                                    '" aria-valuemin="0" aria-valuemax="100" style="width:' + porc + '%"> <span>Cupos disponibles: ' + value["availableSpots"] +
-                                    '/' + value["totalSpots"] + '</span></div> </div>'));
+                                    .html(value.code + ' - ' + value.teacher + '<p>' + minSch + '</p>' +
+                                    'Cupos disp. ' + value["availableSpots"] + '/' + value["totalSpots"]+
+                                    '<progress value="'+value["availableSpots"]+'" max="'+value["totalSpots"]+'"/>' ));
                         });
-                        $('#accordionGroup').append(div);
+                        item.append(div);
+                        content.append(item);
 
-                        $('#accordionGroup').accordion("refresh");
+                        $('#accordionGroup').append(content);
+                        $('.collapsible').collapsible({
+                            accordion : true
+                        });
+
+                        $("#accordionGroup ol li").click(function() {
+                            drawGroup(this.id, this.value, name)
+                        });
+                        $("#progressbarGroups").hide();
                     },
                     error: function (request, status, error) {
                         delete groups[name];
@@ -156,7 +170,7 @@
                 });
             }
 
-*/
+
             var updateTypeCourse = function () {
                 var courseType = $.parseJSON('${courseType.encodeAsJSON()}')
                 $('#menuType').empty();
@@ -179,6 +193,7 @@
             }
 
             $("#plans").change(function () {
+                $("#listCourses").empty();
                 updateCourses();
             });
 
@@ -211,18 +226,14 @@
                 }
                 ;
             });
-/*
-            $("#accordionGroup").accordion({
-                collapsible: true,
-                active: false,
-                heightStyle: "content"
-            });
+
 
             $('#accordionGroup').on('click', 'a', function () {
-                $("#accordionGroup").accordion("option", "active", false);
-                var parent = $(this).closest('h3');
+
+                var parent = $(this).closest('li')
                 var name = parent.attr('value');
-                var code = parent.next('ol').attr('value');
+                var code = parent.attr('id');
+
                 delete schedule[name];
                 delete groups[name];
                 $("#scheduleTable td").each(function () {
@@ -231,33 +242,15 @@
                         $(this).css("background-color", "#eee")
                     }
                 });
-                var head = parent.next('ol');
 
-                parent.add(head).fadeOut('slow', function () {
+                parent.fadeOut('medium', function () {
                     $(this).remove();
                 });
             });
 
-            $("#selectable").selectable({
-                        selected: function (event, ui) {
-                            $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
-                            $("#selectedCoursesCol").removeClass('hidden');
-                            $("#msgCol").addClass('hidden');
-                            if (!(courses[$(ui.selected).attr('value')].name in groups)) {
-                                updateGroups(event, ui);
-                            }
-                        }
-                    }
-            );
-/*
-            $('#accordionGroup').on('click', 'ol', function () {
-                $(this).selectable({
-                    selected: function (event, ui) {
-                        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");
-                        var code = $(ui.selected).attr('value')
-                        var parent = $(this).prev('h3');
-                        var name = parent.attr('value')
-                        var gr = groups[name][$(ui.selected).attr('id')]
+        var drawGroup = function (id, code, name) {
+
+                        var gr = groups[name][id]
                         $("#scheduleTable td").each(function () {
                             if ($(this).html().indexOf(code) >= 0) {
                                 $(this).html("")
@@ -308,8 +301,7 @@
                         }
 
                     }
-                });
-            });
+
             /*
              $("#showSaveSchedule").button().click(
              function () {
@@ -369,7 +361,7 @@
              );
              */
             $("#progressbarCourses").hide();
-
+            $("#progressbarGroups").hide();
 
         });
     </script>
@@ -568,37 +560,29 @@
             </div>
         </div>
 
+        <div id="progressbarGroups">
+            <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
 
-        <ul class="collapsible" data-collapsible="accordion">
-            <li>
-                <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
-                <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p>
-                    <div class="card-panel teal">
-                        <span class="white-text">I am a very simple card. I am good at containing small bits of information.
-                        I am convenient because I require little markup to use effectively. I am similar to what is called a panel in other frameworks.
-                        </span>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
                     </div>
                 </div>
-
-            </li>
-            <li>
-                <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
-                <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
-            </li>
-            <li>
-                <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
-                <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
-            </li>
-        </ul>
-
-
-
-        <div id="selectedCoursesCol" class="hidden">
-            <label for="accordionGroup">Materias seleccionadas</label>
-
-            <div id="accordionGroup">
             </div>
         </div>
+
+        <div id="selectedCoursesCol" class="hidden">
+            <ul class="collapsible" data-collapsible="accordion" id="accordionGroup">
+            </ul>
+        </div>
+
 
         <!-- Modal -->
         <div class="modal fade" id="modalCr" role="dialog">

@@ -8500,7 +8500,7 @@ a.waves-effect .waves-ripple {
   display: block;
   cursor: pointer;
   min-height: 3rem;
-  line-height: 3rem;
+  line-height: 1.5rem;
   padding: 0 1rem;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
@@ -8524,7 +8524,7 @@ a.waves-effect .waves-ripple {
 
 .collapsible-body p {
   margin: 0;
-  padding: 2rem;
+  padding: 3px;
 }
 
 .side-nav .collapsible {
