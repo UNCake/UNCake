@@ -5,7 +5,7 @@
 body {
     padding-left: 5px;
     padding-right: 5px;
-    background-color: #eee;
+    background-color: #fafafa;
     font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
@@ -72,10 +72,9 @@ progress {
     float: left;
 }
 
-#scheduleTable {
-    table-layout: fixed;
+#scheduleDiv{
+    background-color: #eee;
 }
-
 #showSaveSchedule{
     float: right;
 }

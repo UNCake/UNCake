@@ -2926,9 +2926,6 @@ footer.page-footer .footer-copyright {
   background-color: rgba(51, 51, 51, 0.08);
 }
 
-table, th, td {
-  border: none;
-}
 
 table {
   width: 100%;
@@ -2965,7 +2962,7 @@ thead {
 }
 
 td, th {
-  padding: 15px 5px;
+  padding: 5px 2px 5px 2px;
   display: table-cell;
   text-align: left;
   vertical-align: middle;
@@ -8524,7 +8521,7 @@ a.waves-effect .waves-ripple {
 
 .collapsible-body p {
   margin: 0;
-  padding: 3px;
+  padding: 0.5rem;
 }
 
 .side-nav .collapsible {

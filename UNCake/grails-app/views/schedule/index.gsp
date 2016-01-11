@@ -7,7 +7,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ defaultCodec="none" %>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -94,11 +94,11 @@
                         $('#listCourses').empty();
                         $.each(courses, function (key, value) {
                             $('#listCourses')
-                                    .append($('<li>', {value: key, class:"collection-item"})
+                                    .append($('<li>', {value: key, class: "collection-item"})
                                             .text(value.code + " " + value.name));
                         });
                         $("#progressbarCourses").hide();
-                        $("#listCourses li").click(function() {
+                        $("#listCourses li").click(function () {
                             $("#selectedCoursesCol").removeClass('hidden');
                             $("#msgCol").addClass('hidden');
                             if (!(courses[this.value].name in groups)) {
@@ -132,8 +132,8 @@
                     success: function (group) {
 
                         var content = $('<li>', {value: name, id: code});
-                        content.append('<div class="collapsible-header"> <a id="deleteCourse" > <i class="tiny material-icons">not_interested</i></a>'+ code + ' ' + name +'</div>')
-                        var item = $('<div>', {class:"collapsible-body"});
+                        content.append('<div class="collapsible-header"> <a id="deleteCourse" > <i class="tiny material-icons">not_interested</i></a>' + code + ' ' + name + '</div>')
+                        var item = $('<div>', {class: "collapsible-body"});
 
                         var div = $('<ol>', {class: 'selectableItem', id: name, value: code});
                         groups[name] = group;
@@ -147,18 +147,20 @@
 
                             div.append($('<li>', {value: code, id: key})
                                     .html(value.code + ' - ' + value.teacher + '<p>' + minSch + '</p>' +
-                                    'Cupos disp. ' + value["availableSpots"] + '/' + value["totalSpots"]+
-                                    '<progress value="'+value["availableSpots"]+'" max="'+value["totalSpots"]+'"/>' ));
+                                    'Cupos disp. ' + value["availableSpots"] + '/' + value["totalSpots"] +
+                                    '<progress value="' + value["availableSpots"] + '" max="' + value["totalSpots"] + '"/>'));
                         });
                         item.append(div);
                         content.append(item);
 
                         $('#accordionGroup').append(content);
                         $('.collapsible').collapsible({
-                            accordion : true
+                            accordion: true
                         });
 
-                        $("#accordionGroup ol li").click(function() {
+                        $('#accordionGroup ol li').off("click")
+
+                        $('#accordionGroup ol li').click(function () {
                             drawGroup(this.id, this.value, name)
                         });
                         $("#progressbarGroups").hide();
@@ -248,92 +250,87 @@
                 });
             });
 
-        var drawGroup = function (id, code, name) {
+            var drawGroup = function (id, code, name) {
 
-                        var gr = groups[name][id]
-                        $("#scheduleTable td").each(function () {
-                            if ($(this).html().indexOf(code) >= 0) {
-                                $(this).html("")
-                                $(this).css("background-color", "#eee")
+                var gr = groups[name][id]
+
+                $("#scheduleTable td").each(function () {
+                    if ($(this).html().indexOf(code) >= 0) {
+                        $(this).html("")
+                        $(this).css("background-color", "#eee")
+                    }
+                });
+
+                var available = true;
+                var crCourse = "";
+                for (var i in gr["timeSlots"]) {
+                    var ts = gr["timeSlots"][i]
+                    for (var s = ts.startHour; s < ts.endHour; s++) {
+                        if ($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim() != "") {
+                            available = false;
+                            crCourse = $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim();
+                            crCourse = crCourse.substr(0, crCourse.indexOf("-"));
+                            $(courses).each(function (key, value) {
+                                if (value["code"] == crCourse) {
+                                    crCourse = value["name"];
+                                }
+                            });
+                            break;
+                        }
+                    }
+                    if (!available) break;
+                }
+
+                if (!available) {
+
+                    Materialize.toast("Existe un cruce entre la materia " + crCourse + " y la materia " + name + ".", 4000)
+
+                } else {
+                    schedule[name] = gr;
+                    var colors = ["#f49595", "#f9eb97", "#c6f9ac", "#a8d9f6", "#e2bbfd", "#84d8b8",
+                        "#b4e7cf", "#eed7cb", "#eeeba1", "#f8bbf9"]
+                    var color = colors[Math.random() * 10 | 0]
+                    for (var i in gr["timeSlots"]) {
+                        var ts = gr["timeSlots"][i]
+                        if (ts.startHour > 0) {
+                            for (var s = ts.startHour; s < ts.endHour; s++) {
+                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code + '-' + gr["code"]);
+                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
+                                        color);
+                            }
+
+                        }
+                    }
+                }
+
+            }
+
+            $("#saveSchedule").submit(
+                    function () {
+                        var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
+                        schedule["name"] = $("#nameSc").val();
+                        schedule["image"] = $("#scheduleDiv").html();
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: JSON.stringify(schedule),
+                            contentType: 'application/json',
+                            success: function (r) {
+                                $("#modalSave").closeModal();
+
+                                if (r != "") {
+                                    Materialize.toast("Horario "+$("#nameSc").val()+" guardardo.", 4000)
+                                }else{
+                                    Materialize.toast("No se puede guardar el horario.", 4000)
+                                }
+                            },error: function(){
+                                Materialize.toast("No se puede guardar el horario.", 4000)
                             }
                         });
-
-                        var available = true;
-                        var crCourse = "";
-                        for (var i in gr["timeSlots"]) {
-                            var ts = gr["timeSlots"][i]
-                            for (var s = ts.startHour; s < ts.endHour; s++) {
-                                if ($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim() != "") {
-                                    available = false;
-                                    crCourse = $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim();
-                                    crCourse = crCourse.substr(0, crCourse.indexOf("-"));
-                                    $(courses).each(function (key, value) {
-                                        if (value["code"] == crCourse) {
-                                            crCourse = value["name"];
-                                        }
-                                    });
-                                    break;
-                                }
-                            }
-                            if (!available) break;
-                        }
-
-                        if (!available) {
-                            $("#modal-title").html("Cruce de horarios");
-                            $("#modal-message").html("Existe un cruce entre la materia " + crCourse + " y la materia " + name + ".");
-                            $("#modalCr").modal("show");
-                        } else {
-                            schedule[name] = gr;
-                            var colors = ["#f49595", "#f9eb97", "#c6f9ac", "#a8d9f6", "#e2bbfd", "#84d8b8",
-                                "#b4e7cf", "#eed7cb", "#eeeba1", "#f8bbf9"]
-                            var color = colors[Math.random() * 10 | 0]
-                            for (var i in gr["timeSlots"]) {
-                                var ts = gr["timeSlots"][i]
-                                if (ts.startHour > 0) {
-                                    for (var s = ts.startHour; s < ts.endHour; s++) {
-                                        $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code + '-' + gr["code"]);
-                                        $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
-                                                color);
-                                    }
-
-                                }
-                            }
-                        }
-
+                        return false;
                     }
-
+            );
             /*
-             $("#showSaveSchedule").button().click(
-             function () {
-
-             $("#modalSave").modal("show");
-             });
-
-             $("#saveSchedule").submit(
-             function () {
-             var url = "
-            ${createLink(controller:'Schedule', action:'buildSchedule')}";
-             schedule["name"] = $("#nameSc").val();
-             schedule["image"] = $("#scheduleDiv").html();
-             $.ajax({
-             type: "POST",
-             url: url,
-             data: JSON.stringify(schedule),
-             contentType: 'application/json',
-             success: function (r) {
-             $("#modalSave").modal("hide");
-
-             if (r != "") {
-             $("#modal-title").html("Horario");
-             $("#modal-message").html("Horario guardado.");
-             $("#modalCr").modal("show");
-             }
-             }
-             });
-             return false;
-             }
-             );
-
              $("#printSchedule").button().click(
              function () {
 
@@ -363,6 +360,7 @@
             $("#progressbarCourses").hide();
             $("#progressbarGroups").hide();
 
+            $('.modal-trigger').leanModal();
         });
     </script>
 
@@ -518,8 +516,8 @@
 
     <div class="col-sm-6">
         <div class="table-responsive" id="scheduleDiv">
-            <table id="scheduleTable" class="table-condensed">
-                <div id="head_nav">
+            <table id="scheduleTable">
+                <div>
                     <tr>
                         <th>H</th>
                         <th>Lunes</th>
@@ -532,32 +530,32 @@
                     </tr>
                 </div>
             </table>
+
         </div>
 
 
         <g:if test="${session.user != null}">
             <div>
-                <button id="showSaveSchedule">
-                    Guardar
-                </button>
+                <!-- Modal Trigger -->
+                <a id="showSaveSchedule" class="waves-effect waves-light btn modal-trigger" href="#modalSave">Guardar</a>
             </div>
         </g:if>
 
         <div>
-            <button id="printSchedule">
-                Imprimir
-            </button>
+            <a class="waves-effect waves-light btn" id="printSchedule">Imprimir</a>
         </div>
 
     </div>
 
     <div class="col-sm-3">
 
-        <div class="panel panel-default" id="msgCol">
-            <div class="panel-body">
-                <h3>Bienvenido!</h3>
-                Utiliza los filtros para crear tu horario.
+        <div class="card blue-grey darken-1" id="msgCol">
+            <div class="card-content white-text">
+                <span class="card-title">Bienvenido!</span>
+
+                <p>Utiliza los filtros para crear tu horario.</p>
             </div>
+
         </div>
 
         <div id="progressbarGroups">
@@ -583,52 +581,27 @@
             </ul>
         </div>
 
-
-        <!-- Modal -->
-        <div class="modal fade" id="modalCr" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" id="modal-title">Cruce de horarios</h4>
-                    </div>
-
-                    <div class="modal-body">
-                        <p id="modal-message">Selecciona otro grupo.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalSave" role="dialog">
-        <div class="modal-dialog">
+        <!-- Modal Structure -->
+        <div id="modalSave" class="modal bottom-sheet">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Guardar horario</h4>
-                </div>
+                <h4>Guardar horario</h4>
+                <form id="saveSchedule">
+                    <div class="form-group">
+                        <label>Nombre</label>
 
-                <div class="modal-body">
-
-                    <form id="saveSchedule">
-                        <div class="form-group">
-                            <label>Nombre</label>
-
-                            <div style="display: flex">
-                                <input type="text" id="nameSc" class="form-control" placeholder="Introduce un nombre"
-                                       required autofocus>
-                            </div>
+                        <div style="display: flex">
+                            <input type="text" id="nameSc" class="form-control"
+                                   placeholder="Introduce un nombre"
+                                   required autofocus>
                         </div>
-                        <button class="btn btn-lg btn-primary btn-block color-black" type="submit"
-                                value='guardar'>Guardar</button>
-                    </form>
-
-                </div>
+                    </div>
+                    <button class="btn btn-lg btn-primary btn-block color-black" type="submit"
+                            value='guardar'>Guardar</button>
+                </form>
             </div>
         </div>
+
     </div>
-</div>
 
 </div>
 
