@@ -97,8 +97,6 @@
     </header>
 
     <div class="container">
-
-
         <div class="row">
             <div class="large-12 columns">
                 <br>
@@ -155,6 +153,7 @@
                                                                 drawComponents( advanceCmpToDraw.split(',') );
                                                                 drawTable( subjectsToDraw.split(',') );
                                                                 $("#container_save").hide();
+                                                                $( "#arraySubjects" ).val(subjectsToDraw);
                                                             }
                                                         });
                                                     }else{
@@ -162,9 +161,7 @@
                                                     }
                                                 }
                                                 loadExternal( "${params.plan}" );
-
                                                 google.load("visualization", "1.1", {packages:["bar", "corechart", "imagebarchart", "table"]});
-
                                                 function drawPAPA( averages ) {
                                                     var data = new Array(averages.length/2 + 1);
                                                     var max = 0;
@@ -348,7 +345,7 @@
                                 <div class="row" id="information_container" style="display: none;" ><!--style="display: none; background-color: white; border-radius: 5px;">-->
                                     <br/>
                                     <h5 id="titleRecord"></h5>
-                                    <br/>
+                                    <p id="PAPAMessage" style="text-align: left;"></p>
                                     <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
                                         <div id="papa_chart" style="width: 900px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
                                     </div>
@@ -396,10 +393,19 @@
                                             <h5 style="line-height: 30px; display: inline-block; vertical-align: middle;">Promedio esperado:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
                                             <input type="text" class="txtAverage" id="txtAverage" style="width: 200px; display: inline-block;" placeholder="Promedio"/>
                                         </div>
-                                        <div style="text-align: right;">
-                                            <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
-                                        </div>
-                                        <br/>
+                                        <g:if test="${session.user == null}">
+                                            <div style="text-align: right;">
+                                                <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
+                                            </div>
+                                            <br/>
+                                        </g:if>
+                                        <g:else>
+                                            <div style="text-align: right;">
+                                                <input type="button" class="btn_calculate_add_logged" id="btn_calculate_add_logged" value="Calcular"/>
+                                            </div>
+                                            <br/>
+                                            <g:hiddenField name="arraySubjects" id="arraySubjects" value=""></g:hiddenField>
+                                        </g:else>
                                     </div>
                                     <div style="text-align: center;">
                                         <br/>
@@ -459,6 +465,233 @@
             }
         }
         $(function(){
+            function loadLogged( record ) {
+                record = record.replace(/&/g,"|");
+                if( record.length > 0 ){
+                    var response = $.ajax({
+                        type: 'POST',
+                        url: "${createLink(action: 'loadAcademicRecord')}",
+                        data: {selectedRecord: record},
+                        success: function( input ){
+                            $("#information_container").show();
+                            input = String(input).substring( 1, String(input).length );
+                            var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
+                            $("#titleRecord").text(record.replace(/\|/g,"-"));
+                            $("#container_save").hide();
+                            var calculate = true;
+                            var typedCredits = [];
+                            var typedGrades = [];
+                            var expectedPAPA = 0;
+                            $('.txtCredits').each( function() {
+                                if( $(this).val() == '' || !$(this).val().match(/[1-9][0-9]?[0-9]?/g) ){
+                                    $(this).focus();
+                                    $(this).effect( "pulsate", {}, 300 );
+                                    calculate = false;
+                                }else{
+                                    typedCredits.push( parseInt( $(this).val() ) );
+                                }
+                            });
+                            $('.txtNota').each( function() {
+                                if( $(this).val() != '' ){
+                                    if( !$(this).val().match(/[0-4](?:\.[0-9])?/g) && !$(this).val().match(/5/g) ){
+                                         $(this).focus();
+                                         $(this).effect( "pulsate", {}, 300 );
+                                         calculate = false;
+                                    }else{
+                                         typedGrades.push( parseFloat( $(this).val() ) );
+                                    }
+                                }else{
+                                    typedGrades.push( -1 );
+                                }
+                            });
+                            $('.txtAverage').each( function() {
+                                if( $(this).val() == '' ){
+                                    $(this).focus();
+                                    $(this).effect( "pulsate", {}, 300 );
+                                    calculate = false;
+                                }
+                                if( $(this).val() != '' ){
+                                    if( !$(this).val().match(/[0-4](?:\.[0-9])?/g) && !$(this).val().match(/5/g) ){
+                                         $(this).focus();
+                                         $(this).effect( "pulsate", {}, 300 );
+                                         calculate = false;
+                                    }else{
+                                         expectedPAPA = parseFloat( $(this).val() ) - 0.05;
+                                    }
+                                }
+                            });
+                            var gradeCredits = 0;
+                            var grades = 0;
+                            var ungradeCredits = 0;
+                            var ungradeSubjects = 0, gradeSubjects = 0;
+                            var sums = [];
+                            var sumSubjects = 0;
+                            var sumCredits = 0;
+                            var subjectsAux;
+                            var arraySubjects = subjectsToDraw.split(',');
+                            if( calculate == true ){
+                                for (var i = 0; i < arraySubjects.length; i++) {
+                                    sumSubjects += parseFloat( arraySubjects[i].split('\t')[9] ) * parseInt( arraySubjects[i].split('\t')[6] );
+                                    sumCredits += parseInt( arraySubjects[i].split('\t')[6] );
+                                }
+                                sums.push( sumSubjects );
+                                sums.push( sumCredits );
+                                subjectsAux = arraySubjects;
+                                for( var i = 0; i < arraySubjects.length - 1; i++ ){
+                                    for( var j = i + 1; j < arraySubjects.length; j++ ){
+                                         if( arraySubjects[i].split('\t')[0].valueOf() == arraySubjects[j].split('\t')[0].valueOf() ){
+                                              subjectsAux.splice(i, 1);
+                                         }
+                                    }
+                                }
+                                sumSubjects = 0.0;
+                                sumCredits = 0;
+                                for( var i = 0; i < subjectsAux.length; i++ ){
+                                    sumSubjects += parseFloat( subjectsAux[i].split('\t')[9] ) * parseInt( subjectsAux[i].split('\t')[6] );
+                                    sumCredits += parseInt( subjectsAux[i].split('\t')[6] );
+                                }
+                                sums.push( sumSubjects );
+                                sums.push( sumCredits );
+                                for( var i = 0; i < typedGrades.length; i++ ){
+                                    if( typedGrades[i] == -1 ){
+                                         ungradeCredits += typedCredits[i];
+                                         ungradeSubjects += 1;
+                                    }else{
+                                         gradeCredits += typedCredits[i];
+                                         grades += typedCredits[i] * typedGrades[i];
+                                         gradeSubjects += 1;
+                                    }
+                                }
+                                var plannedPAPA = (sums[0] + grades) / (sums[1] + gradeCredits);
+                                var gradeNeeded = 0;
+                                if( ungradeSubjects > 0 ){
+                                    gradeNeeded = ( expectedPAPA *( sums[1] + ungradeCredits + gradeCredits) - plannedPAPA*( sums[1] + gradeCredits ) ) / ungradeCredits;
+                                    if( gradeNeeded <= 5 ) {
+                                         $('#newSubjectsMessage').css('color', 'black');
+                                         if( ungradeSubjects > 1 )
+                                              $('#newSubjectsMessage').text('La nota mínima requerida en las ' + ungradeSubjects + ' asignaturas para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es de: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                                         else
+                                              $('#newSubjectsMessage').text('La nota mínima requerida en la asignatura para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es de: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                                    }else{
+                                         $('#newSubjectsMessage').css('color', 'red');
+                                         if( ungradeSubjects > 1 )
+                                              $('#newSubjectsMessage').text('La nota mínima requerida en las ' + ungradeSubjects + ' asignaturas para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es mayor a 5, exactamente es: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                                         else
+                                              $('#newSubjectsMessage').text('La nota mínima requerida en la asignatura para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es mayor a 5, exactamente es: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                                    }
+                                }else{
+                                    $('#newSubjectsMessage').css('color', 'black');
+                                    var auxPlannedPAPA;
+                                    if( plannedPAPA * 10 - Math.floor(plannedPAPA * 10) >= 0.5 )
+                                        auxPlannedPAPA = ( Math.ceil(plannedPAPA * 10) / 10.0 );
+                                    else
+                                        auxPlannedPAPA = ( Math.floor(plannedPAPA * 10) / 10.0 );
+                                    if( gradeSubjects > 1 )
+                                        $('#newSubjectsMessage').text('El PAPA obtenido cursando las ' + ungradeSubjects + ' asignaturas con las notas asignadas es de: ' + auxPlannedPAPA + ' exactamente: ' + plannedPAPA );
+                                    else
+                                        $('#newSubjectsMessage').text('El PAPA obtenido cursando la asignatura con la nota asignada es de: ' + auxPlannedPAPA + ' exactamente: ' + plannedPAPA );
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            $( "#btn_calculate_add_logged" ).button().click( function() {
+                var history = document.getElementById('academicRecord').value;
+                if( history.length <= 50 ){
+                    loadLogged( $("#recordSelector").val() );
+                }else{
+                    var calculate = true;
+                    var typedCredits = [];
+                    var typedGrades = [];
+                    var expectedPAPA = 0;
+                    $('.txtCredits').each( function() {
+                        if( $(this).val() == '' || !$(this).val().match(/[1-9][0-9]?[0-9]?/g) ){
+                            $(this).focus();
+                            $(this).effect( "pulsate", {}, 300 );
+                            calculate = false;
+                        }else{
+                            typedCredits.push( parseInt( $(this).val() ) );
+                        }
+                    });
+                    $('.txtNota').each( function() {
+                        if( $(this).val() != '' ){
+                            if( !$(this).val().match(/[0-4](?:\.[0-9])?/g) && !$(this).val().match(/5/g) ){
+                                 $(this).focus();
+                                 $(this).effect( "pulsate", {}, 300 );
+                                 calculate = false;
+                            }else{
+                                 typedGrades.push( parseFloat( $(this).val() ) );
+                            }
+                        }else{
+                            typedGrades.push( -1 );
+                        }
+                    });
+                    $('.txtAverage').each( function() {
+                        if( $(this).val() == '' ){
+                            $(this).focus();
+                            $(this).effect( "pulsate", {}, 300 );
+                            calculate = false;
+                        }
+                        if( $(this).val() != '' ){
+                            if( !$(this).val().match(/[0-4](?:\.[0-9])?/g) && !$(this).val().match(/5/g) ){
+                                 $(this).focus();
+                                 $(this).effect( "pulsate", {}, 300 );
+                                 calculate = false;
+                            }else{
+                                 expectedPAPA = parseFloat( $(this).val() ) - 0.05;
+                            }
+                        }
+                    });
+                    var gradeCredits = 0;
+                    var grades = 0;
+                    var ungradeCredits = 0;
+                    var ungradeSubjects = 0, gradeSubjects = 0;
+                    var sums = [];
+                    if( calculate == true ){
+                        sums = getSums( history );
+                        for( var i = 0; i < typedGrades.length; i++ ){
+                            if( typedGrades[i] == -1 ){
+                                 ungradeCredits += typedCredits[i];
+                                 ungradeSubjects += 1;
+                            }else{
+                                 gradeCredits += typedCredits[i];
+                                 grades += typedCredits[i] * typedGrades[i];
+                                 gradeSubjects += 1;
+                            }
+                        }
+                        var plannedPAPA = (sums[0] + grades) / (sums[1] + gradeCredits);
+                        var gradeNeeded = 0;
+                        if( ungradeSubjects > 0 ){
+                            gradeNeeded = ( expectedPAPA *( sums[1] + ungradeCredits + gradeCredits) - plannedPAPA*( sums[1] + gradeCredits ) ) / ungradeCredits;
+                            if( gradeNeeded <= 5 ) {
+                                 $('#newSubjectsMessage').css('color', 'black');
+                                 if( ungradeSubjects > 1 )
+                                      $('#newSubjectsMessage').text('La nota mínima requerida en las ' + ungradeSubjects + ' asignaturas para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es de: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                                 else
+                                      $('#newSubjectsMessage').text('La nota mínima requerida en la asignatura para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es de: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                            }else{
+                                 $('#newSubjectsMessage').css('color', 'red');
+                                 if( ungradeSubjects > 1 )
+                                      $('#newSubjectsMessage').text('La nota mínima requerida en las ' + ungradeSubjects + ' asignaturas para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es mayor a 5, exactamente es: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                                 else
+                                      $('#newSubjectsMessage').text('La nota mínima requerida en la asignatura para tener el PAPA en ' + (expectedPAPA + 0.05) + ' es mayor a 5, exactamente es: ' + ( Math.ceil(gradeNeeded * 10) / 10.0 ));
+                            }
+                        }else{
+                            $('#newSubjectsMessage').css('color', 'black');
+                            var auxPlannedPAPA;
+                            if( plannedPAPA * 10 - Math.floor(plannedPAPA * 10) >= 0.5 )
+                                auxPlannedPAPA = ( Math.ceil(plannedPAPA * 10) / 10.0 );
+                            else
+                                auxPlannedPAPA = ( Math.floor(plannedPAPA * 10) / 10.0 );
+                            if( gradeSubjects > 1 )
+                                $('#newSubjectsMessage').text('El PAPA obtenido cursando las ' + ungradeSubjects + ' asignaturas con las notas asignadas es de: ' + auxPlannedPAPA + ' exactamente: ' + plannedPAPA );
+                            else
+                                $('#newSubjectsMessage').text('El PAPA obtenido cursando la asignatura con la nota asignada es de: ' + auxPlannedPAPA + ' exactamente: ' + plannedPAPA );
+                        }
+                    }
+                }
+            });
             $( "#newRecord" ).button().click( function() {
                 $("#data_container").show();
                 $("#academicRecord").val("");
@@ -479,6 +712,7 @@
                             var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
                             var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
                             drawPAPA( averagesToDraw.split(',') );
+                            $("#PAPAMessage").text( "Tu PAPA exacto es: " + averagesToDraw.split(',')[ averagesToDraw.split(',').length - 2 ]  + " y  tu PA es: " + averagesToDraw.split(',')[ averagesToDraw.split(',').length - 1 ]);
                             drawPercentage( parseFloat(advanceToDraw) );
                             drawComponents( advanceCmpToDraw.split(',') );
                             drawTable( subjectsToDraw.split(',') );
@@ -656,10 +890,15 @@
                         }
                     }else{
                         $('#newSubjectsMessage').css('color', 'black');
-                        if( gradeSubjects > 1 )
-                            $('#newSubjectsMessage').text('El PAPA obtenido cursando las ' + ungradeSubjects + ' asignaturas con las notas asignadas es de: ' + ( Math.ceil(plannedPAPA * 10) / 10.0 ) );
+                        var auxPlannedPAPA;
+                        if( plannedPAPA * 10 - Math.floor(plannedPAPA * 10) >= 0.5 )
+                            auxPlannedPAPA = ( Math.ceil(plannedPAPA * 10) / 10.0 );
                         else
-                            $('#newSubjectsMessage').text('El PAPA obtenido cursando la asignatura con la nota asignada es de: ' + ( Math.ceil(plannedPAPA * 10) / 10.0 ) );
+                            auxPlannedPAPA = ( Math.floor(plannedPAPA * 10) / 10.0 );
+                        if( gradeSubjects > 1 )
+                            $('#newSubjectsMessage').text('El PAPA obtenido cursando las ' + ungradeSubjects + ' asignaturas con las notas asignadas es de: ' + auxPlannedPAPA + ' exactamente: ' + plannedPAPA );
+                        else
+                            $('#newSubjectsMessage').text('El PAPA obtenido cursando la asignatura con la nota asignada es de: ' + auxPlannedPAPA + ' exactamente: ' + plannedPAPA );
                     }
                 }
             });
@@ -686,6 +925,7 @@
                     averages.push( calculatePAPA( history )[0] );
                     averages.push( calculatePAPA( history )[1] );
                     drawPAPA(averages);
+                    $("#PAPAMessage").text( "Tu PAPA exacto es: " + averages[ averages.length - 2 ] + " y  tu PA es: " + averages[ averages.length - 1 ] );
                     drawPercentage( getPercentage( history ) );
                     drawComponents( getComponents( history ) );
                     drawTable( getSubjects( history ) );
@@ -725,7 +965,7 @@
                 return percentage;
             }
             function calculatePAPA( input ){
-                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:()\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
                 var subjects = [];
                 var subjectsAux;
                 var sumSubjects = 0.0;
@@ -759,7 +999,7 @@
                 return averages;
             }
             function getSums( input ){
-                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:()\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
                 var subjects = [];
                 var subjectsAux;
                 var sumSubjects = 0.0;
@@ -795,7 +1035,7 @@
                 return output;
             }
             function getSubjects( input ){
-                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
+                var subjectPattern = /[0-9][A-Z\-0-9]*[\t][A-Za-záéíóúüÁÉÍÓÚÜñÑ:()\.\- ]+[\t][0-9]+[\t][0-9]+[\t][0-9]+[\t][A-Z][\t][0-9]+[\t][0-9]+[\t]+[0-9]\.?[0-9]/i;
                 var subjects = [];
                 var subject;
                 var historySoFar = input;
