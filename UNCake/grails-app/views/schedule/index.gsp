@@ -13,39 +13,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
-    <asset:javascript src="html2canvas.js"/>
-    <asset:javascript src="jquery-2.1.3.js"/>
-    <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
-    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
+    <asset:stylesheet src="bootstrap/css/bootstrap.css"/>
     <asset:stylesheet src="agency.css"/>
-    <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
     <asset:stylesheet src="schedule.css"/>
-    <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+    <asset:stylesheet src="materialize/css/materialize.css"/>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
+
+    <asset:javascript src="jquery-2.1.3.js"/>
     <script>
+
         $(function () {
 
-            $('.default-value').each(function () {
-                var $t = $(this),
-                        default_value = this.value;
-                $t.css('color', '#929292');
-                $t.focus(function () {
-                    if (this.value == default_value) {
-                        this.value = '';
-                        $t.css('color', 'black');
-                    }
-                });
-                $t.blur(function () {
-                    if ($.trim(this.value) == '') {
-                        $t.css('color', '#929292');
-                        this.value = default_value;
-                    }
-                });
-            });
+            $('select').material_select();
+            $('.caret').html('');
 
             var courses
             var groups = {}
@@ -71,7 +54,15 @@
                         type: $("#menuTypePlan").val()
                     },
                     success: function (plans) {
-                        $("#plans").autocomplete("option", "source", plans);
+                        $('#plans').empty();
+                        $.each(plans, function (key, value) {
+
+                            $('#plans')
+                                    .append($('<option>', {value: value})
+                                            .text(value));
+                        });
+                        $("#plans").material_select();
+                        $('.caret').html('');
                     },
 
                     error: function (request, status, error) {
@@ -79,6 +70,12 @@
                     }
                 });
             }
+
+            $("#loc").change(function () {
+                console.log("prueba");
+                updatePlans();
+                $('#listCourses').empty();
+            });
 
             var updateCourses = function () {
                 var url = "${createLink(controller:'Schedule', action:'searchCourses')}";
@@ -95,20 +92,24 @@
                     },
                     success: function (resCourses) {
                         courses = resCourses
-                        $('#selectable').empty();
+                        $('#listCourses').empty();
                         $.each(courses, function (key, value) {
-                            $('#selectable')
-                                    .append($('<li>', {value: key})
+                            $('#listCourses')
+                                    .append($('<li>', {value: key, class:"collection-item"})
                                             .text(value.code + " " + value.name));
                         });
                         $("#progressbarCourses").hide();
+                        $("#listCourses li").click(function() {
+                            alert(this.value); // id of clicked li by directly accessing DOMElement property
+                        });
+
                     },
                     error: function (request, status, error) {
                         alert(error)
                     }
                 });
             }
-
+/*
             var updateGroups = function (event, ui) {
                 var url = "${createLink(controller:'Schedule', action:'searchGroups')}";
                 var name = courses[$(ui.selected).attr('value')].name;
@@ -155,7 +156,7 @@
                 });
             }
 
-
+*/
             var updateTypeCourse = function () {
                 var courseType = $.parseJSON('${courseType.encodeAsJSON()}')
                 $('#menuType').empty();
@@ -173,61 +174,44 @@
                                         .text(key));
                     });
                 }
-                $('#menuType').selectmenu("refresh", true);
+                $('#menuType').material_select();
+                $('.caret').html('');
             }
 
-            $("#plans").autocomplete({
-                source: [],
-                select: function (event, ui) {
-                    $("#plans").val(ui.item.label);
-                    updateCourses();
-                }
-
+            $("#plans").change(function () {
+                updateCourses();
             });
 
-            $("#loc").autocomplete({
-                source: $.parseJSON('${locs.encodeAsJSON()}'),
-                select: function (event, ui) {
-                    $("#loc").val(ui.item.label);
-                    updatePlans();
-                }
-            });
 
-            $("#menuType").selectmenu({
-                select: function () {
-                    if ($("#menuType").val() == "") {
-                        $('#selectable li').show();
-                    } else {
-                        $('#selectable li').each(function () {
-                            (courses[$(this).val()].typology == $("#menuType").val()) ? $(this).show() : $(this).hide();
-                        });
-                    }
+            $("#menuType").change(function () {
+                if ($("#menuType").val() == "") {
+                    $('#listCourses li').show();
+                } else {
+                    $('#listCourses li').each(function () {
+                        (courses[$(this).val()].typology == $("#menuType").val()) ? $(this).show() : $(this).hide();
+                    });
                 }
             });
 
-            $("#menuTypePlan").selectmenu({
-                create: updateTypeCourse(),
-                select: function () {
-                    updateTypeCourse()
-                    $("#plans").val("Digita el plan de estudios").addClass("default-value")
-                    updatePlans()
-                    $("#selectable").empty()
-                }
+            $("#menuTypePlan").change(function () {
+                updateTypeCourse()
+                updatePlans()
+                $("#listCourses").empty()
             });
 
             $("#course").keyup(function () {
                 var course = $(this).val().toLowerCase();
                 if (course == "") {
-                    $('#selectable li').show();
+                    $('#listCourses li').show();
                 } else {
-                    $('#selectable li').each(function () {
+                    $('#listCourses li').each(function () {
                         var text = $(this).text().toLowerCase();
                         (text.indexOf(course) >= 0) ? $(this).show() : $(this).hide();
                     });
                 }
                 ;
             });
-
+/*
             $("#accordionGroup").accordion({
                 collapsible: true,
                 active: false,
@@ -265,7 +249,7 @@
                         }
                     }
             );
-
+/*
             $('#accordionGroup').on('click', 'ol', function () {
                 $(this).selectable({
                     selected: function (event, ui) {
@@ -326,66 +310,66 @@
                     }
                 });
             });
+            /*
+             $("#showSaveSchedule").button().click(
+             function () {
 
-            $("#showSaveSchedule").button().click(
-                    function () {
+             $("#modalSave").modal("show");
+             });
 
-                        $("#modalSave").modal("show");
-                    });
+             $("#saveSchedule").submit(
+             function () {
+             var url = "
+            ${createLink(controller:'Schedule', action:'buildSchedule')}";
+             schedule["name"] = $("#nameSc").val();
+             schedule["image"] = $("#scheduleDiv").html();
+             $.ajax({
+             type: "POST",
+             url: url,
+             data: JSON.stringify(schedule),
+             contentType: 'application/json',
+             success: function (r) {
+             $("#modalSave").modal("hide");
 
-            $("#saveSchedule").submit(
-                    function () {
-                        var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
-                        schedule["name"] = $("#nameSc").val();
-                        schedule["image"] = $("#scheduleDiv").html();
-                        $.ajax({
-                            type: "POST",
-                            url: url,
-                            data: JSON.stringify(schedule),
-                            contentType: 'application/json',
-                            success: function (r) {
-                                $("#modalSave").modal("hide");
+             if (r != "") {
+             $("#modal-title").html("Horario");
+             $("#modal-message").html("Horario guardado.");
+             $("#modalCr").modal("show");
+             }
+             }
+             });
+             return false;
+             }
+             );
 
-                                if(r != ""){
-                                    $("#modal-title").html("Horario");
-                                    $("#modal-message").html("Horario guardado.");
-                                    $("#modalCr").modal("show");
-                                }
-                            }
-                        });
-                        return false;
-                    }
-            );
+             $("#printSchedule").button().click(
+             function () {
 
-            $("#printSchedule").button().click(
-                    function () {
+             /*
+             html2canvas($('#scheduleTable'), {
+             onrendered: function (canvas) {
+             var img = canvas.toDataURL();
+             //window.open(img);
 
-/*
-                        html2canvas($('#scheduleTable'), {
-                            onrendered: function (canvas) {
-                                var img = canvas.toDataURL();
-                                //window.open(img);
+             return false;
 
-                                return false;
+             }
+             });*
+             var mywindow = window.open('', 'my div', 'height=400,width=600');
+             mywindow.document.write('<html><head><title>Mi Horario</title>');
+             mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="screen"/>');
+             mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="print"/>');
+             mywindow.document.write("<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>");
+             mywindow.document.write('</head><body>');
+             mywindow.document.write($("#scheduleDiv").html());
+             mywindow.document.write('</body></html>');
+             mywindow.onload = mywindow.print();
+             mywindow.close();
+             }
+             );
+             */
+            $("#progressbarCourses").hide();
 
-                            }
-                        });*/
-                        var mywindow = window.open('', 'my div', 'height=400,width=600');
-                        mywindow.document.write('<html><head><title>Mi Horario</title>');
-                        mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="screen"/>');
-                        mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="print"/>');
-                        mywindow.document.write("<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>");
-                        mywindow.document.write('</head><body>');
-                        mywindow.document.write($("#scheduleDiv").html());
-                        mywindow.document.write('</body></html>');
-                        mywindow.onload = mywindow.print();
-                        mywindow.close();
-                    }
-            );
-
-            $("#progressbarCourses").progressbar({
-                value: false
-            }).hide();
 
         });
     </script>
@@ -458,51 +442,89 @@
 <div class="row">
     <div class="col-sm-3">
 
-        <label for="loc">Sede:</label>
-
-        <div class="ui-widget">
-            <input id="loc" value="Digita la sede" class="default-value">
+        <div class="input-field">
+            <select class="icons" id="loc">
+                <option value="" disabled selected>Selecciona tu sede</option>
+                <option value="AMAZONIA" data-icon="${resource(dir: 'images', file: 'amazonia.jpg')}"
+                        class="circle">Amazonia</option>
+                <option value="BOGOTA" data-icon="${resource(dir: 'images', file: 'bogota.jpg')}"
+                        class="circle">Bogotá</option>
+                <option value="CARIBE" data-icon="${resource(dir: 'images', file: 'caribe.jpg')}"
+                        class="circle">Caribe</option>
+                <option value="MANIZALES" data-icon="${resource(dir: 'images', file: 'manizales.jpg')}"
+                        class="circle">Manizales</option>
+                <option value="MEDELLIN" data-icon="${resource(dir: 'images', file: 'medellin.jpg')}"
+                        class="circle">Medellín</option>
+                <option value="PALMIRA" data-icon="${resource(dir: 'images', file: 'palmira.jpg')}"
+                        class="circle">Palmira</option>
+                <option value="ORINOQUIA" data-icon="${resource(dir: 'images', file: 'orinoquia.jpg')}"
+                        class="circle">Orinoquia</option>
+                <option value="TUMACO" data-icon="${resource(dir: 'images', file: 'tumaco.jpg')}"
+                        class="circle">Tumaco</option>
+            </select>
+            <label>Sede</label>
         </div>
 
-        <label for="menuTypePlan">Tipo:</label>
 
-        <div>
-            <select name="menuTypePlan" id="menuTypePlan">
+        <div class="input-field">
+            <select id="menuTypePlan">
                 <option value="PRE" selected="selected">Pregrado</option>
                 <option value="POS">Posgrado</option>
             </select>
-        </div>
-
-        <label for="plans">Planes:</label>
-
-        <div class="ui-widget">
-            <input id="plans" value="Digita el plan de estudios" class="default-value">
+            <label for="menuTypePlan">Tipo</label>
         </div>
 
 
-        <label for="menuType">Tipología:</label>
-
-        <div>
-            <select name="menuType" id="menuType">
+        <div class="input-field">
+            <select id="plans">
+                <option value="" disabled selected>Selecciona una sede</option>
             </select>
+            <label for="plans">Planes</label>
         </div>
 
-        <label for="course">Materia:</label>
-
-        <div class="ui-widget">
-            <input id="course" value="Filtra los resultados por materia" class="default-value">
+        <div class="input-field">
+            <select name="menuType" id="menuType">
+                <option value="">Todas</option>
+                <option value="B">Fundamentación</option>
+                <option value="C">Disciplinar</option>
+                <option value="L">Libre elección</option>
+                <option value="P">Nivelación</option>
+            </select>
+            <label for="menuType">Tipología</label>
         </div>
 
-        <div id="progressbarCourses"></div>
+
+        <div class="input-field">
+            <i class="material-icons prefix">search</i>
+            <input id="course" type="text" class="validate">
+            <label for="course">Materia</label>
+        </div>
+
+        <div id="progressbarCourses">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-green-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="selectablemenu">
-            <ol class="selectableItem" id="selectable">
-            </ol>
+            <div class="collection selectableItem" id="listCourses">
+            </div>
         </div>
-
     </div>
 
-    <div class="col-sm-6" >
+    <div class="col-sm-6">
         <div class="table-responsive" id="scheduleDiv">
             <table id="scheduleTable" class="table-condensed">
                 <div id="head_nav">
@@ -545,6 +567,31 @@
                 Utiliza los filtros para crear tu horario.
             </div>
         </div>
+
+
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+                <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p>
+                    <div class="card-panel teal">
+                        <span class="white-text">I am a very simple card. I am good at containing small bits of information.
+                        I am convenient because I require little markup to use effectively. I am similar to what is called a panel in other frameworks.
+                        </span>
+                    </div>
+                </div>
+
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+                <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+                <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
+            </li>
+        </ul>
+
+
 
         <div id="selectedCoursesCol" class="hidden">
             <label for="accordionGroup">Materias seleccionadas</label>
@@ -589,7 +636,8 @@
                                        required autofocus>
                             </div>
                         </div>
-                        <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='guardar'> Guardar </button>
+                        <button class="btn btn-lg btn-primary btn-block color-black" type="submit"
+                                value='guardar'>Guardar</button>
                     </form>
 
                 </div>
@@ -599,5 +647,10 @@
 </div>
 
 </div>
+
+<asset:javascript src="html2canvas.js"/>
+<asset:javascript src="jquery-2.1.3.js"/>
+<asset:javascript src="bootstrap/js/bootstrap.min.js"/>
+<asset:javascript src="materialize/js/materialize.js"/>
 </body>
 </html>

@@ -202,7 +202,7 @@
                     </div>
                 </div>
                 <div>
-                    <br/><h3 style="color: black;">Universidad Nacional de Colombia 2015</h3><br/>
+                    <br/><h3 style="color: black;">UNCake 2015</h3><br/>
                 </div>
             </div>
         </header>

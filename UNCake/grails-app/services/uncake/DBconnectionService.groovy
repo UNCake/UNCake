@@ -41,7 +41,7 @@ class DBconnectionService {
                 }
             }
         }
-
+/*
         //Se almacenan las materias de cada plan de estudios (pregrado)
         StudyPlan.findAllByType("PRE").each { sp ->
 
@@ -91,14 +91,15 @@ class DBconnectionService {
                         }
                 }
 
-                /*println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
-                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")*/
+                println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
+                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")
                 sp.save(flush: true)
 
             } catch (Exception e) {
                 println "Programa academico $sp.name de la sede $sp.location.name no disponible"
             }
         }
+*/
     }
 
     /*
