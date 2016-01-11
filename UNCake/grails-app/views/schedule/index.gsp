@@ -241,6 +241,7 @@
                 $("#scheduleTable td").each(function () {
                     if ($(this).html().indexOf(code) >= 0) {
                         $(this).html("")
+                        $(this).attr("title","")
                         $(this).css("background-color", "#eee")
                     }
                 });
@@ -257,6 +258,7 @@
                 $("#scheduleTable td").each(function () {
                     if ($(this).html().indexOf(code) >= 0) {
                         $(this).html("")
+                        $(this).attr("title","")
                         $(this).css("background-color", "#eee")
                     }
                 });
@@ -295,6 +297,7 @@
                         if (ts.startHour > 0) {
                             for (var s = ts.startHour; s < ts.endHour; s++) {
                                 $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code + '-' + gr["code"]);
+                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).attr("title", name +'\n'+ gr["teacher"]);
                                 $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
                                         color);
                             }
