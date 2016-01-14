@@ -197,13 +197,14 @@
     <g:javascript>
         $(function(){
             $( "#calculate-papa" ).click( function() {
-                var record = $( "#academic-record" ).val();
-                if( record.length > 0 ){
-                    var response = $.ajax({
+                var academicRecord = removeAccent( $( "#academic-record" ).val() );
+                if( academicRecord.length > 0 ){
+                    $.ajax({
                         type: 'POST',
-                        url: "${createLink(action: 'calculateAcademicRecord')}",
-                        data: {academicRecord: record},
-                        success: function( input ){
+                        url: "${ createLink( action: 'calculateAcademicRecord') }",
+                        data: {academicRecord: academicRecord},
+                        success: function( result ){
+                            alert(result);
                             /*$("#information_container").show();
                             input = String(input).substring( 1, String(input).length );
                             var averagesToDraw = input.split(']')[0].trim().substring(1).replace(/\[/g,"");
@@ -223,7 +224,23 @@
                 }
             });
         });
-
+        function removeAccent( input ){
+            input = input.replace(/á/g,"a");
+            input = input.replace(/é/g,"e");
+            input = input.replace(/í/g,"i");
+            input = input.replace(/ó/g,"o");
+            input = input.replace(/ú/g,"u");
+            input = input.replace(/Á/g,"A");
+            input = input.replace(/É/g,"E");
+            input = input.replace(/Í/g,"I");
+            input = input.replace(/Ó/g,"O");
+            input = input.replace(/Ú/g,"U");
+            input = input.replace(/Ü/g,"U");
+            input = input.replace(/ü/g,"u");
+            input = input.replace(/Ñ/g,"N");
+            input = input.replace(/ñ/g,"n");
+            return input;
+        }
     </g:javascript>
 </body>
 </html>

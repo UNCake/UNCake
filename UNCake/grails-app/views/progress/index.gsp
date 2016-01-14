@@ -435,7 +435,7 @@
             if( record.length > 0 ){
                 var response = $.ajax({
                     type: 'POST',
-                    url: "${createLink(action: 'loadAcademicRecord')}",
+                    url: "${createLink(controllerName: 'GradesController', action: 'loadAcademicRecord')}",
                     data: {selectedRecord: record},
                     success: function( input ){
                         $("#information_container").show();
