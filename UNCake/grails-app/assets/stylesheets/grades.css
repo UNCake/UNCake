@@ -1,0 +1,65 @@
+/*#grades-body{
+    background: url('../images/home/fotoUN_5.jpg') repeat repeat;
+    background-size: 100%;
+}
+#information-panel-n-logo{
+    background-color: transparent;
+    width: 40%;
+}
+#information-panel-logo{
+    background-color: transparent;
+    width: 30%;
+}*/
+/* TODO */
+#academicRecord{
+    padding-top: 20px;
+    padding-left: 20px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: solid 1px #a0a0a0;
+}
+/* TODO */
+#saved_container{
+    display: none;
+}
+#saved-msj{
+    text-align: left;
+    display: inline-block;
+}
+#new-subjects{
+    align-content: center;
+    text-align: center;
+}
+#text-credits{
+    line-height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+}
+#input-credits, #input-grade, #text-average{
+    width: 200px;
+    display: inline-block;
+}
+#text-grade, #check-grade{
+    line-height: 30px;
+    display: inline-block;
+}
+#btn-add{
+    height: 45px;
+    width: 50px;
+    display: inline-block;
+}
+.div-center{
+    text-align: center;
+}
+.div-right{
+    text-align: right;
+}
+#text-expected-avg{
+    line-height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+}
+#display-block{
+    display: inline-block;
+}

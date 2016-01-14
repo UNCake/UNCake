@@ -16,3 +16,9 @@
     padding:15px;
     text-align:center;
 }
+.dialog{
+    display: none;
+}
+.dialog-body{
+    float:left; margin:0 7px 20px 0;
+}
