@@ -20,7 +20,7 @@ class GradesController {
         studyPlan.freeChoiceCredits = studyPlan.freeChoiceCredits == null ? Integer.parseInt( academicRecord.find( requiredPattern ).split('\\t')[3] ) : studyPlan.freeChoiceCredits
 
         //render getCoursesToSave( getPeriods( academicRecord ), getPeriodNames( academicRecord ) ).size()
-        render getPAPA( getPeriods( academicRecord ) )
+        render getPA( getPeriods( academicRecord ) )[0] + "\n\n" + getPA( getPeriods( academicRecord ) )[1] + "\n\n" + getPA( getPeriods( academicRecord ) )[2] + "\n\n" + getPA( getPeriods( academicRecord ) )[3]
     }
 
     def getPAPA( periods ){
@@ -41,6 +41,56 @@ class GradesController {
             papa[i] = sumCredits > 0 ? sumGrades / sumCredits : 0
         }
         return papa
+    }
+
+    def getPA( periods ){
+        def pa = []
+        def subjects = []
+
+        def subPerPeriod = []
+        def duplicatedSubject
+        def sumGrades = 0;
+        def sumCredits = 0;
+
+        for( int i = 0; i < periods.size(); i++ ){
+            def periodsText = String.valueOf( periods[i] )
+            while( periodsText.find( subjectPattern ) ){
+                def subject = String.valueOf( periodsText.find( subjectPattern ) )
+                subjects.add( subject )
+                periodsText = periodsText.replace( subject, "" )
+            }
+            def subjectsPA = []
+            for( int j = 0; j < subjects.size(); j++ ){
+                duplicatedSubject = false
+                def code1 = Integer.parseInt( (subjects[j].split('\t')[0])[0..(subjects[j].indexOf('-')-1)] )
+                def grade1 = Double.parseDouble( subjects[j].split('\t')[9] )
+                for( int k = 0; k < subjects.size(); k++){
+                    if( j != k ){
+                        def code2 = Integer.parseInt( (subjects[k].split('\t')[0])[0..(subjects[k].indexOf('-')-1)] )
+                        if( code1 == code2 ) {
+                            duplicatedSubject = true
+                            def grade2 = Double.parseDouble( subjects[k].split('\t')[9] )
+                            if( grade2 >= grade1 ) {
+                                if( !subjectsPA.contains( subjects[k] ) )
+                                    subjectsPA.add(subjects[k])
+                                if( subjectsPA.contains( subjects[j] ) )
+                                    subjectsPA.remove( subjects[j] )
+                            }
+                            else {
+                                if( !subjectsPA.contains( subjects[j] ) )
+                                    subjectsPA.add(subjects[j])
+                                if( subjectsPA.contains( subjects[k] ) )
+                                    subjectsPA.remove( subjects[k] )
+                            }
+                        }
+                    }
+                }
+                if(!duplicatedSubject)
+                    subjectsPA.add( subjects[j] )
+            }
+            subPerPeriod.add( subjectsPA )
+        }
+        return subPerPeriod
     }
 
     def getPeriods( academicRecord ){
