@@ -54,15 +54,14 @@
                         type: $("#menuTypePlan").val()
                     },
                     success: function (plans) {
-                        $('#plans').empty();
+                        $('#dropdownPlans').empty();
                         $.each(plans, function (key, value) {
 
-                            $('#plans')
-                                    .append($('<option>', {value: value})
-                                            .text(value));
+                            $('#dropdownPlans')
+                                    .append($('<li>', {value: value})
+                                            .html('<a>'+value +'</a>'));
                         });
-                        $("#plans").material_select();
-                        $('.caret').html('');
+                        updateDropdown();
                     },
 
                     error: function (request, status, error) {
@@ -70,6 +69,31 @@
                     }
                 });
             }
+
+            var updateDropdown= function(){
+                $('.dropdown-button').dropdown({
+                        inDuration: 300,
+                        outDuration: 225,
+                        gutter: 0,
+                        belowOrigin: true,
+                        alignment: 'left'
+                    }
+            )}
+
+            $('#dropdownPlans').on('click', 'li',function () {
+                $('#plans').val($(this).text());
+                $("#listCourses").empty();
+                updateCourses();
+            });
+
+            $('#plans').keyup(function () {
+                var plan = $(this).val().toLowerCase();
+                $('#dropdownPlans li').each(function () {
+                    var text = $(this).text().toLowerCase();
+                    (text.indexOf(plan) >= 0) ? $(this).show() : $(this).hide();
+                });
+            });
+
 
             $("#loc").change(function () {
                 updatePlans();
@@ -194,12 +218,6 @@
                 $('.caret').html('');
             }
 
-            $("#plans").change(function () {
-                $("#listCourses").empty();
-                updateCourses();
-            });
-
-
             $("#menuType").change(function () {
                 if ($("#menuType").val() == "") {
                     $('#listCourses li').show();
@@ -241,7 +259,7 @@
                 $("#scheduleTable td").each(function () {
                     if ($(this).html().indexOf(code) >= 0) {
                         $(this).html("")
-                        $(this).attr("title","")
+                        $(this).attr("title", "")
                         $(this).css("background-color", "#eee")
                     }
                 });
@@ -258,7 +276,7 @@
                 $("#scheduleTable td").each(function () {
                     if ($(this).html().indexOf(code) >= 0) {
                         $(this).html("")
-                        $(this).attr("title","")
+                        $(this).attr("title", "")
                         $(this).css("background-color", "#eee")
                     }
                 });
@@ -297,7 +315,7 @@
                         if (ts.startHour > 0) {
                             for (var s = ts.startHour; s < ts.endHour; s++) {
                                 $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code + '-' + gr["code"]);
-                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).attr("title", name +'\n'+ gr["teacher"]);
+                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).attr("title", name + '\n' + gr["teacher"]);
                                 $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
                                         color);
                             }
@@ -322,11 +340,11 @@
                                 $("#modalSave").closeModal();
 
                                 if (r != "") {
-                                    Materialize.toast("Horario "+$("#nameSc").val()+" guardardo.", 4000)
-                                }else{
+                                    Materialize.toast("Horario " + $("#nameSc").val() + " guardardo.", 4000)
+                                } else {
                                     Materialize.toast("No se puede guardar el horario.", 4000)
                                 }
-                            },error: function(){
+                            }, error: function () {
                                 Materialize.toast("No se puede guardar el horario.", 4000)
                             }
                         });
@@ -469,10 +487,9 @@
 
 
         <div class="input-field">
-            <select id="plans">
-                <option value="" disabled selected>Selecciona una sede</option>
-            </select>
-            <label for="plans">Planes</label>
+            <input id="plans" class="dropdown-button" placeholder="Selecciona un plan" data-activates="dropdownPlans">
+            <ul id="dropdownPlans" class="dropdown-content"></ul>
+            <label class="active" for="plans">Planes</label>
         </div>
 
         <div class="input-field">
@@ -540,7 +557,8 @@
         <g:if test="${session.user != null}">
             <div>
                 <!-- Modal Trigger -->
-                <a id="showSaveSchedule" class="waves-effect waves-light btn modal-trigger" href="#modalSave">Guardar</a>
+                <a id="showSaveSchedule" class="waves-effect waves-light btn modal-trigger"
+                   href="#modalSave">Guardar</a>
             </div>
         </g:if>
 
@@ -588,6 +606,7 @@
         <div id="modalSave" class="modal bottom-sheet">
             <div class="modal-content">
                 <h4>Guardar horario</h4>
+
                 <form id="saveSchedule">
                     <div class="form-group">
                         <label>Nombre</label>
