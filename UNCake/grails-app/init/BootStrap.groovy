@@ -5,8 +5,11 @@ import uncake.User
 class BootStrap {
     def DBconnectionService
     def init = { servletContext ->
-        if(StudyPlan.count() == 0) {
+        println "Consultando db..."
+        println "db :" + StudyPlan.count()
+        if(!StudyPlan.count()) {
             //Inicializacion de Sedes
+
             println "Iniciando db..."
             new Location(name: 'AMAZONIA', url: 'http://siaama.unal.edu.co').save()
             new Location(name: 'BOGOTA', url: 'http://sia.bogota.unal.edu.co').save()

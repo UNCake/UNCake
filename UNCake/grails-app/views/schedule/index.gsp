@@ -161,7 +161,7 @@
                         $('#accordionGroup ol li').off("click")
 
                         $('#accordionGroup ol li').click(function () {
-                            drawGroup(this.id, this.value, name)
+                            drawGroup(this.id, this.value, $(this).closest('ol').attr('id'))
                         });
                         $("#progressbarGroups").hide();
                     },
