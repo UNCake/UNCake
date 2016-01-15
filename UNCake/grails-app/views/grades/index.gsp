@@ -123,25 +123,36 @@
                     </g:if><br/><br/>
                 </div>
 
-                <div class="row" id="information_container" style="display: none;" >
-                    <br/>
-                    <h5 id="titleRecord"></h5>
-                    <p id="PAPAMessage" style="text-align: left;"></p>
-
-                    <div style="background-color: white; text-align: center; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                        <div id="papa_chart" style="width: 900px; height: 500px; display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;"></div>
-                    </div><br/>
-
-                    <div class="large-12 columns" style="padding-right: 80px;">
-                        <div id="percentage_chart" style="width: 450px; height: 350px; float: left;  padding-left: 80px;"></div>
-                        <div id="components_chart" style="width: 450px; height: 350px; float: right;"></div>
-                    </div><br/>
-
-                    <div class="large-12 columns div-center">
-                        <br/>
-                        <div id="record_table" style="width: 1000px; display: inline-block;"></div><br/><br/>
+                <div id="information_container" style="/*display: none;*/" >
+                    <div class="col s12 transparent">
+                        <div class="card col s12 blue-grey darken-1 z-depth-3">
+                            <div class="card-content white-text">
+                                <span class="card-title" id="title-record">Información</span>
+                                <p id="papa-message">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
+                            </div>
+                        </div>
                     </div>
 
+                    <div class="col s12 transparent">
+                        <div class="card col s12 white z-depth-3">
+                            <div class="input-field col s12 transparent" style="text-align: center; padding: 20px;">
+                                <div class="col s12" id="papa-chart" style="width: 100%; height: 500px; padding: 3%;"></div> <!-- display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;-->
+                            </div><br/>
+
+                            <div class="col s12 transparent" style="padding-right: 80px;">
+                                <div id="percentage_chart" style="width: 450px; height: 350px; float: left;  padding-left: 80px;"></div>
+                                <div id="components_chart" style="width: 450px; height: 350px; float: right;"></div>
+                            </div><br/>
+
+                            <div class="col s12 transparent div-center">
+                                <br/>
+                                <div id="record_table" style="width: 1000px; display: inline-block;"></div><br/><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 transparent" style="display: none;" >
                     <g:if test="${session.user != null}">
                         <g:if test="${uncake.User.findById( ( (User)session.user ).id ).academicRecord.size() > 0}">
                             <g:javascript>
@@ -195,7 +206,18 @@
     <asset:javascript src="jquery-ui/jquery-ui.js"/>
     <asset:javascript src="materialize/js/materialize.js"/>
     <g:javascript>
+        google.load("visualization", "1.1", {packages:["bar", "corechart", "imagebarchart", "table"]});
+
+        const PAPA = 'PAPA', PA = 'PA', PERIOD_NAMES = 'period_names', SUBJECTS = 'subjects', ADVANCE_COMP = 'advance_comp', ADVANCE = 'advance';
+
+        var dataCalculate = {};
+        var dataVisible = false;
+
         $(function(){
+            $(window).resize(function(){
+                if( dataVisible )
+                    drawPAPA( dataCalculate[PAPA], dataCalculate[PA], dataCalculate[PERIOD_NAMES] );
+            });
             $( "#calculate-papa" ).click( function() {
                 var academicRecord = removeAccent( $( "#academic-record" ).val() );
                 if( academicRecord.length > 0 ){
@@ -204,14 +226,20 @@
                         url: "${ createLink( action: 'calculateAcademicRecord') }",
                         data: {academicRecord: academicRecord},
                         success: function( result ){
-                            alert(result);
-                            /*$("#information_container").show();
+                            $("#information_container").show();
+                            dataCalculate = splitDataCalculate( result );
+                            /*alert(dataCalculate[PAPA].length);
+                            alert(dataCalculate[PA].length);
+                            alert(dataCalculate[PERIOD_NAMES].length);*/
+                            drawPAPA( dataCalculate[PAPA], dataCalculate[PA], dataCalculate[PERIOD_NAMES] );
+                            dataVisible = true;
+                            /*
                             input = String(input).substring( 1, String(input).length );
                             var averagesToDraw = input.split(']')[0].trim().substring(1).replace(/\[/g,"");
                             var advanceToDraw = input.split(']')[1].trim().substring(1).replace(/\[/g,"");
                             var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
                             var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
-                            drawPAPA( averagesToDraw.split(',') );
+
                             drawPercentage( parseFloat(advanceToDraw) );
                             drawComponents( advanceCmpToDraw.split(',') );
                             drawTable( subjectsToDraw.split(',') );
@@ -224,6 +252,20 @@
                 }
             });
         });
+
+        function splitDataCalculate( data ){
+            var result = {};
+            data = data.substring( 1 , data.length - 1 );  //To remove brackets
+            var arrayData = data.split(", '&&&',");
+            result[ PAPA ] = arrayData[0].split(',');
+            result[ PA ] = arrayData[1].split(',');
+            result[ PERIOD_NAMES ] = arrayData[2].split(',');
+            result[ SUBJECTS ] = arrayData[3].split(',');
+            result[ ADVANCE_COMP ] = arrayData[4].split(',');
+            result[ ADVANCE ] = arrayData[5].split(',');
+            return result;
+        }
+
         function removeAccent( input ){
             input = input.replace(/á/g,"a");
             input = input.replace(/é/g,"e");
@@ -240,6 +282,64 @@
             input = input.replace(/Ñ/g,"N");
             input = input.replace(/ñ/g,"n");
             return input;
+        }
+
+        function roundAverage( avg ){
+            if( avg * 10 - Math.floor( avg * 10 ) < 0.5 )
+                return Math.floor( avg * 10 ) / 10;
+            return Math.ceil( avg * 10 ) / 10;
+        }
+
+
+        function drawPAPA( papa, pa, periodNames ) {
+            var data = new Array( papa.length + 1 );
+            var max = 0;
+            var min = 5;
+            data[0] = new Array(5);
+            data[0][0] = 'Semestre';
+            data[0][1] = 'PAPA';
+            data[0][2] = { role: 'style' };
+            data[0][3] = 'PA';
+            data[0][4] = { role: 'style' };
+            for( i = 0; i < papa.length; i++ ) {
+                papa[i] = roundAverage( papa[i] );
+                pa[i] = roundAverage( pa[i] );
+                max = papa[i] > max ? papa[i] : max;
+                min = papa[i] < min ? papa[i] : min;
+                max = pa[i] > max ? pa[i] : max;
+                min = pa[i] < min ? pa[i] : min;
+
+                data[i + 1] = new Array(5);
+            }
+            max = max < 4.9 ? max + 0.11 : 5;
+            min = min > 0.1 ? min - 0.1 : 0;
+            for (var i = 0; i < papa.length; i++){
+                data[i + 1][0] = periodNames[i].replace(/'/g, "");
+                data[i + 1][1] = papa[i];
+                data[i + 1][2] = 'springGreen';
+                data[i + 1][3] = pa[i];
+                data[i + 1][4] = 'dodgerBlue';
+            }
+            var data = new google.visualization.arrayToDataTable( data );
+            var options = {
+                title: 'PAPA y PA',
+                legend: { position: 'none' },
+                chart: { },
+                axes: {
+                    x: {
+                        0: { side: 'bottom', label: 'Semestre'}
+                    }
+                },
+                vAxis: {
+                    viewWindow: {
+                        max: max,
+                        min: min
+                    },
+                },
+                bar: { groupWidth: "70%" }
+            };
+            var chart = new google.charts.Bar( document.getElementById( 'papa-chart' ) );
+            chart.draw( data, google.charts.Bar.convertOptions( options ) );
         }
     </g:javascript>
 </body>

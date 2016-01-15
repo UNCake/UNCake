@@ -154,7 +154,7 @@ class GradesController {
         def recordSoFar = academicRecord
         while( recordSoFar.find( periodPattern ) ) {
             def periodName = recordSoFar.find( periodPattern )
-            periodNames.add( periodName )
+            periodNames.add( periodName.split("\\|")[1] )
             recordSoFar = recordSoFar.substring( recordSoFar.indexOf( periodName ) ).replace( periodName, "" )
         }
         return periodNames
