@@ -32,17 +32,15 @@
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
     <style>
-
-    /* label color */
-    .input-field label{
-        color: #81d4fa;
-    }
-    .input-field .prefix{
-        color: #80deea;
-    }
-    .input-field textarea{
-        border-bottom: 1px solid #80deea;
-    }
+        .input-field label{
+            color: #81d4fa;
+        }
+        .input-field .prefix{
+            color: #80deea;
+        }
+        .input-field textarea{
+            border-bottom: 1px solid #80deea;
+        }
     </style>
 </head>
 
@@ -145,17 +143,16 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col s12 transparent">
                         <div class="card col s12 white z-depth-2">
                             <div class="input-field col s12 transparent" style="text-align: center; padding: 20px;">
                                 <div class="col s12" id="papa-chart" style="width: 100%; height: 550px; padding: 3%;"></div> <!-- display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;-->
-                            </div><br/>
+                            </div>
 
                             <div class="col s12 transparent" style="padding-right: 20px;">
                                 <div id="advance-chart" style="width: 50%; height: 400px; float: left; padding: 1%;"></div>
                                 <div id="components-chart" style="width: 50%; height: 400px; float: right; padding: 1%;"></div>
-                            </div><br/>
+                            </div>
 
                             <div class="col s12 transparent div-center">
                                 <div id="record-table" style="width: 100%; display: inline-block;"></div><br/><br/>
@@ -219,19 +216,20 @@
     <asset:javascript src="materialize/js/materialize.js"/>
     <g:javascript>
         google.load("visualization", "1.1", {packages:["bar", "corechart", "imagebarchart", "table"]});
+        const PAPA = 'PAPA', PA = 'PA', PERIOD_NAMES = 'period_names', SUBJECTS = 'subjects', ADVANCE_COMP = 'advance_comp', ADVANCE = 'advance', PLAN = 'plan';
 
-        const PAPA = 'PAPA', PA = 'PA', PERIOD_NAMES = 'period_names', SUBJECTS = 'subjects', ADVANCE_COMP = 'advance_comp', ADVANCE = 'advance';
-
+        var textObtained = "";
         var dataCalculate = {};
         var dataVisible = false;
 
         $(function(){
             $(window).resize(function(){
-                if( dataVisible )
+                if( dataVisible ){
                     drawPAPA( dataCalculate[PAPA], dataCalculate[PA], dataCalculate[PERIOD_NAMES] );
                     drawPercentage( roundAverage( dataCalculate[ADVANCE] ) );
                     drawComponents( dataCalculate[ADVANCE_COMP] );
                     drawTable( dataCalculate[SUBJECTS] );
+                }
             });
             $( "#calculate-papa" ).click( function() {
                 var academicRecord = removeAccent( $( "#academic-record" ).val() );
@@ -243,6 +241,8 @@
                         success: function( result ){
                             $("#information_container").show();
                             dataCalculate = splitDataCalculate( result );
+                            textObtained = result;
+                            showPlan( dataCalculate[PLAN] );
                             drawPAPA( dataCalculate[PAPA], dataCalculate[PA], dataCalculate[PERIOD_NAMES] );
                             drawPercentage( roundAverage( dataCalculate[ADVANCE] ) );
                             drawComponents( dataCalculate[ADVANCE_COMP] );
@@ -266,8 +266,14 @@
                     Materialize.toast("Ingresa tu historia académica", 4000, "light-blue lighten-3 z-depth-2");
                 }
             });
-        });
 
+            function showPlan( plan ){
+                plan = String( plan ).replace(/'/g, "");
+                $("#title-record").text( String( plan ).split('\|')[1] );
+                $("#papa-message").text( "PAPA actual: " + (dataCalculate[PAPA] )[ dataCalculate[PAPA].length - 1 ] );
+            }
+
+        });
         function splitDataCalculate( data ){
             var result = {};
             data = data.substring( 1 , data.length - 1 );  //To remove brackets
@@ -278,6 +284,7 @@
             result[ SUBJECTS ] = arrayData[3].split(',');
             result[ ADVANCE_COMP ] = arrayData[4].split(',');
             result[ ADVANCE ] = arrayData[5].split(',');
+            result[ PLAN ] = arrayData[6].split(',');
             return result;
         }
 
@@ -410,23 +417,27 @@
             for (var i = 0; i < subjects.length; i++) {
                 var subject = subjects[i].replace(/'/g, "");
                 orderedSubjects[i] = new Array(4);
-                orderedSubjects[i][0] = parseFloat( subject.split('\\t')[9] ) >= 3;
+                orderedSubjects[i][0] = { v : parseFloat( subject.split('\\t')[9] ), f: '■' };
                 orderedSubjects[i][1] = subject.split('\\t')[1];
                 orderedSubjects[i][2] = parseInt( subject.split('\\t')[6] );
                 orderedSubjects[i][3] = parseFloat( subject.split('\\t')[9] );
             }
             var dataTable = new google.visualization.DataTable();
-            dataTable.addColumn( 'boolean', 'Aprobada', {style: 'font-style:bold; font-size:36px; color: #f00;'} );
-            dataTable.addColumn( 'string', 'Materia', {style: 'font-style:bold; font-size:36px;'} );
-            dataTable.addColumn( 'number', 'Créditos', {style: 'font-style:bold; font-size:36px;'} );
-            dataTable.addColumn( 'number', 'Nota', {style: 'font-style:bold; font-size:36px;'} );
+            dataTable.addColumn( 'number', '' ); //{style: 'font-style:bold; font-size:36px; color: #f00; text-align: center;'}
+            dataTable.addColumn( 'string', 'Materia' );
+            dataTable.addColumn( 'number', 'Créditos' );
+            dataTable.addColumn( 'number', 'Nota' );
             for (var i = 0; i < orderedSubjects.length; i++) {
                 dataTable.addRows([
                     [ orderedSubjects[i][0], orderedSubjects[i][1], orderedSubjects[i][2], orderedSubjects[i][3] ]
                 ]);
             }
             var table = new google.visualization.Table(document.getElementById('record-table'));
-            table.draw( dataTable, {showRowNumber: true, width: '100%', height: '100%'} );
+            var formatter = new google.visualization.ColorFormat();
+            formatter.addRange(3.0, 5.1, 'springGreen');
+            formatter.addRange(0.0, 3.0, '#ff5252');
+            formatter.format( dataTable, 0 );
+            table.draw( dataTable, {allowHtml: true, showRowNumber: true, width: '100%', height: '100%'} );
         }
     </g:javascript>
 </body>

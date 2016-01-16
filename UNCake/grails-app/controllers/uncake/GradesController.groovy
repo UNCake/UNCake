@@ -22,10 +22,13 @@ class GradesController {
     *   4. subjects
     *   5. Advance components
     *   6. Advance
+    *   7. Plan
     */
+
     def calculateAcademicRecord(){
         def academicRecord = String.valueOf( params.academicRecord )
         def codeStudyPlan = Integer.parseInt( String.valueOf( academicRecord.find( planPattern ) ).split('\\|')[0].trim() )
+        def nameStudyPlan = String.valueOf( academicRecord.find( planPattern ) ).trim()
         def studyPlan = uncake.StudyPlan.findByCode( codeStudyPlan )
         studyPlan.fundamentalCredits = studyPlan.fundamentalCredits == null ? Integer.parseInt( academicRecord.find( requiredPattern ).split('\\t')[1] ) : studyPlan.fundamentalCredits
         studyPlan.disciplinaryCredits = studyPlan.disciplinaryCredits == null ? Integer.parseInt( academicRecord.find( requiredPattern ).split('\\t')[2] ) : studyPlan.disciplinaryCredits
@@ -35,7 +38,7 @@ class GradesController {
         def advanceComponents = getAdvanceComponents( academicRecord )
 
         def data = getPAPA( periods ) + "&&&" + getPA( periods ) + "&&&" + getPeriodNames( academicRecord ) + "&&&"
-        data += getSubjects( periods ) + "&&&" + advanceComponents + "&&&" + getAdvance( advanceComponents )
+        data += getSubjects( periods ) + "&&&" + advanceComponents + "&&&" + getAdvance( advanceComponents ) + "&&&" + nameStudyPlan
         render data
     }
 
@@ -193,5 +196,6 @@ class GradesController {
         }
         return coursesToSave
     }
+
 }
 
