@@ -59,7 +59,7 @@
 
                             $('#dropdownPlans')
                                     .append($('<li>', {value: value})
-                                            .html('<a>'+value +'</a>'));
+                                            .html('<a>' + value + '</a>'));
                         });
                         updateDropdown();
                     },
@@ -70,17 +70,18 @@
                 });
             }
 
-            var updateDropdown= function(){
+            var updateDropdown = function () {
                 $('.dropdown-button').dropdown({
-                        inDuration: 300,
-                        outDuration: 225,
-                        gutter: 0,
-                        belowOrigin: true,
-                        alignment: 'left'
-                    }
-            )}
+                            inDuration: 300,
+                            outDuration: 225,
+                            gutter: 0,
+                            belowOrigin: true,
+                            alignment: 'left'
+                        }
+                )
+            }
 
-            $('#dropdownPlans').on('click', 'li',function () {
+            $('#dropdownPlans').on('click', 'li', function () {
                 $('#plans').val($(this).text());
                 $("#listCourses").empty();
                 updateCourses();
@@ -244,8 +245,16 @@
                         (text.indexOf(course) >= 0) ? $(this).show() : $(this).hide();
                     });
                 }
-                ;
             });
+
+            var clearSlot = function (slot) {
+                $(slot).html("")
+                $(slot).val("")
+                $(slot).css("background-color", "#eee")
+                $(slot).css("border", "1px solid #C0C0C0")
+                $(slot).attr("rowspan", 1)
+                $(slot).show()
+            }
 
 
             $('#accordionGroup').on('click', 'a', function () {
@@ -257,10 +266,8 @@
                 delete schedule[name];
                 delete groups[name];
                 $("#scheduleTable td").each(function () {
-                    if ($(this).html().indexOf(code) >= 0) {
-                        $(this).html("")
-                        $(this).attr("title", "")
-                        $(this).css("background-color", "#eee")
+                    if ($(this).val().indexOf(code) >= 0) {
+                        clearSlot(this);
                     }
                 });
 
@@ -274,22 +281,21 @@
                 var gr = groups[name][id]
 
                 $("#scheduleTable td").each(function () {
-                    if ($(this).html().indexOf(code) >= 0) {
-                        $(this).html("")
-                        $(this).attr("title", "")
-                        $(this).css("background-color", "#eee")
+                    if ($(this).val().indexOf(code) >= 0) {
+                        clearSlot(this);
                     }
                 });
 
-                var available = true;
+                var available = true, slot;
                 var crCourse = "";
                 for (var i in gr["timeSlots"]) {
                     var ts = gr["timeSlots"][i]
                     for (var s = ts.startHour; s < ts.endHour; s++) {
-                        if ($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim() != "") {
+                        slot = "#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s;
+                        crCourse = $(slot).val();
+
+                        if (crCourse != "") {
                             available = false;
-                            crCourse = $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim();
-                            crCourse = crCourse.substr(0, crCourse.indexOf("-"));
                             $(courses).each(function (key, value) {
                                 if (value["code"] == crCourse) {
                                     crCourse = value["name"];
@@ -313,11 +319,19 @@
                     for (var i in gr["timeSlots"]) {
                         var ts = gr["timeSlots"][i]
                         if (ts.startHour > 0) {
-                            for (var s = ts.startHour; s < ts.endHour; s++) {
-                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code + '-' + gr["code"]);
-                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).attr("title", name + '\n' + gr["teacher"]);
-                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
-                                        color);
+                            slot = "#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * ts.startHour;
+                            name = (name.length > 15) ? name.substr(0, 15) + '...' : name;
+                            $(slot).html(name + "<br> Gr." + gr["code"]);
+                            $(slot).val(code);
+                            $(slot).css("background-color", color);
+                            $(slot).css("border", "none");
+                            $(slot).css("text-align", "center");
+                            $(slot).attr("rowspan", ts.endHour - ts.startHour);
+
+                            for (var s = ts.startHour + 1; s < ts.endHour; s++) {
+                                slot = "#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s;
+                                $(slot).val(code);
+                                $(slot).hide();
                             }
 
                         }
@@ -535,23 +549,28 @@
     </div>
 
     <div class="col-sm-6">
-        <div class="table-responsive" id="scheduleDiv">
-            <table id="scheduleTable">
-                <div>
+        <canvas >
+            <div class="responsive-table" id="scheduleDiv">
+                <table id="scheduleTable">
+                    <thead>
                     <tr>
                         <th>H</th>
-                        <th>Lunes</th>
-                        <th>Martes</th>
-                        <th>Miercoles</th>
-                        <th>Jueves</th>
-                        <th>Viernes</th>
-                        <th>Sabado</th>
-                        <th>Domingo</th>
+                        <th>Lu.</th>
+                        <th>Ma.</th>
+                        <th>Mi.</th>
+                        <th>Ju.</th>
+                        <th>Vi.</th>
+                        <th>Sa.</th>
+                        <th>Do.</th>
                     </tr>
-                </div>
-            </table>
+                    </thead>
+                    <tbody>
 
-        </div>
+                    </tbody>
+                </table>
+
+            </div>
+        </canvas>
 
 
         <g:if test="${session.user != null}">

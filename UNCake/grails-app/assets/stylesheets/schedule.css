@@ -1,12 +1,14 @@
 @media print {
-    body {-webkit-print-color-adjust: exact;}
+    body {
+        -webkit-print-color-adjust: exact;
+    }
 }
 
 body {
     padding-left: 5px;
     padding-right: 5px;
     background-color: #fafafa;
-    font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #progressbarCourses {
@@ -22,12 +24,12 @@ progress {
     display: block;
 }
 
-.selectableItem li:hover{
+.selectableItem li:hover {
     background-color: #00E676;
     cursor: pointer;
 }
 
-.selectableItem li:active{
+.selectableItem li:active {
     background-color: whitesmoke;
 }
 
@@ -43,7 +45,7 @@ progress {
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    cursor:  pointer;
+    cursor: pointer;
 }
 
 .selectableItem li {
@@ -52,22 +54,20 @@ progress {
     border-radius: 2px;
 }
 
-
-
 #accordionGroup {
     max-height: 80%;
     height: 100%;
     overflow-y: auto;
-    cursor:  pointer;
+    cursor: pointer;
 }
 
-#accordionGroup ol{
+#accordionGroup ol {
     max-height: 50%;
     height: 100%;
     overflow-y: auto;
 }
 
-#accordionGroup li{
+#accordionGroup li {
     overflow-x: hidden;
 }
 
@@ -75,41 +75,34 @@ progress {
     float: left;
 }
 
-#scheduleDiv{
+#scheduleDiv {
     background-color: #eee;
 }
-#showSaveSchedule{
+
+#showSaveSchedule {
     float: right;
 }
 
-th,td
-{
+#scheduleTable {
+    table-layout: fixed;
+}
+
+th, td {
     font-size: 1em;
     margin: 0;
-    text-align: center;
     border-collapse: collapse;
-    border:1px dashed #C0C0C0;
-    padding:5px;
-    background:#F0F0F0;
+    border: 1px solid #C0C0C0;
+    background: #F0F0F0;
 }
 
-td
-{
-    padding: 5px 10px;
+td {
     width: 90px;
-    word-wrap:break-word;
+    font-size: 0.7rem;
+    word-wrap: break-word;
 }
 
-th
-{
+th {
     background: #666;
     color: white;
-    padding: 5px 10px;
 }
 
-td:hover
-{
-    cursor: pointer;
-    background: #666;
-    color: #f8da4e;
-}
