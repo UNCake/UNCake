@@ -31,6 +31,19 @@
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+    <style>
+
+    /* label color */
+    .input-field label{
+        color: #81d4fa;
+    }
+    .input-field .prefix{
+        color: #80deea;
+    }
+    .input-field textarea{
+        border-bottom: 1px solid #80deea;
+    }
+    </style>
 </head>
 
 <body id="grades-body" class="blue-grey lighten-5">
@@ -81,8 +94,8 @@
         <div class="row transparent">
             <div class="col s10 offset-s1">
                 <br/>
-                <div class="col s6 transparent">
-                    <div class="card blue-grey darken-1 z-depth-3">
+                <div class="col s12 transparent">
+                    <div class="card indigo lighten-2 z-depth-2">
                         <div class="card-content white-text">
                             <span class="card-title">Información</span>
                             <p>Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
@@ -91,15 +104,15 @@
                 </div>
 
                 <div class="col s12 transparent">
-                    <div class="card white z-depth-3">
+                    <div class="card white z-depth-2">
                         <br/>
-                        <div id="prueba" class="input-field col s12 transparent">
+                        <div id="prueba" class="input-field col s12">
                             <i class="material-icons prefix">library_books</i>
-                            <textarea class="materialize-textarea transparent" id="academic-record" style="margin-top: 20px; max-height: 20em; overflow-y: auto;"></textarea>
-                            <label for="academic-record" class="transparent">Historia académica</label>
+                            <textarea class="materialize-textarea" id="academic-record"></textarea>
+                            <label for="academic-record">Historia académica</label>
                         </div><div><br/><br/><br/><br/><br/><br/><br/></div>
                         <div style="text-align: center">
-                            <a class="waves-effect waves-light btn" id="calculate-papa"> Calcular </a><br/><br/><br/>
+                            <a class="waves-effect waves-light btn light-blue lighten-3" id="calculate-papa"> Calcular </a><br/><br/><br/>
                         </div>
                     </div>
                 </div><br/>
@@ -125,7 +138,7 @@
 
                 <div id="information_container" style="/*display: none;*/" >
                     <div class="col s12 transparent">
-                        <div class="card col s12 blue-grey darken-1 z-depth-3">
+                        <div class="card col s12 indigo lighten-2 z-depth-2">
                             <div class="card-content white-text">
                                 <span class="card-title" id="title-record">Información</span>
                                 <p id="papa-message">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
@@ -134,19 +147,18 @@
                     </div>
 
                     <div class="col s12 transparent">
-                        <div class="card col s12 white z-depth-3">
+                        <div class="card col s12 white z-depth-2">
                             <div class="input-field col s12 transparent" style="text-align: center; padding: 20px;">
-                                <div class="col s12" id="papa-chart" style="width: 100%; height: 500px; padding: 3%;"></div> <!-- display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;-->
+                                <div class="col s12" id="papa-chart" style="width: 100%; height: 550px; padding: 3%;"></div> <!-- display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;-->
                             </div><br/>
 
-                            <div class="col s12 transparent" style="padding-right: 80px;">
-                                <div id="percentage_chart" style="width: 450px; height: 350px; float: left;  padding-left: 80px;"></div>
-                                <div id="components_chart" style="width: 450px; height: 350px; float: right;"></div>
+                            <div class="col s12 transparent" style="padding-right: 20px;">
+                                <div id="advance-chart" style="width: 50%; height: 400px; float: left; padding: 1%;"></div>
+                                <div id="components-chart" style="width: 50%; height: 400px; float: right; padding: 1%;"></div>
                             </div><br/>
 
                             <div class="col s12 transparent div-center">
-                                <br/>
-                                <div id="record_table" style="width: 1000px; display: inline-block;"></div><br/><br/>
+                                <div id="record-table" style="width: 100%; display: inline-block;"></div><br/><br/>
                             </div>
                         </div>
                     </div>
@@ -217,6 +229,9 @@
             $(window).resize(function(){
                 if( dataVisible )
                     drawPAPA( dataCalculate[PAPA], dataCalculate[PA], dataCalculate[PERIOD_NAMES] );
+                    drawPercentage( roundAverage( dataCalculate[ADVANCE] ) );
+                    drawComponents( dataCalculate[ADVANCE_COMP] );
+                    drawTable( dataCalculate[SUBJECTS] );
             });
             $( "#calculate-papa" ).click( function() {
                 var academicRecord = removeAccent( $( "#academic-record" ).val() );
@@ -228,10 +243,10 @@
                         success: function( result ){
                             $("#information_container").show();
                             dataCalculate = splitDataCalculate( result );
-                            /*alert(dataCalculate[PAPA].length);
-                            alert(dataCalculate[PA].length);
-                            alert(dataCalculate[PERIOD_NAMES].length);*/
                             drawPAPA( dataCalculate[PAPA], dataCalculate[PA], dataCalculate[PERIOD_NAMES] );
+                            drawPercentage( roundAverage( dataCalculate[ADVANCE] ) );
+                            drawComponents( dataCalculate[ADVANCE_COMP] );
+                            drawTable( dataCalculate[SUBJECTS] );
                             dataVisible = true;
                             /*
                             input = String(input).substring( 1, String(input).length );
@@ -248,7 +263,7 @@
                     });
                 }else{
                     $( "#prueba" ).effect( "shake", {}, 500 );
-                    Materialize.toast("Ingresa tu historia académica", 4000, "blue-grey darken-1 z-depth-3");
+                    Materialize.toast("Ingresa tu historia académica", 4000, "light-blue lighten-3 z-depth-2");
                 }
             });
         });
@@ -290,17 +305,14 @@
             return Math.ceil( avg * 10 ) / 10;
         }
 
-
         function drawPAPA( papa, pa, periodNames ) {
             var data = new Array( papa.length + 1 );
             var max = 0;
             var min = 5;
-            data[0] = new Array(5);
+            data[0] = new Array(3);
             data[0][0] = 'Semestre';
             data[0][1] = 'PAPA';
-            data[0][2] = { role: 'style' };
-            data[0][3] = 'PA';
-            data[0][4] = { role: 'style' };
+            data[0][2] = 'PA';
             for( i = 0; i < papa.length; i++ ) {
                 papa[i] = roundAverage( papa[i] );
                 pa[i] = roundAverage( pa[i] );
@@ -308,38 +320,113 @@
                 min = papa[i] < min ? papa[i] : min;
                 max = pa[i] > max ? pa[i] : max;
                 min = pa[i] < min ? pa[i] : min;
-
-                data[i + 1] = new Array(5);
+                data[i + 1] = new Array(3);
             }
             max = max < 4.9 ? max + 0.11 : 5;
             min = min > 0.1 ? min - 0.1 : 0;
             for (var i = 0; i < papa.length; i++){
                 data[i + 1][0] = periodNames[i].replace(/'/g, "");
                 data[i + 1][1] = papa[i];
-                data[i + 1][2] = 'springGreen';
-                data[i + 1][3] = pa[i];
-                data[i + 1][4] = 'dodgerBlue';
+                data[i + 1][2] = pa[i];
             }
             var data = new google.visualization.arrayToDataTable( data );
             var options = {
                 title: 'PAPA y PA',
+                titleTextStyle: {color: '#000'},
                 legend: { position: 'none' },
-                chart: { },
-                axes: {
-                    x: {
-                        0: { side: 'bottom', label: 'Semestre'}
-                    }
-                },
+                hAxis: { title: 'Semestre', titleTextStyle: { color: '#000'}  },
                 vAxis: {
                     viewWindow: {
                         max: max,
                         min: min
                     },
                 },
-                bar: { groupWidth: "70%" }
+                colors: ['springGreen', 'dodgerBlue'],
+                bar: { groupWidth: "80%" }
             };
             var chart = new google.charts.Bar( document.getElementById( 'papa-chart' ) );
             chart.draw( data, google.charts.Bar.convertOptions( options ) );
+        }
+
+        function drawPercentage( advance ) {
+            var data = new Array(3);
+            for( var i = 0; i < 3; i++ ) {
+                data[i] = new Array(2);
+            }
+            data[0][0] = 'Detalle';
+            data[0][1] = 'Porcentaje';
+            data[1][0] = 'Avance';
+            data[1][1] = advance;
+            data[2][0] = 'Pendiente';
+            data[2][1] = 100 - advance;
+
+            var data = google.visualization.arrayToDataTable( data );
+            var options = {
+                title: 'Mi avance de carrera',
+                pieHole: 0.1,
+                slices: { 0: { color: 'springGreen' }, 1: { color: 'dodgerBlue' } },
+                backgroundColor: 'transparent',
+                is3D: true,
+                pieSliceTextStyle: { color: 'black' }
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('advance-chart'));
+            chart.draw(data, options);
+        }
+
+        function drawComponents( advanceComp ) {
+            var componentTitles = ['Fundamentación','Disciplinar','Libre elección', 'Nivelación'];
+            var data = new Array(componentTitles.length + 1);
+            for( var i = 0; i < componentTitles.length + 1; i++ ){
+                data[i] = new Array(5);
+            }
+            data[0][0] = 'Componente';
+            data[0][1] = 'Aprobados';
+            data[0][2] = { role: 'style' };
+            data[0][3] = 'Pendientes';
+            data[0][4] = { role: 'style' };
+            for (var i = 0; i < componentTitles.length; i++){
+                data[i+1][0] = componentTitles[i];
+                data[i+1][1] = parseInt( advanceComp[ i * 2 + 1 ] );
+                data[i+1][2] = 'springGreen';
+                data[i+1][3] = parseInt( advanceComp[ i * 2 ] - advanceComp[ i * 2 + 1 ] );
+                data[i+1][4] = 'dodgerBlue';
+            }
+            var data = google.visualization.arrayToDataTable(data);
+
+            var options = {
+                title: 'Avance por componentes',
+                backgroundColor: 'transparent',
+                legend: { position: 'none' },
+                bar: { groupWidth: '80%' },
+                isStacked: 'percent',
+                is3D: true
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById('components-chart'));
+            chart.draw(data, options);
+        }
+
+        function drawTable( subjects ){
+            var orderedSubjects = new Array( subjects.length );
+            for (var i = 0; i < subjects.length; i++) {
+                var subject = subjects[i].replace(/'/g, "");
+                orderedSubjects[i] = new Array(4);
+                orderedSubjects[i][0] = parseFloat( subject.split('\\t')[9] ) >= 3;
+                orderedSubjects[i][1] = subject.split('\\t')[1];
+                orderedSubjects[i][2] = parseInt( subject.split('\\t')[6] );
+                orderedSubjects[i][3] = parseFloat( subject.split('\\t')[9] );
+            }
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn( 'boolean', 'Aprobada', {style: 'font-style:bold; font-size:36px; color: #f00;'} );
+            dataTable.addColumn( 'string', 'Materia', {style: 'font-style:bold; font-size:36px;'} );
+            dataTable.addColumn( 'number', 'Créditos', {style: 'font-style:bold; font-size:36px;'} );
+            dataTable.addColumn( 'number', 'Nota', {style: 'font-style:bold; font-size:36px;'} );
+            for (var i = 0; i < orderedSubjects.length; i++) {
+                dataTable.addRows([
+                    [ orderedSubjects[i][0], orderedSubjects[i][1], orderedSubjects[i][2], orderedSubjects[i][3] ]
+                ]);
+            }
+            var table = new google.visualization.Table(document.getElementById('record-table'));
+            table.draw( dataTable, {showRowNumber: true, width: '100%', height: '100%'} );
         }
     </g:javascript>
 </body>
