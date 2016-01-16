@@ -92,7 +92,7 @@ class ProgressController {
         }
         for( int j = 0; j < subjectsPA.size(); j++ ){
             if( ( (uncake.Course)subjectsPA[j] ).grade > 3  ){
-                if( ( (uncake.Course)subjectsPA[j] ).typology.equals("Fundamentación") )
+                if( ( (uncake.Course)subjectsPA[j] ).typology.equals("Fundamentaciï¿½n") )
                     creditsFundamentals += ( (uncake.Course)subjectsPA[j] ).credits
                 if( ( (uncake.Course)subjectsPA[j] ).typology.equals("Disciplinar") )
                     creditsDisciplinary += ( (uncake.Course)subjectsPA[j] ).credits
@@ -174,14 +174,14 @@ class ProgressController {
                 def grade = Double.parseDouble( subject.split('\t')[9] )
                 def typology = ""
                 if( subject.split('\t')[5] == 'B' )
-                    typology = "Fundamentación"
+                    typology = "Fundamentaciï¿½n"
                 if( subject.split('\t')[5] == 'C' )
                     typology = "Disciplinar"
                 if( subject.split('\t')[5] == 'L' )
                     typology = "Electiva"
 
                 def newCourse = new uncake.Course( code: code, name: name, typology: typology, credits: credits, grade: grade, semester: String.valueOf( periodNames[i]), semesterNumber: i + 1 )
-                newCourse.save(flush: true)
+                newCourse.save( )
                 coursesToSave.add( newCourse )
                 periodsText = periodsText.replace( subject, "" )
             }

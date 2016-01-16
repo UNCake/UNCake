@@ -59,7 +59,7 @@
 <body class="index" style="background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: no-repeat; background-size: 100% 100%;" > <!--id="page-top"-->
     <script>
         $(function () {
-            var availableTags = $.parseJSON('${userlist.encodeAsJSON()}');
+            var availableTags; /*= $.parseJSON('${userlist.encodeAsJSON()}');*/
             $("#selectedName").autocomplete({
                 source: availableTags
             });

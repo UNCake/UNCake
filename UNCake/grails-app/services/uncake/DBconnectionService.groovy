@@ -32,7 +32,7 @@ class DBconnectionService {
                             faculty = source[i]
                         } else if (i + 1 < source.size() && source[i + 1].contains('semaforo')) {
                             new StudyPlan(location: loc, faculty: faculty, code: source[i + 1].find(/[0-9]+/),
-                                    name: source[i], type: it).save(flush: true)
+                                    name: source[i], type: it).save( )
                         }
                     }
 
@@ -93,7 +93,7 @@ class DBconnectionService {
 
                 println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
                         ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")
-                sp.save(flush: true)
+                sp.save( )
 
             } catch (Exception e) {
                 println "Programa academico $sp.name de la sede $sp.location.name no disponible"
@@ -120,11 +120,11 @@ class DBconnectionService {
             if (course == null) {
                 course = new Course(name: name, code: fcode, credits: credits,
                         typology: typology, location: plan.location)
-                    course.save(flush:true)
+                    course.save()
             }
 
             def pre = new Prerequisite(course: course, code: plan.code+"-"+fcode)
-            pre.save(flush:true)
+            pre.save()
 
             return pre
         }

@@ -353,11 +353,14 @@
                             success: function (r) {
                                 $("#modalSave").closeModal();
 
-                                if (r != "") {
+                                if (r[0] == 1) {
                                     Materialize.toast("Horario " + $("#nameSc").val() + " guardardo.", 4000)
-                                } else {
+                                } else if (r[2] == 3) {
                                     Materialize.toast("No se puede guardar el horario.", 4000)
+                                } else {
+                                    Materialize.toast("El horario no puede ser vacio.", 4000)
                                 }
+
                             }, error: function () {
                                 Materialize.toast("No se puede guardar el horario.", 4000)
                             }
@@ -365,33 +368,35 @@
                         return false;
                     }
             );
-            /*
-             $("#printSchedule").button().click(
-             function () {
 
-             /*
-             html2canvas($('#scheduleTable'), {
-             onrendered: function (canvas) {
-             var img = canvas.toDataURL();
-             //window.open(img);
+            $("#printSchedule").button().click(
+                    function () {
+                        delete schedule["name"]
+                        delete schedule["image"]
+                        $.each(schedule, function (key, value) {
 
-             return false;
+                            $('#listSchedule').append($('<p>').html(key + "-" + value.teacher));
+                            /*
+                             for(var i in value["timeSlots"]){
+                             slot = value["timeSlots"][i]
+                             console.log(slot.day)
+                             console.log(slot.building)
+                             $('#scheduleDiv').append($('<p>').html( slot.day + ": " + slot.startHour+ "-" + slot.endHour
+                             + " " + (slot.building != null)? slot.classroom+"-"+slot.building: "no asignado"));
 
-             }
-             });*
-             var mywindow = window.open('', 'my div', 'height=400,width=600');
-             mywindow.document.write('<html><head><title>Mi Horario</title>');
-             mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="screen"/>');
-             mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="print"/>');
-             mywindow.document.write("<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>");
-             mywindow.document.write('</head><body>');
-             mywindow.document.write($("#scheduleDiv").html());
-             mywindow.document.write('</body></html>');
-             mywindow.onload = mywindow.print();
-             mywindow.close();
-             }
-             );
-             */
+                             }
+                             */
+                        })
+
+                        html2canvas($('#scheduleDiv'), {
+                            onrendered: function (canvas) {
+                                Canvas2Image.saveAsPNG(canvas);
+                                $("#listSchedule").html("");
+                            }
+                        })
+                    }
+            );
+
             $("#progressbarCourses").hide();
             $("#progressbarGroups").hide();
 
@@ -549,29 +554,29 @@
     </div>
 
     <div class="col-sm-6">
-        <canvas >
-            <div class="responsive-table" id="scheduleDiv">
-                <table id="scheduleTable">
-                    <thead>
-                    <tr>
-                        <th>H</th>
-                        <th>Lu.</th>
-                        <th>Ma.</th>
-                        <th>Mi.</th>
-                        <th>Ju.</th>
-                        <th>Vi.</th>
-                        <th>Sa.</th>
-                        <th>Do.</th>
-                    </tr>
-                    </thead>
-                    <tbody>
 
-                    </tbody>
-                </table>
+        <div class="responsive-table" id="scheduleDiv">
+            <table id="scheduleTable">
+                <thead>
+                <tr>
+                    <th>H</th>
+                    <th>Lu.</th>
+                    <th>Ma.</th>
+                    <th>Mi.</th>
+                    <th>Ju.</th>
+                    <th>Vi.</th>
+                    <th>Sa.</th>
+                    <th>Do.</th>
+                </tr>
+                </thead>
+                <tbody>
 
-            </div>
-        </canvas>
+                </tbody>
+            </table>
 
+            <div id="listSchedule"></div>
+
+        </div>
 
         <g:if test="${session.user != null}">
             <div>
@@ -582,7 +587,7 @@
         </g:if>
 
         <div>
-            <a class="waves-effect waves-light btn" id="printSchedule">Imprimir</a>
+            <a class="waves-effect waves-light btn" id="printSchedule">Descargar</a>
         </div>
 
     </div>
@@ -646,6 +651,7 @@
 
 </div>
 
+<asset:javascript src="canvas2image.js"/>
 <asset:javascript src="html2canvas.js"/>
 <asset:javascript src="jquery-2.1.3.js"/>
 <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
