@@ -21,8 +21,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
-
     <asset:javascript src="jquery-2.1.3.js"/>
+
     <script>
 
         $(function () {
@@ -390,10 +390,17 @@
 
                         html2canvas($('#scheduleDiv'), {
                             onrendered: function (canvas) {
-                                Canvas2Image.saveAsPNG(canvas);
+
+                                var imgData = canvas.toDataURL("image/jpeg", 1.0);
+                                var pdf = new jsPDF();
+
+                                pdf.addImage(imgData, 'JPEG', 0, 0);
+                                pdf.save("horario.pdf");
+
                                 $("#listSchedule").html("");
                             }
                         })
+
                     }
             );
 
@@ -587,7 +594,7 @@
         </g:if>
 
         <div>
-            <a class="waves-effect waves-light btn" id="printSchedule">Descargar</a>
+            <a class="waves-effect waves-light btn" id="printSchedule" download>Descargar</a>
         </div>
 
     </div>
@@ -651,10 +658,9 @@
 
 </div>
 
-<asset:javascript src="canvas2image.js"/>
 <asset:javascript src="html2canvas.js"/>
-<asset:javascript src="jquery-2.1.3.js"/>
 <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
 <asset:javascript src="materialize/js/materialize.js"/>
+<script src="https://parall.ax/parallax/js/jspdf.js"></script>
 </body>
 </html>
