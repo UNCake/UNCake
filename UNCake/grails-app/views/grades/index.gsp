@@ -33,14 +33,28 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
     <style>
         .input-field label{
-            color: #81d4fa;
+            color: #7986cb;
         }
         .input-field .prefix{
-            color: #80deea;
+            color: #7986cb;
+        }
+        .input-field .prefix.active{
+            color: #7986cb;
         }
         .input-field textarea{
-            border-bottom: 1px solid #80deea;
+            color: #779;
+            border-bottom: 1px solid #7986cb;
         }
+        .input-field textarea:focus + label{
+            color: #000;
+        }
+        /*.input-field input[type=text]:focus + label {
+            color: #000;
+        }
+        .input-field input[type=text]:focus {
+            border-bottom: 1px solid #000;
+            box-shadow: 0 1px 0 0 #000;
+        }*/
     </style>
 </head>
 
@@ -134,38 +148,80 @@
                     </g:if><br/><br/>
                 </div>
 
-                <div id="information_container" style="/*display: none;*/" >
-                    <div class="col s12 transparent">
+                <div id="information_container" style="display: none;">
+                    <div id="record-title" class="col s12 transparent">
                         <div class="card col s12 indigo lighten-2 z-depth-2">
                             <div class="card-content white-text">
-                                <span class="card-title" id="title-record">Información</span>
-                                <p id="papa-message">Selecciona la historia académica del SIA con el comando Ctrl+A, luego copiala Ctrl+C y pégala en la caja de texto que está a continuación Ctrl+V.</p>
+                                <span class="card-title" id="title-record"></span>
+                                <p id="papa-message"></p>
+                                <p id="pa-message"></p>
                             </div>
                         </div>
                     </div>
-                    <div class="col s12 transparent">
+                    <div id="record-data" class="col s12 transparent">
                         <div class="card col s12 white z-depth-2">
-                            <div class="input-field col s12 transparent" style="text-align: center; padding: 20px;">
-                                <div class="col s12" id="papa-chart" style="width: 100%; height: 550px; padding: 3%;"></div> <!-- display: inline-block; padding-top: 40px; padding-bottom: 40px; padding-right: 400px;-->
-                            </div>
+                            <ul class="collapsible" data-collapsible="expandable">
+                                <li>
+                                    <div class="collapsible-header active"><i class="material-icons">filter_drama</i>Promedio</div>
+                                    <div class="collapsible-body transparent">
+                                        <div id="papa-chart" style="width: 100%; height: 550px; padding: 20px;"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-header active"><i class="material-icons">place</i>Avance</div>
+                                    <div class="collapsible-body transparent">
+                                        <div style="width: 100%; height: 400px;">
+                                            <div id="advance-chart" style="width: 48%; height: 400px; float: left;"></div>
+                                            <div id="components-chart" style="width: 48%; height: 400px; float: right;"></div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-header active"><i class="material-icons">whatshot</i>Materias</div>
+                                    <div class="collapsible-body transparent">
+                                        <div id="record-table" style="width: 100%;"></div>
+                                    </div>
+                                </li>
 
-                            <div class="col s12 transparent" style="padding-right: 20px;">
-                                <div id="advance-chart" style="width: 50%; height: 400px; float: left; padding: 1%;"></div>
-                                <div id="components-chart" style="width: 50%; height: 400px; float: right; padding: 1%;"></div>
-                            </div>
-
-                            <div class="col s12 transparent div-center">
-                                <div id="record-table" style="width: 100%; display: inline-block;"></div><br/><br/>
-                            </div>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
-                <div class="col s12 transparent" style="display: none;" >
+                <div class="col s12 transparent" style="/*display: none;*/" >
+                    <div class="card col s12 white z-depth-2">
+                        <div id="new-subjects" class="center-align" style=" padding-bottom: 6em;">
+                            <br/>
+                            <div class="input-field col s4">
+                                <i class="material-icons prefix">schedule</i>
+                                <input placeholder="Créditos a cursar" id="input-credits" type="text" class="validate">
+                                <label for="input-credits">Créditos</label>
+                            </div>
+
+                            <div class="input-field col s2 center-align">
+                                <div class="switch">
+                                    <label>
+                                        Nota&nbsp;&nbsp;&nbsp;
+                                        <input type="checkbox">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="input-field col s4">
+                                <i class="material-icons prefix">done_all</i>
+                                <input placeholder="Nota esperada" id="input-grade" type="text" class="validate">
+                                <label for="input-grade">Nota esperada</label>
+                            </div>
+                            <div class="input-field col s2">
+                                <a class="btn-floating btn-medium waves-effect waves-light light-blue lighten-3"><i class="material-icons">add</i></a>
+                            </div>
+                        </div>
+                    </div>
+
                     <g:if test="${session.user != null}">
                         <g:if test="${uncake.User.findById( ( (User)session.user ).id ).academicRecord.size() > 0}">
                             <g:javascript>
-                                $("#data_container").hide();
                                 $("#saved_container").show();
                             </g:javascript>
                         </g:if>
@@ -174,40 +230,24 @@
                         </div><br>
                     </g:if>
 
-                    <div id="new-subjects" class="large-12 columns">
-                        <h5 id="text-credits">Créditos:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                        <input type="text" name="txtCredits" class="txtCredits" id="input-credits" placeholder="Créditos a cursar"/>
-                        <h5 id="text-grade">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nota:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                        <input type="checkbox" id="check-grade" name="checkNota" class="checkNota"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="text" name="txtNota" id="input-grade" class="txtNota" disabled="true" placeholder="Nota esperada"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="button" class="btn-add" id="1" value="+"/>
-                    </div>
-
-                    <div id="calculate" class="large-12 columns">
-                        <br>
-                        <div class="div-center">
-                            <h5 id="text-expected-avg">Promedio esperado:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                            <input type="text" class="txtAverage" id="text-average" style="" placeholder="Promedio"/>
+                    <div class="card col s12 white z-depth-2">
+                        <div id="calculate" class="col s12 columns" style=" padding-bottom: 1em;">
+                            <br>
+                            <div class="input-field col s4 offset-s2">
+                                <i class="material-icons prefix">trending_up</i>
+                                <input placeholder="PAPA que esperas obtener" id="input-average" type="text" class="validate">
+                                <label for="input-average">Promedio esperado</label>
+                            </div>
+                            <div class="input-field col s2 right-align">
+                                <a class="waves-effect waves-light btn light-blue lighten-3" id="btn-calculate-add"> Calcular </a>
+                            </div>
                         </div>
-
-                        <g:if test="${session.user == null}">
-                            <div class="div-right">
-                                <input type="button" class="btn_calculate_add" id="btn_calculate_add" value="Calcular"/>
-                            </div><br/>
-                        </g:if>
-
-                        <g:else>
-                            <div class="div-right">
-                                <input type="button" class="btn_calculate_add_logged" id="btn_calculate_add_logged" value="Calcular"/>
-                            </div><br/>
-                            <g:hiddenField name="arraySubjects" id="arraySubjects" value=""></g:hiddenField>
-                        </g:else>
-
                     </div>
-                    <div class="div-center">
-                        <br/><p id="newSubjectsMessage" class="div-center"></p><br/>
+                    <div class="div-center" style="display: none">
+                        <p id="newSubjectsMessage" class="div-center"></p>
                     </div>
                 </div>
+
             </div>
         </div>
     <div/>
@@ -239,26 +279,21 @@
                         url: "${ createLink( action: 'calculateAcademicRecord') }",
                         data: {academicRecord: academicRecord},
                         success: function( result ){
-                            $("#information_container").show();
-                            dataCalculate = splitDataCalculate( result );
-                            textObtained = result;
-                            showPlan( dataCalculate[PLAN] );
-                            drawPAPA( dataCalculate[PAPA], dataCalculate[PA], dataCalculate[PERIOD_NAMES] );
-                            drawPercentage( roundAverage( dataCalculate[ADVANCE] ) );
-                            drawComponents( dataCalculate[ADVANCE_COMP] );
-                            drawTable( dataCalculate[SUBJECTS] );
-                            dataVisible = true;
-                            /*
-                            input = String(input).substring( 1, String(input).length );
-                            var averagesToDraw = input.split(']')[0].trim().substring(1).replace(/\[/g,"");
-                            var advanceToDraw = input.split(']')[1].trim().substring(1).replace(/\[/g,"");
-                            var advanceCmpToDraw = input.split(']')[2].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
-                            var subjectsToDraw = input.split(']')[3].trim().substring(1).replace(/\[/g,"").replace(/'/g,"").replace(/\\t/g,"\t");
-
-                            drawPercentage( parseFloat(advanceToDraw) );
-                            drawComponents( advanceCmpToDraw.split(',') );
-                            drawTable( subjectsToDraw.split(',') );
-                            $("#container_save").hide();*/
+                            if( result == "false" ){
+                                $( "#prueba" ).effect( "shake", {}, 500 );
+                                Materialize.toast("Ingresa una historia académica válida", 4000, "light-blue lighten-3 z-depth-2");
+                            }
+                            else{
+                                $("#information_container").show();
+                                dataCalculate = splitDataCalculate( result );
+                                textObtained = result;
+                                showPlan( dataCalculate[PLAN] );
+                                drawPAPA( dataCalculate[PAPA], dataCalculate[PA], dataCalculate[PERIOD_NAMES] );
+                                drawPercentage( roundAverage( dataCalculate[ADVANCE] ) );
+                                drawComponents( dataCalculate[ADVANCE_COMP] );
+                                drawTable( dataCalculate[SUBJECTS] );
+                                dataVisible = true;
+                            }
                         }
                     });
                 }else{
@@ -271,6 +306,7 @@
                 plan = String( plan ).replace(/'/g, "");
                 $("#title-record").text( String( plan ).split('\|')[1] );
                 $("#papa-message").text( "PAPA actual: " + (dataCalculate[PAPA] )[ dataCalculate[PAPA].length - 1 ] );
+                $("#pa-message").text( "PA actual: " + (dataCalculate[PA] )[ dataCalculate[PA].length - 1 ] );
             }
 
         });
@@ -370,11 +406,12 @@
             var data = google.visualization.arrayToDataTable( data );
             var options = {
                 title: 'Mi avance de carrera',
+                titleTextStyle: {color: '#666'},
                 pieHole: 0.1,
                 slices: { 0: { color: 'springGreen' }, 1: { color: 'dodgerBlue' } },
                 backgroundColor: 'transparent',
                 is3D: true,
-                pieSliceTextStyle: { color: 'black' }
+                pieSliceTextStyle: { color: '#000' }
             };
             var chart = new google.visualization.PieChart(document.getElementById('advance-chart'));
             chart.draw(data, options);
@@ -402,6 +439,7 @@
 
             var options = {
                 title: 'Avance por componentes',
+                titleTextStyle: {color: '#666'},
                 backgroundColor: 'transparent',
                 legend: { position: 'none' },
                 bar: { groupWidth: '80%' },

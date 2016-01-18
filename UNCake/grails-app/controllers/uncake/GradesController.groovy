@@ -5,7 +5,7 @@ class GradesController {
     final SUBJECT_CREDITS = 6, SUBJECT_GRADE = 9, SUBJECT_NAME = 1, SUBJECT_CODE = 0, SUBJECT_TYPOLOGY = 5
     final ADVANCE_FUND = 1, ADVANCE_DISC = 2, ADVANCE_FREE = 3, ADVANCE_NIV = 5
 
-    def planPattern = "[0-9]+ \\| [A-Za-z:\\.\\- ]+"
+    def planPattern = "[0-9]+ \\| [A-Za-z:\\.\\- ]+\n"
     def subjectPattern = "[0-9][A-Z\\-0-9]*[\\t][A-Za-z:\\(\\)\\.\\- ]+[\\t][0-9]+[\\t][0-9]+[\\t][0-9]+[\\t][A-Z][\\t][0-9]+[\\t][0-9]+[\\t]+[0-9]\\.?[0-9]"
     def requiredPattern = "exigidos\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9\\-]+\\t[0-9]+"
     def approvedPattern = "aprobados\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9]+\\t[0-9\\-]+\\t[0-9]+"
@@ -27,20 +27,31 @@ class GradesController {
 
     def calculateAcademicRecord(){
         def academicRecord = String.valueOf( params.academicRecord )
-        def codeStudyPlan = Integer.parseInt( String.valueOf( academicRecord.find( planPattern ) ).split('\\|')[0].trim() )
-        def nameStudyPlan = String.valueOf( academicRecord.find( planPattern ) ).trim()
-        def studyPlan = uncake.StudyPlan.findByCode( codeStudyPlan )
-        studyPlan.fundamentalCredits = studyPlan.fundamentalCredits == null ? Integer.parseInt( academicRecord.find( requiredPattern ).split('\\t')[1] ) : studyPlan.fundamentalCredits
-        studyPlan.disciplinaryCredits = studyPlan.disciplinaryCredits == null ? Integer.parseInt( academicRecord.find( requiredPattern ).split('\\t')[2] ) : studyPlan.disciplinaryCredits
-        studyPlan.freeChoiceCredits = studyPlan.freeChoiceCredits == null ? Integer.parseInt( academicRecord.find( requiredPattern ).split('\\t')[3] ) : studyPlan.freeChoiceCredits
+        def valid = academicRecord.find( planPattern ) != null & academicRecord.find( subjectPattern ) != null & academicRecord.find( periodPattern ) != null
+        valid &= academicRecord.find( requiredPattern ) != null & academicRecord.find( approvedPattern ) != null
+        if( !valid )
+            render false
+        else {
 
-        def periods = getPeriods( academicRecord )
-        def advanceComponents = getAdvanceComponents( academicRecord )
+            def codeStudyPlan = Integer.parseInt(String.valueOf(academicRecord.find(planPattern)).split('\\|')[0].trim())
+            def nameStudyPlan = String.valueOf(academicRecord.find(planPattern)).trim()
+            def studyPlan = uncake.StudyPlan.findByCode(codeStudyPlan)
+            studyPlan.fundamentalCredits = studyPlan.fundamentalCredits == null ? Integer.parseInt(academicRecord.find(requiredPattern).split('\\t')[1]) : studyPlan.fundamentalCredits
+            studyPlan.disciplinaryCredits = studyPlan.disciplinaryCredits == null ? Integer.parseInt(academicRecord.find(requiredPattern).split('\\t')[2]) : studyPlan.disciplinaryCredits
+            studyPlan.freeChoiceCredits = studyPlan.freeChoiceCredits == null ? Integer.parseInt(academicRecord.find(requiredPattern).split('\\t')[3]) : studyPlan.freeChoiceCredits
 
-        def data = getPAPA( periods ) + "&&&" + getPA( periods ) + "&&&" + getPeriodNames( academicRecord ) + "&&&"
-        data += getSubjects( periods ) + "&&&" + advanceComponents + "&&&" + getAdvance( advanceComponents ) + "&&&" + nameStudyPlan
-        render data
+            def periods = getPeriods(academicRecord)
+            def advanceComponents = getAdvanceComponents(academicRecord)
+
+            def data = getPAPA(periods) + "&&&" + getPA(periods) + "&&&" + getPeriodNames(academicRecord) + "&&&"
+            data += getSubjects(periods) + "&&&" + advanceComponents + "&&&" + getAdvance(advanceComponents) + "&&&" + nameStudyPlan
+            render data
+        }
     }
+
+
+
+
 
     def getAdvance = { advanceComponents ->
         if( advanceComponents.size() < 6 )

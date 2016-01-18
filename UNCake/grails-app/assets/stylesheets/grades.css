@@ -24,28 +24,6 @@
     text-align: left;
     display: inline-block;
 }
-#new-subjects{
-    align-content: center;
-    text-align: center;
-}
-#text-credits{
-    line-height: 30px;
-    display: inline-block;
-    vertical-align: middle;
-}
-#input-credits, #input-grade, #text-average{
-    width: 200px;
-    display: inline-block;
-}
-#text-grade, #check-grade{
-    line-height: 30px;
-    display: inline-block;
-}
-#btn-add{
-    height: 45px;
-    width: 50px;
-    display: inline-block;
-}
 .div-center{
     text-align: center;
 }
