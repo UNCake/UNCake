@@ -48,6 +48,9 @@
         .input-field textarea:focus + label{
             color: #000;
         }
+        .collapsible-header i, .collapsible-header p{
+            color: #7986cb;
+        }
         /*.input-field input[type=text]:focus + label {
             color: #000;
         }
@@ -162,27 +165,26 @@
                         <div class="card col s12 white z-depth-2">
                             <ul class="collapsible" data-collapsible="expandable">
                                 <li>
-                                    <div class="collapsible-header active"><i class="material-icons">filter_drama</i>Promedio</div>
+                                    <div class="collapsible-header active"><i class="material-icons">equalizer</i><p>Promedio</p></div>
                                     <div class="collapsible-body transparent">
-                                        <div id="papa-chart" style="width: 100%; height: 550px; padding: 20px;"></div>
+                                        <div id="papa-chart"></div>
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="collapsible-header active"><i class="material-icons">place</i>Avance</div>
+                                    <div class="collapsible-header active"><i class="material-icons">track_changes</i><p>Avance</p></div>
                                     <div class="collapsible-body transparent">
                                         <div style="width: 100%; height: 400px;">
-                                            <div id="advance-chart" style="width: 48%; height: 400px; float: left;"></div>
-                                            <div id="components-chart" style="width: 48%; height: 400px; float: right;"></div>
+                                            <div id="advance-chart"></div>
+                                            <div id="components-chart"></div>
                                         </div>
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="collapsible-header active"><i class="material-icons">whatshot</i>Materias</div>
+                                    <div class="collapsible-header active"><i class="material-icons">list</i><p>Materias</p></div>
                                     <div class="collapsible-body transparent">
-                                        <div id="record-table" style="width: 100%;"></div>
+                                        <div id="record-table"></div>
                                     </div>
                                 </li>
-
                             </ul>
                         </div>
                     </div>
@@ -190,19 +192,19 @@
 
                 <div class="col s12 transparent" style="/*display: none;*/" >
                     <div class="card col s12 white z-depth-2">
-                        <div id="new-subjects" class="center-align" style=" padding-bottom: 6em;">
+                        <div id="new-subjects-1" class="center-align" style=" padding-bottom: 6em;">
                             <br/>
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">schedule</i>
-                                <input placeholder="Créditos a cursar" id="input-credits" type="text" class="validate">
-                                <label for="input-credits">Créditos</label>
+                                <input placeholder="Créditos a cursar" id="input-credits-1" type="text" class="validate">
+                                <label for="input-credits-1">Créditos</label>
                             </div>
 
                             <div class="input-field col s2 center-align">
                                 <div class="switch">
                                     <label>
                                         Nota&nbsp;&nbsp;&nbsp;
-                                        <input type="checkbox">
+                                        <input type="checkbox" id="check-grade-1">
                                         <span class="lever"></span>
                                     </label>
                                 </div>
@@ -210,11 +212,11 @@
 
                             <div class="input-field col s4">
                                 <i class="material-icons prefix">done_all</i>
-                                <input placeholder="Nota esperada" id="input-grade" type="text" class="validate">
-                                <label for="input-grade">Nota esperada</label>
+                                <input placeholder="Nota esperada" id="input-grade-1" type="text" class="validate">
+                                <label for="input-grade-1">Nota esperada</label>
                             </div>
                             <div class="input-field col s2">
-                                <a class="btn-floating btn-medium waves-effect waves-light light-blue lighten-3"><i class="material-icons">add</i></a>
+                                <a id="btn-add-1" class="btn-add btn-floating btn-medium waves-effect waves-light light-blue lighten-3"><i id="icon-add-1" class="material-icons">add</i></a>
                             </div>
                         </div>
                     </div>
@@ -301,7 +303,35 @@
                     Materialize.toast("Ingresa tu historia académica", 4000, "light-blue lighten-3 z-depth-2");
                 }
             });
+            $(".btn-add").each(function (){
+                $(this).bind("click",addField);
+            });
 
+            function addField(){
+                var clickID = parseInt($(this).parent('div').parent('div').attr('id').replace('new-subjects-',''));
+                var newID = (clickID + 1);
+
+                var $newClone = $('#new-subjects-'+clickID).clone(true);
+
+                $newClone.attr("id",'new-subjects-'+newID);
+
+                $newClone.children('div').eq(0).children('input').eq(0).attr('id','input-credits-'+newID);
+                $newClone.children('div').eq(0).children('label').eq(0).attr('for', 'input-credits-'+newID);
+                $newClone.children('div').eq(1).children('div').eq(0).children('label').eq(0).children('input').eq(0).attr('id','check-grade-'+newID);
+                $newClone.children('div').eq(2).children('input').eq(0).attr('id','input-grade-'+newID);
+                $newClone.children('div').eq(2).children('label').eq(0).attr('for', 'input-grade-'+newID);
+                $newClone.children('div').eq(3).children('a').eq(0).attr('id', 'btn-add-'+newID);
+                $newClone.children('div').eq(3).children('a').eq(0).children('i').eq(0).attr('id', 'icon-add-'+newID);
+                $newClone.children('div').eq(3).children('a').eq(0).children('div').eq(0).remove();
+                $newClone.insertAfter($('#new-subjects-'+clickID));
+
+                $("#icon-add-"+clickID).text('close');
+                $("#btn-add-"+ clickID).unbind("click", addField);
+                $("#btn-add-"+ clickID).bind("click", delRow);
+            }
+            function delRow() {
+                $(this).parent('div').parent('div').remove();
+            }
             function showPlan( plan ){
                 plan = String( plan ).replace(/'/g, "");
                 $("#title-record").text( String( plan ).split('\|')[1] );
