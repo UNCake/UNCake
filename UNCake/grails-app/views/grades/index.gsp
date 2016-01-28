@@ -17,13 +17,11 @@
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-    <!--<link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'foundation/jquery-ui/jquery-ui.css')}" type="text/css">-->
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'bootstrap/css/bootstrap.min.css')}" type="text/css">
+    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'bootstrap/css/bootstrap.css')}" type="text/css">
+    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'jquery-ui/jquery-ui.css')}" type="text/css" />
     <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'agency.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'dialogueStyle.css')}" type="text/css">
     <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'grades.css')}" type="text/css">
     <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'materialize/css/materialize.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'jquery-ui/jquery-ui.css')}" type="text/css" />
 
     <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -51,22 +49,18 @@
         .collapsible-header i, .collapsible-header p{
             color: #7986cb;
         }
-        /*.input-field input[type=text]:focus + label {
-            color: #000;
-        }
-        .input-field input[type=text]:focus {
-            border-bottom: 1px solid #000;
-            box-shadow: 0 1px 0 0 #000;
-        }*/
     </style>
 </head>
 
 <body id="grades-body" class="blue-grey lighten-5">
-    <div id="replace_dialog" title="¿Reemplazar el registro?" class="dialog">
-        <p><span class="ui-icon ui-icon-alert" class="dialog-body"></span>Ya tienes una historia académica guardada de esta carrera. ¿Deseas reemplazarla?</p>
-    </div>
-    <div id="ok_dialog" class="dialog">
-        <p id="ok_msg"><span class="ui-icon ui-icon-alert" class="dialog-body"></span></p>
+
+    <div id="modal-overwrite" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h4 id="modal-header">REEMPLAZAR</h4>
+            <p id="modal-content">La historia académica ingresada ya existe, ¿desea reemplazarla?</p>
+            <a id="btn-overwrite" class="modal-action modal-close waves-effect waves-light btn light-blue lighten-3">Aceptar</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="modal-action modal-close waves-effect waves-light btn light-blue lighten-3">Cancelar</a>
+        </div>
     </div>
 
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -121,7 +115,7 @@
                 <div class="col s12 transparent">
                     <div class="card white z-depth-2">
                         <br/>
-                        <div id="prueba" class="input-field col s12">
+                        <div id="input-record" class="input-field col s12">
                             <i class="material-icons prefix">library_books</i>
                             <textarea class="materialize-textarea" id="academic-record"></textarea>
                             <label for="academic-record">Historia académica</label>
@@ -132,32 +126,58 @@
                     </div>
                 </div><br/>
 
-                <div class="row" id="saved_container">
-                    <p id="saved-msj">Tienes historias académicas almacenadas ¿quieres ver una previamente guardada crear una nueva?</p>
-                    <g:if test="${session.user != null}">
-                        <g:if test="${uncake.User.findById( ((User)session.user).id ).academicRecord.size() > 0}">
-                            <g:set var="records" value="[]"/>
-                            <g:each in="${uncake.User.findById( ((User)session.user).id ).academicRecord}">
-                                <g:each in="${it.studyPlan}" var="studyPlan">
-                                    <div style="display: none;">${records.add(studyPlan.code + " | " + studyPlan.name)}</div>
-                                </g:each>
-                            </g:each>
-                            <div>
-                                <g:select id="recordSelector" name="${records}" from="${records}" noSelection="['':'-Selecciona una historia académica-']"/>
-                            </div><br/>
-                            <input type="button" id="loadRecord" name="loadRecord" value="Cargar" />
-                            <input type="button" id="newRecord" name="newRecord" value="Nueva" />
-                        </g:if>
-                    </g:if><br/><br/>
+                <div id="saved-container" class="col s12 transparent" style="display: none;">
+                    <div class="card white z-depth-2">
+                        <div class="card-content black-text">
+                            <span class="card-title">Cargar</span>
+                            <p>Tienes historias académicas almacenadas ¿quieres ver una previamente guardada crear una nueva?</p><br/>
+                            <g:if test="${session.user != null}">
+                                <g:if test="${uncake.User.findById( ((User)session.user).id ).academicRecord.size() > 0}">
+                                    <g:set var="records" value="[]"/>
+                                    <g:each in="${uncake.User.findById( ((User)session.user).id ).academicRecord}">
+                                        <g:each in="${it.studyPlan}" var="studyPlan">
+                                            <div style="display: none;">${records.add(studyPlan.code + " | " + studyPlan.name)}</div>
+                                        </g:each>
+                                    </g:each>
+                                    <div class="input-field col s8">
+                                        <select id="select-record">
+                                            <option value="" disabled selected>-Selecciona una historia académica-</option>
+                                            <g:each in="${records}">
+                                                <option value="${it}">${it}</option>
+                                            </g:each>
+                                        </select>
+                                        <label for="select-record">Historias académicas</label>
+                                    </div>
+                                    <div class="col s4 right-align">
+                                        <a class="waves-effect waves-light btn light-blue lighten-3" id="btn-load"> Cargar </a>
+                                    </div>
+                                    <br/><br/><br/><br/>
+                                </g:if>
+                            </g:if>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="information_container" style="display: none;">
                     <div id="record-title" class="col s12 transparent">
                         <div class="card col s12 indigo lighten-2 z-depth-2">
                             <div class="card-content white-text">
-                                <span class="card-title" id="title-record"></span>
-                                <p id="papa-message"></p>
-                                <p id="pa-message"></p>
+                                <div class="col s9">
+                                    <span class="card-title" id="title-record"></span>
+                                    <p id="papa-message"></p>
+                                    <p id="pa-message"></p>
+                                    <br/>
+                                </div>
+                                <g:if test="${session.user != null}">
+                                    <g:if test="${uncake.User.findById( ( (User)session.user ).id ).academicRecord.size() > 0}">
+                                        <g:javascript>
+                                            document.getElementById("saved-container").style.display = 'block';
+                                        </g:javascript>
+                                    </g:if>
+                                    <div class="col s3 center-align">
+                                        <br/><br/><a class="waves-effect waves-light btn light-blue lighten-3" id="btn-save"> Guardar </a><br/><br/><br/>
+                                    </div>
+                                </g:if>
                             </div>
                         </div>
                     </div>
@@ -188,65 +208,57 @@
                             </ul>
                         </div>
                     </div>
-                </div>
 
-                <div class="col s12 transparent" style="/*display: none;*/" >
-                    <div class="card col s12 white z-depth-2">
-                        <div id="new-subjects-1" class="center-align" style=" padding-bottom: 6em;">
-                            <br/>
-                            <div class="input-field col s4">
-                                <i class="material-icons prefix">schedule</i>
-                                <input placeholder="Créditos a cursar" id="input-credits-1" type="text" class="validate">
-                                <label for="input-credits-1">Créditos</label>
-                            </div>
+                    <div class="col s12 transparent">
+                        <div class="card col s12 white z-depth-2">
+                            <div id="new-subjects-1" class="center-align" style=" padding-bottom: 6em;">
+                                <br/>
+                                <div class="input-field col s4">
+                                    <i class="material-icons prefix">schedule</i>
+                                    <input placeholder="Créditos a cursar" id="input-credits-1" type="text" class="input-credits">
+                                    <label for="input-credits-1">Créditos</label>
+                                </div>
 
-                            <div class="input-field col s2 center-align">
-                                <div class="switch">
-                                    <label>
-                                        Nota&nbsp;&nbsp;&nbsp;
-                                        <input type="checkbox" id="check-grade-1">
-                                        <span class="lever"></span>
-                                    </label>
+                                <div class="input-field col s2 center-align">
+                                    <div class="switch">
+                                        <label>
+                                            Nota&nbsp;&nbsp;&nbsp;
+                                            <input type="checkbox" id="check-grade-1" class="check-grade">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="input-field col s4">
+                                    <i class="material-icons prefix">done_all</i>
+                                    <input placeholder="Nota esperada" id="input-grade-1" type="text" class="input-grade" disabled="disabled">
+                                    <label for="input-grade-1">Nota esperada</label>
+                                </div>
+                                <div class="input-field col s2">
+                                    <a id="btn-add-1" class="btn-add btn-floating btn-medium waves-effect waves-light light-blue lighten-3"><i id="icon-add-1" class="material-icons">add</i></a>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="input-field col s4">
-                                <i class="material-icons prefix">done_all</i>
-                                <input placeholder="Nota esperada" id="input-grade-1" type="text" class="validate">
-                                <label for="input-grade-1">Nota esperada</label>
-                            </div>
-                            <div class="input-field col s2">
-                                <a id="btn-add-1" class="btn-add btn-floating btn-medium waves-effect waves-light light-blue lighten-3"><i id="icon-add-1" class="material-icons">add</i></a>
+                        <div class="card col s12 white z-depth-2">
+                            <div id="calculate" class="col s12 columns" style=" padding-bottom: 1em;">
+                                <br>
+                                <div id="box-average" class="input-field col s4 offset-s2">
+                                    <i class="material-icons prefix">trending_up</i>
+                                    <input placeholder="PAPA que esperas obtener" id="input-average" type="text" class="validate">
+                                    <label for="input-average">Promedio esperado</label>
+                                </div>
+                                <div class="input-field col s2 right-align">
+                                    <a class="waves-effect waves-light btn light-blue lighten-3" id="calculate-add"> Calcular </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <g:if test="${session.user != null}">
-                        <g:if test="${uncake.User.findById( ( (User)session.user ).id ).academicRecord.size() > 0}">
-                            <g:javascript>
-                                $("#saved_container").show();
-                            </g:javascript>
-                        </g:if>
-                        <div class="div-center" id="container_save">
-                            <input type="button" class="" id="btn_save" value="Guardar"/>
-                        </div><br>
-                    </g:if>
-
-                    <div class="card col s12 white z-depth-2">
-                        <div id="calculate" class="col s12 columns" style=" padding-bottom: 1em;">
-                            <br>
-                            <div class="input-field col s4 offset-s2">
-                                <i class="material-icons prefix">trending_up</i>
-                                <input placeholder="PAPA que esperas obtener" id="input-average" type="text" class="validate">
-                                <label for="input-average">Promedio esperado</label>
-                            </div>
-                            <div class="input-field col s2 right-align">
-                                <a class="waves-effect waves-light btn light-blue lighten-3" id="btn-calculate-add"> Calcular </a>
+                        <div id="card-result" class="card col s12 indigo lighten-2 z-depth-2" style="display: none;">
+                            <div class="card-content white-text">
+                                <span class="card-title">Resultado:</span>
+                                <p id="projection-result"></p>
                             </div>
                         </div>
-                    </div>
-                    <div class="div-center" style="display: none">
-                        <p id="newSubjectsMessage" class="div-center"></p>
                     </div>
                 </div>
 
@@ -257,6 +269,10 @@
     <asset:javascript src="jquery-ui/jquery-ui.js"/>
     <asset:javascript src="materialize/js/materialize.js"/>
     <g:javascript>
+        $(document).ready(function() {
+            $('select').material_select();
+            $('.caret').html('');
+        });
         google.load("visualization", "1.1", {packages:["bar", "corechart", "imagebarchart", "table"]});
         const PAPA = 'PAPA', PA = 'PA', PERIOD_NAMES = 'period_names', SUBJECTS = 'subjects', ADVANCE_COMP = 'advance_comp', ADVANCE = 'advance', PLAN = 'plan';
 
@@ -282,7 +298,7 @@
                         data: {academicRecord: academicRecord},
                         success: function( result ){
                             if( result == "false" ){
-                                $( "#prueba" ).effect( "shake", {}, 500 );
+                                $( "#input-record" ).effect( "shake", {}, 500 );
                                 Materialize.toast("Ingresa una historia académica válida", 4000, "light-blue lighten-3 z-depth-2");
                             }
                             else{
@@ -299,14 +315,172 @@
                         }
                     });
                 }else{
-                    $( "#prueba" ).effect( "shake", {}, 500 );
+                    $( "#input-record" ).effect( "shake", {}, 500 );
                     Materialize.toast("Ingresa tu historia académica", 4000, "light-blue lighten-3 z-depth-2");
                 }
+            });
+            $("#calculate-add").click( function() {
+                if( validateInputCalculate() ){
+                    var credits = "";
+                    var grades = "";
+                    var average;
+                    $(".input-credits").each(function(){
+                        credits = credits.concat( "&&" + parseInt( $(this).val() ) );
+                    });
+                    $(".input-grade").each(function(){
+                        if( $(this).val() != "" )
+                            grades = grades.concat( "&&" + $(this).val().replace(',','.') );
+                        else
+                            grades = grades.concat( "&&" + String(-1) );
+                    });
+                    credits = credits.substring( 2, String(credits).length );
+                    grades = grades.substring( 2, String(grades).length );
+                    average = $("#input-average").val().replace(',','.');
+                    var inputData = credits.concat('&&&').concat(grades).concat('&&&').concat(average).concat('&&&').concat( dataCalculate[SUBJECTS] );
+                    $.ajax({
+                        type: 'POST',
+                        url: "${ createLink( action: 'calculateProjection') }",
+                        data: {inputData: inputData},
+                        success: function( result ){
+                            $("#card-result").hide();
+                            var numSubjects = parseInt( result.split('&&&')[2] );
+                            if( result.split('&&&')[0] == 0 ){
+                                var gradeSubject = parseFloat( result.split('&&&')[1] );
+                                $("#projection-result").text("");
+                                if( gradeSubject < 0 ){
+                                    Materialize.toast("Tu PAPA no puede bajar tanto con los créditos inscritos", 4000, "light-blue lighten-3 z-depth-2");
+                                }else if( gradeSubject > 5){
+                                    Materialize.toast("La nota mínima requerida es mayor a 5, exactamente: " + roundSubject(gradeSubject), 4000, "light-blue lighten-3 z-depth-2");
+                                }else{
+                                    $("#card-result").effect( "slide", {}, 500 );
+                                    if( numSubjects > 1 )
+                                        $("#projection-result").text("La nota mínima requerida en las " + numSubjects + " asignaturas para tener el PAPA en " + average + " es de " + roundSubject(gradeSubject) );
+                                    else
+                                        $("#projection-result").text("La nota mínima requerida en la asignatura para tener el PAPA en " + average + " es de " + roundSubject(gradeSubject) );
+                                }
+                            }else{
+                                $("#card-result").effect( "slide", {}, 500 );
+                                var averageObtained = parseFloat( result.split('&&&')[1] );
+                                if( numSubjects > 1 )
+                                    $("#projection-result").text("El PAPA obtenido cursando las " + numSubjects + " asignaturas es de " + roundAverage(averageObtained) + " exactamente " + averageObtained );
+                                else
+                                    $("#projection-result").text("El PAPA obtenido cursando la asignatura es de " + roundAverage(averageObtained) + " exactamente " + averageObtained );
+                            }
+                        }
+                    });
+                }
+            });
+            $( "#btn-save" ).click( function() {
+                var record = removeAccent( $( "#academic-record" ).val() );
+                $.ajax({
+                    type: 'POST',
+                    url: "${createLink(action: 'existAcademicRecord')}",
+                    data: {record: record},
+                    success: function( created ){
+                        if( parseInt(created) == 1 )
+                            $( "#modal-overwrite" ).openModal();
+                        else
+                            saveRecord( record );
+                    },
+                    error: function( data ){
+                    }
+                });
+            });
+            $( "#btn-overwrite" ).click( function() {
+                var record = removeAccent( $( "#academic-record" ).val() );
+                saveRecord( record );
+            });
+            $( "#btn-load" ).click( function() {
+                var academicRecord = $("#select-record").val() != null ? String( $("#select-record").val() ) : null;
+                if( academicRecord != null ){
+                    $.ajax({
+                        type: 'POST',
+                        url: "${createLink(action: 'loadAcademicRecord')}",
+                        data: {record: academicRecord},
+                        success: function( result ){
+                            $("#information_container").show();
+                            dataCalculate = splitDataCalculate( result );
+                            textObtained = result;
+                            showPlan( dataCalculate[PLAN] );
+                            drawPAPA( dataCalculate[PAPA], dataCalculate[PA], dataCalculate[PERIOD_NAMES] );
+                            drawPercentage( roundAverage( dataCalculate[ADVANCE] ) );
+                            drawComponents( dataCalculate[ADVANCE_COMP] );
+                            drawTable( dataCalculate[SUBJECTS] );
+                            dataVisible = true;
+                        },
+                        error: function( data ){
+                            Materialize.toast("¡Ocurrió un error al cargar la historia académica!", 4000, "light-blue lighten-3 z-depth-2");
+                        }
+                    });
+                }
+                else
+                    Materialize.toast("Selecciona una historia académica a cargar", 4000, "light-blue lighten-3 z-depth-2");
             });
             $(".btn-add").each(function (){
                 $(this).bind("click",addField);
             });
+            $( ".check-grade" ).on( "click", function() {
+                var checkID = parseInt($(this).attr('id').replace('check-grade-',''));
+                $( "#input-grade-" + checkID )[0].disabled = true;
+                $( "#input-grade-" + checkID ).val('');
+                if( $( "#check-grade-" + checkID ).is(":checked") ){
+                    $( "#input-grade-" + checkID )[0].disabled = false;
+                }
+            });
+            function saveRecord( record ){
+                $.ajax({
+                    type: 'POST',
+                    url: "${createLink(action: 'saveAcademicRecord')}",
+                    data: {record: record},
+                    success: function(){
+                        Materialize.toast("¡La historia académica ha sido guardada!", 4000, "light-blue lighten-3 z-depth-2");
+                        //document.getElementById("saved-container").style.display = 'block';
+                    },
+                    error: function( data ){
+                        Materialize.toast("¡Ocurrió un error al guardar la historia académica!", 4000, "light-blue lighten-3 z-depth-2");
+                    }
+                });
+            }
+            function validateInputCalculate(){
+                var regExpCredits = /^[0-9]+$/g;
+                var regExpGrade = /^[0-9](:?[\.\,][0-9])?$/g;
+                var creditsError = false;
+                var gradeError = false;
+                var averageError = false;
+                $(".input-credits").each(function(){
+                    if( !$(this).val().match( regExpCredits ) ){
+                        creditsError = true;
+                        $(this).parent('div').effect( "shake", {}, 500 );
+                        Materialize.toast("Revisa los créditos ingresados", 4000, "light-blue lighten-3 z-depth-2");
+                    }
+                });
+                $(".input-grade").each(function(){
+                    if( !$(this).is(":disabled") && !$(this).val().match( regExpGrade ) ){
+                        gradeError = true;
+                        $(this).parent('div').effect( "shake", {}, 500 );
+                        Materialize.toast("Revisa las notas ingresadas", 4000, "light-blue lighten-3 z-depth-2");
+                    }
+                    else{
+                        if( parseFloat( $(this).val() ) > 5 ){
+                            gradeError = true;
+                            $(this).parent('div').effect( "shake", {}, 500 );
+                            Materialize.toast("Revisa las notas ingresadas", 4000, "light-blue lighten-3 z-depth-2");
+                        }
+                    }
+                });
 
+                if( !$("#input-average").val().match( regExpGrade ) )
+                    averageError = true
+                else{
+                    if( parseFloat( $("#input-average").val() ) > 5 )
+                        averageError = true
+                }
+                if( averageError ){
+                    $("#box-average").effect( "shake", {}, 500 );
+                    Materialize.toast("Revisa el promedio esperado", 4000, "light-blue lighten-3 z-depth-2");
+                }
+                return !creditsError & !gradeError & !averageError;
+            }
             function addField(){
                 var clickID = parseInt($(this).parent('div').parent('div').attr('id').replace('new-subjects-',''));
                 var newID = (clickID + 1);
@@ -353,7 +527,6 @@
             result[ PLAN ] = arrayData[6].split(',');
             return result;
         }
-
         function removeAccent( input ){
             input = input.replace(/á/g,"a");
             input = input.replace(/é/g,"e");
@@ -371,13 +544,14 @@
             input = input.replace(/ñ/g,"n");
             return input;
         }
-
         function roundAverage( avg ){
             if( avg * 10 - Math.floor( avg * 10 ) < 0.5 )
                 return Math.floor( avg * 10 ) / 10;
             return Math.ceil( avg * 10 ) / 10;
         }
-
+        function roundSubject( grade ){
+            return Math.ceil( grade * 10 ) / 10;
+        }
         function drawPAPA( papa, pa, periodNames ) {
             var data = new Array( papa.length + 1 );
             var max = 0;
@@ -420,7 +594,6 @@
             var chart = new google.charts.Bar( document.getElementById( 'papa-chart' ) );
             chart.draw( data, google.charts.Bar.convertOptions( options ) );
         }
-
         function drawPercentage( advance ) {
             var data = new Array(3);
             for( var i = 0; i < 3; i++ ) {
@@ -446,7 +619,6 @@
             var chart = new google.visualization.PieChart(document.getElementById('advance-chart'));
             chart.draw(data, options);
         }
-
         function drawComponents( advanceComp ) {
             var componentTitles = ['Fundamentación','Disciplinar','Libre elección', 'Nivelación'];
             var data = new Array(componentTitles.length + 1);
@@ -479,7 +651,6 @@
             var chart = new google.visualization.ColumnChart(document.getElementById('components-chart'));
             chart.draw(data, options);
         }
-
         function drawTable( subjects ){
             var orderedSubjects = new Array( subjects.length );
             for (var i = 0; i < subjects.length; i++) {
