@@ -53,8 +53,8 @@ grails:
     controllers:
         defaultScope: singleton
         upload:
-                    maxFileSize: 9999999999
-                    maxRequestSize: 9999999999
+                    maxFileSize: 9999999
+                    maxRequestSize: 9999999
     converters:
         encoding: UTF-8
     views:
@@ -68,6 +68,8 @@ grails:
                 scriptlets: html
                 taglib: none
                 staticparts: none
+    gorm:
+        failOnError: true
 ---
 hibernate:
     cache:
@@ -82,25 +84,36 @@ endpoints:
 
 dataSource:
     pooled: true
-    dbCreate: "update"
     jmxExport: true
     driverClassName: org.h2.Driver
     username: sa
     password:
-
+        
 environments:
     development:
         dataSource:
-            dbCreate: create-drop
-            url: jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            driverClassName: com.mysql.jdbc.Driver
+            dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+            dbCreate: update
+            url: jdbc:mysql://${OPENSHIFT_MYSQL_DB_HOST}:${OPENSHIFT_MYSQL_DB_PORT}/beta
+            username: ${OPENSHIFT_MYSQL_DB_USERNAME}
+            password: ${OPENSHIFT_MYSQL_DB_PASSWORD}
     test:
         dataSource:
+            driverClassName: com.mysql.jdbc.Driver
+            dialect: org.hibernate.dialect.MySQL5InnoDBDialect
             dbCreate: update
-            url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            url: jdbc:mysql://${OPENSHIFT_MYSQL_DB_HOST}:${OPENSHIFT_MYSQL_DB_PORT}/beta
+            username: ${OPENSHIFT_MYSQL_DB_USERNAME}
+            password: ${OPENSHIFT_MYSQL_DB_PASSWORD}
     production:
         dataSource:
+            driverClassName: com.mysql.jdbc.Driver
+            dialect: org.hibernate.dialect.MySQL5InnoDBDialect
             dbCreate: update
-            url: jdbc:h2:./prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            url: jdbc:mysql://${OPENSHIFT_MYSQL_DB_HOST}:${OPENSHIFT_MYSQL_DB_PORT}/beta
+            username: ${OPENSHIFT_MYSQL_DB_USERNAME}
+            password: ${OPENSHIFT_MYSQL_DB_PASSWORD}
             properties:
                 jmxEnabled: true
                 initialSize: 5

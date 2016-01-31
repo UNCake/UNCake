@@ -21,8 +21,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
-
     <asset:javascript src="jquery-2.1.3.js"/>
+
     <script>
 
         $(function () {
@@ -54,15 +54,14 @@
                         type: $("#menuTypePlan").val()
                     },
                     success: function (plans) {
-                        $('#plans').empty();
+                        $('#dropdownPlans').empty();
                         $.each(plans, function (key, value) {
 
-                            $('#plans')
-                                    .append($('<option>', {value: value})
-                                            .text(value));
+                            $('#dropdownPlans')
+                                    .append($('<li>', {value: value})
+                                            .html('<a>' + value + '</a>'));
                         });
-                        $("#plans").material_select();
-                        $('.caret').html('');
+                        updateDropdown();
                     },
 
                     error: function (request, status, error) {
@@ -70,6 +69,32 @@
                     }
                 });
             }
+
+            var updateDropdown = function () {
+                $('.dropdown-button').dropdown({
+                            inDuration: 300,
+                            outDuration: 225,
+                            gutter: 0,
+                            belowOrigin: true,
+                            alignment: 'left'
+                        }
+                )
+            }
+
+            $('#dropdownPlans').on('click', 'li', function () {
+                $('#plans').val($(this).text());
+                $("#listCourses").empty();
+                updateCourses();
+            });
+
+            $('#plans').keyup(function () {
+                var plan = $(this).val().toLowerCase();
+                $('#dropdownPlans li').each(function () {
+                    var text = $(this).text().toLowerCase();
+                    (text.indexOf(plan) >= 0) ? $(this).show() : $(this).hide();
+                });
+            });
+
 
             $("#loc").change(function () {
                 updatePlans();
@@ -161,7 +186,7 @@
                         $('#accordionGroup ol li').off("click")
 
                         $('#accordionGroup ol li').click(function () {
-                            drawGroup(this.id, this.value, name)
+                            drawGroup(this.id, this.value, $(this).closest('ol').attr('id'))
                         });
                         $("#progressbarGroups").hide();
                     },
@@ -194,12 +219,6 @@
                 $('.caret').html('');
             }
 
-            $("#plans").change(function () {
-                $("#listCourses").empty();
-                updateCourses();
-            });
-
-
             $("#menuType").change(function () {
                 if ($("#menuType").val() == "") {
                     $('#listCourses li').show();
@@ -226,8 +245,16 @@
                         (text.indexOf(course) >= 0) ? $(this).show() : $(this).hide();
                     });
                 }
-                ;
             });
+
+            var clearSlot = function (slot) {
+                $(slot).html("")
+                $(slot).val("")
+                $(slot).css("background-color", "#eee")
+                $(slot).css("border", "1px solid #C0C0C0")
+                $(slot).attr("rowspan", 1)
+                $(slot).show()
+            }
 
 
             $('#accordionGroup').on('click', 'a', function () {
@@ -239,10 +266,8 @@
                 delete schedule[name];
                 delete groups[name];
                 $("#scheduleTable td").each(function () {
-                    if ($(this).html().indexOf(code) >= 0) {
-                        $(this).html("")
-                        $(this).attr("title","")
-                        $(this).css("background-color", "#eee")
+                    if ($(this).val().indexOf(code) >= 0) {
+                        clearSlot(this);
                     }
                 });
 
@@ -256,22 +281,21 @@
                 var gr = groups[name][id]
 
                 $("#scheduleTable td").each(function () {
-                    if ($(this).html().indexOf(code) >= 0) {
-                        $(this).html("")
-                        $(this).attr("title","")
-                        $(this).css("background-color", "#eee")
+                    if ($(this).val().indexOf(code) >= 0) {
+                        clearSlot(this);
                     }
                 });
 
-                var available = true;
+                var available = true, slot;
                 var crCourse = "";
                 for (var i in gr["timeSlots"]) {
                     var ts = gr["timeSlots"][i]
                     for (var s = ts.startHour; s < ts.endHour; s++) {
-                        if ($("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim() != "") {
+                        slot = "#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s;
+                        crCourse = $(slot).val();
+
+                        if (crCourse != "") {
                             available = false;
-                            crCourse = $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).text().trim();
-                            crCourse = crCourse.substr(0, crCourse.indexOf("-"));
                             $(courses).each(function (key, value) {
                                 if (value["code"] == crCourse) {
                                     crCourse = value["name"];
@@ -295,11 +319,19 @@
                     for (var i in gr["timeSlots"]) {
                         var ts = gr["timeSlots"][i]
                         if (ts.startHour > 0) {
-                            for (var s = ts.startHour; s < ts.endHour; s++) {
-                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).html(code + '-' + gr["code"]);
-                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).attr("title", name +'\n'+ gr["teacher"]);
-                                $("#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s).css("background-color",
-                                        color);
+                            slot = "#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * ts.startHour;
+                            name = (name.length > 15) ? name.substr(0, 15) + '...' : name;
+                            $(slot).html(name + "<br> Gr." + gr["code"]);
+                            $(slot).val(code);
+                            $(slot).css("background-color", color);
+                            $(slot).css("border", "none");
+                            $(slot).css("text-align", "center");
+                            $(slot).attr("rowspan", ts.endHour - ts.startHour);
+
+                            for (var s = ts.startHour + 1; s < ts.endHour; s++) {
+                                slot = "#scheduleTable #r" + s + " #" + days.indexOf(ts.day) * s;
+                                $(slot).val(code);
+                                $(slot).hide();
                             }
 
                         }
@@ -321,45 +353,57 @@
                             success: function (r) {
                                 $("#modalSave").closeModal();
 
-                                if (r != "") {
-                                    Materialize.toast("Horario "+$("#nameSc").val()+" guardardo.", 4000)
-                                }else{
+                                if (r[0] == 1) {
+                                    Materialize.toast("Horario " + $("#nameSc").val() + " guardardo.", 4000)
+                                } else if (r[2] == 3) {
                                     Materialize.toast("No se puede guardar el horario.", 4000)
+                                } else {
+                                    Materialize.toast("El horario no puede ser vacio.", 4000)
                                 }
-                            },error: function(){
+
+                            }, error: function () {
                                 Materialize.toast("No se puede guardar el horario.", 4000)
                             }
                         });
                         return false;
                     }
             );
-            /*
-             $("#printSchedule").button().click(
-             function () {
 
-             /*
-             html2canvas($('#scheduleTable'), {
-             onrendered: function (canvas) {
-             var img = canvas.toDataURL();
-             //window.open(img);
+            $("#printSchedule").button().click(
+                    function () {
+                        delete schedule["name"]
+                        delete schedule["image"]
+                        $.each(schedule, function (key, value) {
 
-             return false;
+                            $('#listSchedule').append($('<p>').html(key + "-" + value.teacher));
+                            /*
+                             for(var i in value["timeSlots"]){
+                             slot = value["timeSlots"][i]
+                             console.log(slot.day)
+                             console.log(slot.building)
+                             $('#scheduleDiv').append($('<p>').html( slot.day + ": " + slot.startHour+ "-" + slot.endHour
+                             + " " + (slot.building != null)? slot.classroom+"-"+slot.building: "no asignado"));
 
-             }
-             });*
-             var mywindow = window.open('', 'my div', 'height=400,width=600');
-             mywindow.document.write('<html><head><title>Mi Horario</title>');
-             mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="screen"/>');
-             mywindow.document.write('<link rel="stylesheet" href="/assets/schedule.css" type="text/css" media="print"/>');
-             mywindow.document.write("<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>");
-             mywindow.document.write('</head><body>');
-             mywindow.document.write($("#scheduleDiv").html());
-             mywindow.document.write('</body></html>');
-             mywindow.onload = mywindow.print();
-             mywindow.close();
-             }
-             );
-             */
+                             }
+                             */
+                        })
+
+                        html2canvas($('#scheduleDiv'), {
+                            onrendered: function (canvas) {
+
+                                var imgData = canvas.toDataURL("image/jpeg", 1.0);
+                                var pdf = new jsPDF();
+
+                                pdf.addImage(imgData, 'JPEG', 0, 0);
+                                pdf.save("horario.pdf");
+
+                                $("#listSchedule").html("");
+                            }
+                        })
+
+                    }
+            );
+
             $("#progressbarCourses").hide();
             $("#progressbarGroups").hide();
 
@@ -469,10 +513,9 @@
 
 
         <div class="input-field">
-            <select id="plans">
-                <option value="" disabled selected>Selecciona una sede</option>
-            </select>
-            <label for="plans">Planes</label>
+            <input id="plans" class="dropdown-button" placeholder="Selecciona un plan" data-activates="dropdownPlans">
+            <ul id="dropdownPlans" class="dropdown-content"></ul>
+            <label class="active" for="plans">Planes</label>
         </div>
 
         <div class="input-field">
@@ -518,34 +561,40 @@
     </div>
 
     <div class="col-sm-6">
-        <div class="table-responsive" id="scheduleDiv">
+
+        <div class="responsive-table" id="scheduleDiv">
             <table id="scheduleTable">
-                <div>
-                    <tr>
-                        <th>H</th>
-                        <th>Lunes</th>
-                        <th>Martes</th>
-                        <th>Miercoles</th>
-                        <th>Jueves</th>
-                        <th>Viernes</th>
-                        <th>Sabado</th>
-                        <th>Domingo</th>
-                    </tr>
-                </div>
+                <thead>
+                <tr>
+                    <th>H</th>
+                    <th>Lu.</th>
+                    <th>Ma.</th>
+                    <th>Mi.</th>
+                    <th>Ju.</th>
+                    <th>Vi.</th>
+                    <th>Sa.</th>
+                    <th>Do.</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
             </table>
 
-        </div>
+            <div id="listSchedule"></div>
 
+        </div>
 
         <g:if test="${session.user != null}">
             <div>
                 <!-- Modal Trigger -->
-                <a id="showSaveSchedule" class="waves-effect waves-light btn modal-trigger" href="#modalSave">Guardar</a>
+                <a id="showSaveSchedule" class="waves-effect waves-light btn modal-trigger"
+                   href="#modalSave">Guardar</a>
             </div>
         </g:if>
 
         <div>
-            <a class="waves-effect waves-light btn" id="printSchedule">Imprimir</a>
+            <a class="waves-effect waves-light btn" id="printSchedule" download>Descargar</a>
         </div>
 
     </div>
@@ -588,6 +637,7 @@
         <div id="modalSave" class="modal bottom-sheet">
             <div class="modal-content">
                 <h4>Guardar horario</h4>
+
                 <form id="saveSchedule">
                     <div class="form-group">
                         <label>Nombre</label>
@@ -609,8 +659,8 @@
 </div>
 
 <asset:javascript src="html2canvas.js"/>
-<asset:javascript src="jquery-2.1.3.js"/>
 <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
 <asset:javascript src="materialize/js/materialize.js"/>
+<script src="https://parall.ax/parallax/js/jspdf.js"></script>
 </body>
 </html>

@@ -81,9 +81,9 @@ class ScheduleController {
             // success response handler
             response.success = { resp, json ->
                 json.result.list.each { a ->
-                    def temp = ["teacher"       : a.nombredocente, "code": a.codigo,
+                    def temp = ["teacher"       : (a.nombredocente.trim().size() == 0)? 'Profesor no asignado': a.nombredocente, "code": a.codigo,
                                 "availableSpots": a.cuposdisponibles, "totalSpots": a.cupostotal, "timeSlots": []]
-                    days.each { d -> temp["timeSlots"].add(setTimeSlot(d, a, loc)) }
+                    days.each { d -> setTimeSlot(temp["timeSlots"], d, a, loc) }
                     groups.add(temp)
                 }
             }
@@ -98,7 +98,7 @@ class ScheduleController {
         render groups as JSON
     }
 
-    def setTimeSlot(day, timeslot, loc) {
+    def setTimeSlot(group, day, timeslot, loc) {
         def time = 'horario_' + day
 
         if (timeslot[time] == '--') {
@@ -106,66 +106,80 @@ class ScheduleController {
                     "classroom": 'no']
         }
 
-        def t = timeslot[time].split('-')
+        def hours = timeslot[time].split(' ')
         def place = 'aula_' + day
-        def p = timeslot[place].split('-')
+        def rooms = timeslot[place].split(' ')
 
-        return ["startHour": t[0].toInteger(),
-                "endHour"  : t[t.size() - 1].toInteger(),
-                "classroom": (p.size() > 1) ? p[1] : 'no', "day": day,
-                "building" :  Building.findByCode(p[0]) ,
-                "location" : loc.name]
+        for (def i = 0; i < hours.size(); i++) {
+
+            def t = hours[i].split('-')
+            def p = rooms[i].split('-')
+
+            group.add(new TimeSlot(
+                    "startHour": t[0].toInteger(),
+                    "endHour": t[1].toInteger(),
+                    "classroom": (p.size() > 1) ? p[1] : 'no', "day": day,
+                    "building": Building.findByCode(p[0]),
+                    "location": loc.name))
+        }
     }
 
     def buildSchedule() {
 
         def reqSchedule = request.JSON
-        def res = []
+        def res = [3]
 
         if (reqSchedule.size() > 1) {
             def schedule = new Schedule(credits: 0)
             def user = User.find(session.user)
-            def group, name
+            def group, name, empty = true
+
             reqSchedule.each { key, val ->
                 if (key == "name") name = val
                 else if (key == "image") schedule.image = val
                 else {
+
                     group = new Groups(course: key, code: val.code, availableSpots: val.availableSpots,
                             teacher: val.teacher, totalSpots: val.totalSpots)
+                    empty = false
 
                     val.timeSlots.each { ts ->
 
                         if (Location.findByName(ts.location) != null) {
                             def tempTS = new TimeSlot(building: ts.building, location: Location.findByName(ts.location),
                                     classroom: ts.classroom, day: ts.day, endHour: ts.endHour, startHour: ts.startHour)
-                            tempTS.save(flush: true)
+                            tempTS.save()
                             group.addToTimeSlots(tempTS)
                         }
                     }
 
-                    group.save(flush: true)
+                    group.save()
                     schedule.addToCourses(group)
                 }
             }
 
             schedule.name = name
-            schedule.save(flush: true)
 
-            user.addToSchedules(schedule)
-            user.save(flush: true)
-            res = [1]
+            if(!empty) {
+                schedule.save()
+                user.addToSchedules(schedule)
+                user.save()
+                res = [1]
+            }else{
+                res = [2]
+            }
         }
 
         render res as JSON
     }
 
-    def showSchedule(){
+    def showSchedule() {
         def res = []
-        if(params.friend != null){
+        if (params.friend != null) {
             def user = User.findByName(params.friend)
-            if(!user.schedules.isEmpty())
+            if (!user.schedules.isEmpty())
                 res.add(user.schedules.first().image)
-        }else {
+        } else {
             def schedule = Schedule.findByName(params.name)
             if (schedule != null) {
                 res.add(schedule.image)

@@ -33,7 +33,7 @@ class UserController {
             // Validation works, will check if the image is too big
 
 
-        if (!user.save(flush: true)) {
+        if (!user.save( )) {
             flash.message ="imagen muy grande"
             redirect( action:"index" )
             //render(view:'selectavatar', model:[user:user])
