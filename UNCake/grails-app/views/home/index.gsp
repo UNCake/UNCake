@@ -42,75 +42,10 @@
         margin-top: 8px;
     }
 
-    .ui-autocomplete {
-        max-height: 100px;
-        overflow-y: auto;
-        /* prevent horizontal scrollbar */
-        overflow-x: hidden;
-    }
-    /* IE 6 doesn't support max-height
-         * we use height instead, but this forces the menu to always be this tall
-         */
-    * html .ui-autocomplete {
-        height: 100px;
-    }
 </style>
 
 <body class="index" style="background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: no-repeat; background-size: 100% 100%;" > <!--id="page-top"-->
-    <script>
-        $(function () {
-            var availableTags; /*= $.parseJSON('${userlist.encodeAsJSON()}');*/
-            $("#selectedName").autocomplete({
-                source: availableTags
-            });
-             $("#selectedName").bind("keypress", function(e) {
-                 if(e.keyCode==13){
-                     //console.log(session.user)
-                     var selected = document.getElementById('selectedName').value;
-                     console.log(selected)
-                     if (selected != "") {
-                         //document.getElementById("diagNombre").value = document.getElementById("selectedName").value;
-                         var url = "${createLink(controller:'Home', action:'getUserByName')}";
-                         var response = $.ajax({
-                             url: url,
-                             contentType: "application/json; charset=utf-8",
-                             dataType: "json",
-                             data: {
-                                 selectedName: selected
-                             },
-                             success: function (userValues) {
-                                 //userValues ya tiene todos los datos del usuario. Hasta la foto :O
-                                 if(userValues.name != "null") {
-                                     document.getElementById("diagNombre").value = userValues.name;
-                                     document.getElementById("diagMail").value = userValues.email;
-                                     overlay()
-                                 }
-                             }
-                         });
-                     }
-                 }
-             });
-        });
-    </script>
-    <script>
-        function overlay() {
-            el = document.getElementById("overlay");
-            //console.log(document.getElementById("diagNombre").innerHTML);
-            el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-        }
-    </script>
-    <div id="overlay">
-        <div class="container">
-            <asset:image src="home/services/icono_horarios.png" alt=""/>
-            <p class="text-warning">Click aqui para [<a href='#' onclick='overlay()'>cerrar</a>]</p>
-            <g:form class="form-signin" action="saveFriend" method="post">
-                <input type="input" class="form-control has-success text-warning" id="diagNombre" name="diagNombre" placeholder="Nombre" style="text-align:center; 	background: #1AB394;">
-                <input type="input" class="form-control has-success text-warning" id="diagMail" name="diagMail" placeholder="Mail" style="text-align:center; 	background: #1AB394;">
-                <%--<p class="text-success" id="diagMail" name="diagMail">alejando@unal.edu.co</p>--%>
-                <button class="btn btn-lg btn-primary btn-block color-black" type="submit" value='Login'>Agregar</button>
-            </g:form>
-        </div>
-    </div>
+
     <div id="wrapper">
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
@@ -129,9 +64,6 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="hidden">
                                 <a href="#page-top"></a>
-                            </li>
-                            <li>
-                                <input type="input" class="form-control" id="selectedName" name="selectedName" placeholder="Digita Nombre" style="text-align:center">
                             </li>
 
                             <li>
