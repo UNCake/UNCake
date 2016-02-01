@@ -20,8 +20,8 @@
     <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'bootstrap/css/bootstrap.css')}" type="text/css">
     <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'jquery-ui/jquery-ui.css')}" type="text/css" />
     <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'agency.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'grades.css')}" type="text/css">
     <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'materialize/css/materialize.css')}" type="text/css">
+    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'grades.css')}" type="text/css">
 
     <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -29,27 +29,6 @@
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-    <style>
-        .input-field label{
-            color: #7986cb;
-        }
-        .input-field .prefix{
-            color: #7986cb;
-        }
-        .input-field .prefix.active{
-            color: #7986cb;
-        }
-        .input-field textarea{
-            color: #779;
-            border-bottom: 1px solid #7986cb;
-        }
-        .input-field textarea:focus + label{
-            color: #000;
-        }
-        .collapsible-header i, .collapsible-header p{
-            color: #7986cb;
-        }
-    </style>
 </head>
 
 <body id="grades-body" class="blue-grey lighten-5">
@@ -121,9 +100,13 @@
                             <label for="academic-record">Historia académica</label>
                         </div><div><br/><br/><br/><br/><br/><br/><br/></div>
                         <div style="text-align: center">
-                            <a class="waves-effect waves-light btn light-blue lighten-3" id="calculate-papa"> Calcular </a><br/><br/><br/>
+                            <a class="waves-effect waves-light btn light-blue lighten-3" id="calculate-papa"> Calcular </a><br/><br/>
+                        </div>
+                        <div class="card-action center-align">
+                            <p class="indigo-text">UNCake no guarda ningún tipo de información de los usuarios si ellos no lo desean, cada usuario es responsable por el uso que le de a su información dentro de la plataforma.</p>
                         </div>
                     </div>
+
                 </div><br/>
 
                 <div id="saved-container" class="col s12 transparent" style="display: none;">
@@ -265,7 +248,9 @@
             </div>
         </div>
     <div/>
+
     <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
     <asset:javascript src="jquery-ui/jquery-ui.js"/>
     <asset:javascript src="materialize/js/materialize.js"/>
     <g:javascript>
@@ -458,13 +443,13 @@
                     if( !$(this).is(":disabled") && !$(this).val().match( regExpGrade ) ){
                         gradeError = true;
                         $(this).parent('div').effect( "shake", {}, 500 );
-                        Materialize.toast("Revisa las notas ingresadas", 4000, "light-blue lighten-3 z-depth-2");
+                        Materialize.toast("Revisa las notas ingresadas de 0-5 con una cifra decimal", 4000, "light-blue lighten-3 z-depth-2");
                     }
                     else{
                         if( parseFloat( $(this).val() ) > 5 ){
                             gradeError = true;
                             $(this).parent('div').effect( "shake", {}, 500 );
-                            Materialize.toast("Revisa las notas ingresadas", 4000, "light-blue lighten-3 z-depth-2");
+                            Materialize.toast("La nota ingresada no puede ser mayor a 5", 4000, "light-blue lighten-3 z-depth-2");
                         }
                     }
                 });
@@ -477,7 +462,7 @@
                 }
                 if( averageError ){
                     $("#box-average").effect( "shake", {}, 500 );
-                    Materialize.toast("Revisa el promedio esperado", 4000, "light-blue lighten-3 z-depth-2");
+                    Materialize.toast("Revisa el promedio esperado de 0-5 con una cifra decimal", 4000, "light-blue lighten-3 z-depth-2");
                 }
                 return !creditsError & !gradeError & !averageError;
             }

@@ -118,7 +118,7 @@ class GradesController {
         def studyPlan = uncake.StudyPlan.findByCode( codeStudyPlan )
         def studyPlanCreated = false
         def coursesToSave = getCoursesToSave( periods, periodNames )
-        coursesToSave.each{ it.save(flush: true) }
+        coursesToSave.each{ it.save(failOnError: true) }
 
         newUser.academicRecord.each{
             if( it.studyPlan.code == studyPlan.code )

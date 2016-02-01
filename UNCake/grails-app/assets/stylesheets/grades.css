@@ -1,16 +1,3 @@
-/*#grades-body{
-    background: url('../images/home/fotoUN_5.jpg') repeat repeat;
-    background-size: 100%;
-}
-#information-panel-n-logo{
-    background-color: transparent;
-    width: 40%;
-}
-#information-panel-logo{
-    background-color: transparent;
-    width: 30%;
-}*/
-/* TODO */
 #academic-record{
     margin-top: 20px;
     max-height: 12em;
@@ -54,4 +41,25 @@
 }
 #display-block{
     display: inline-block;
+}
+/*  forms */
+
+.input-field label{
+    color: #7986cb;
+}
+.input-field .prefix{
+    color: #7986cb;
+}
+.input-field .prefix.active{
+    color: #7986cb;
+}
+.input-field textarea{
+    color: #779;
+    border-bottom: 1px solid #7986cb;
+}
+.input-field textarea:focus + label{
+    color: #000;
+}
+.collapsible-header i, .collapsible-header p{
+    color: #7986cb;
 }
