@@ -155,8 +155,7 @@ class BootStrap {
         new Building(code: '6', name: '6 - Bloque 6', coordinates: '6.264376732971618&-75.57407140731812', Location: Location.findByName('MEDELLIN')).save()
         new Building(code: '2', name: '2 - Bloque 2', coordinates: '6.26347022638842&-75.57430744171143', Location: Location.findByName('MEDELLIN')).save()*/
 
-            DBconnectionService.initDB()
-        }
+        DBconnectionService.initDB()
 
     }
     def destroy = {

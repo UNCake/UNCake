@@ -124,7 +124,7 @@
                         <div class="col-md-4 col-sm-6 portfolio-item">
                             <div class="portfolio-caption">
                                 <div class="img-centered">
-                                    <a href="progress" >
+                                    <a href="grades" >
                                         <asset:image src="home/services/icono_papa.png" alt=""/>
                                     </a>
                                 </div>

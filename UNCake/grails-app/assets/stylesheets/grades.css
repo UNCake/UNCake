@@ -1,0 +1,65 @@
+#academic-record{
+    margin-top: 20px;
+    max-height: 12em;
+    overflow-y: auto;
+}
+#papa-chart{
+    width: 100%;
+    height: 550px;
+    padding: 20px;
+}
+#advance-chart, #components-chart{
+    width: 50%; height: 400px;
+}
+#advance-chart{
+    float: left;
+}
+#components-chart{
+    float: right;
+}
+.collapsible-header p{
+    padding-top: 1em;
+}
+/* TODO */
+#saved_container{
+    display: none;
+}
+#saved-msj{
+    text-align: left;
+    display: inline-block;
+}
+.div-center{
+    text-align: center;
+}
+.div-right{
+    text-align: right;
+}
+#text-expected-avg{
+    line-height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+}
+#display-block{
+    display: inline-block;
+}
+/*  forms */
+
+.input-field label{
+    color: #7986cb;
+}
+.input-field .prefix{
+    color: #7986cb;
+}
+.input-field .prefix.active{
+    color: #7986cb;
+}
+.input-field textarea{
+    color: #779;
+    border-bottom: 1px solid #7986cb;
+}
+.input-field textarea:focus + label{
+    color: #000;
+}
+.collapsible-header i, .collapsible-header p{
+    color: #7986cb;
+}

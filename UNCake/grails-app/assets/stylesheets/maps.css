@@ -1,0 +1,19 @@
+/*.input-field label{
+    color: #7986cb;
+}
+.input-field .prefix{
+    color: #7986cb;
+}
+.input-field .prefix.active{
+    color: #7986cb;
+}
+.input-field textarea{
+    color: #779;
+    border-bottom: 1px solid #7986cb;
+}
+.input-field textarea:focus + label{
+    color: #000;
+}
+.collapsible-header i, .collapsible-header p{
+    color: #7986cb;
+}*/
