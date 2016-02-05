@@ -24,6 +24,7 @@ class BootStrap {
             new Building(code: '102', name: '102 - BIBLIOTECA CENTRAL GABRIEL GARCIA MARQUEZ', coordinates: '4.63540605513496&-74.08303678035736', Location: Location.findByName("BOGOTA")).save()
             new Building(code: '104', name: '104 - AUDITORIO LEON DE GREIFF', coordinates: '4.6357776626211376&-74.08204972743988', Location: Location.findByName("BOGOTA")).save()
             new Building(code: '201', name: '201 - FACULTAD DE DERECHO, CIENCIAS POLITICAS Y SOCIALES', coordinates: '4.635432789493002&-74.08373147249222', Location: Location.findByName("BOGOTA")).save()
+            new Building(code: '205', name: '205 - CIENCIAS HUMANAS', coordinates: '4.63427412142206&-74.08397823572159', Location: Location.findByName("BOGOTA") ).save()
             new Building(code: '207', name: '207 - MUSEO DE ARQUITECTURA LEOPOLDO ROTHER', coordinates: '4.633994479593661&-74.08330231904984', Location: Location.findByName("BOGOTA")).save()
             new Building(code: '210', name: '210 - FACULTAD DE ODONTOLOGIA', coordinates: '4.634569269216847&-74.08508062362671', Location: Location.findByName("BOGOTA")).save()
             new Building(code: '212', name: '212 - AULAS DE CIENCIAS HUMANAS', coordinates: '4.634133498522123&-74.08462196588516', Location: Location.findByName("BOGOTA")).save()
@@ -125,7 +126,9 @@ class BootStrap {
             new Building(code: '861', name: '861 - EDIFICIO URIEL GUTIERREZ     ', coordinates: '4.639600663538869&-74.08976376056671', Location: Location.findByName("BOGOTA")).save()
             new Building(code: '862', name: '862 - UNIDAD CAMILO TORRES     ', coordinates: '4.640814395165972&-74.09076690673828', Location: Location.findByName("BOGOTA")).save()
             new Building(code: '910', name: '910 - INSTITUTO COLOMBIANO DE NORMAS TECNICAS Y CERTIFICACION: ICONTEC', coordinates: '4.64431121382209&-74.08361077308655', Location: Location.findByName("BOGOTA")).save()
-            new Building(code: '935', name: '935 - SEDE SECTOR CAN     ', coordinates: '4.648011192666337&-74.09578800201416', Location: Location.findByName("BOGOTA")).save()
+            new Building(code: '933', name: '933 - CASE CAN AREA DE SALUD     ', coordinates: '4.647769518601487&-74.09669190645218', Location: Location.findByName("BOGOTA") ).save()
+            new Building(code: '934', name: '934 - COMPLEJO CLINICA SANTA ROSA     ', coordinates: '4.648753325073918&-74.09551709890366', Location: Location.findByName("BOGOTA") ).save()
+            new Building(code: '935', name: '935 - SEDE SECTOR CAN     ', coordinates: '4.648544800990671&-74.09597307443619', Location: Location.findByName("BOGOTA") ).save()
 
             /*new Building(code: '11', name: '11 - Bloque 11', coordinates: '6.260409421942848&-75.57580947875977', Location: Location.findByName('MEDELLIN')).save()
         new Building(code: '12', name: '12 - Bloque 12', coordinates: '6.260398757087635&-75.57647466659546', Location: Location.findByName('MEDELLIN')).save()
