@@ -106,7 +106,6 @@
                             <p class="indigo-text">UNCake no guarda ningún tipo de información de los usuarios si ellos no lo desean, cada usuario es responsable por el uso que le de a su información dentro de la plataforma.</p>
                         </div>
                     </div>
-
                 </div><br/>
 
                 <div id="saved-container" class="col s12 transparent" style="display: none;">
@@ -135,6 +134,14 @@
                                         <a class="waves-effect waves-light btn light-blue lighten-3" id="btn-load"> Cargar </a>
                                     </div>
                                     <br/><br/><br/><br/>
+                                    <g:if test="${params.plan != null}">
+                                        <g:javascript>
+                                            document.getElementById('select-record').value = "${params.plan}".replace('&','|');
+                                            window.onload = function(){
+                                                $("#btn-load").trigger('click');
+                                            }
+                                        </g:javascript>
+                                    </g:if>
                                 </g:if>
                             </g:if>
                         </div>

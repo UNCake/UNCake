@@ -5,7 +5,7 @@
   Time: 07:44 PM
 --%>
 
-<%@ page import="uncake.ProgressController" contentType="text/html;charset=UTF-8" %>
+<%@ page import="uncake.GradesController" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title></title>

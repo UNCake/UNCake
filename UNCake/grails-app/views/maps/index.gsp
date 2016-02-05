@@ -13,29 +13,23 @@
     <title>UNCake - Edificios</title>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <asset:javascript src="jquery-2.1.3.js"/>
-    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
-    <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
-    <asset:stylesheet src="agency.css"/>
-    <asset:stylesheet src="dialogueStyle.css"/>
-    <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
-    <asset:javascript src="foundation/vendor/modernizr.js"/>
-    <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <asset:javascript src="maps/maps.js"/>
-    <asset:javascript src="foundation/vendor/jquery.js"/>
-    <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
-    <asset:stylesheet src="agency.css"/>
-    <asset:stylesheet src="dialogueStyle.css"/>
-    <asset:stylesheet src="mapsSchedule.css"/>
+
+    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'bootstrap/css/bootstrap.css')}" type="text/css">
+    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'agency.css')}" type="text/css">
+    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'mapsSchedule.css')}" type="text/css">
+    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'jquery-ui/jquery-ui.css')}" type="text/css" />
+    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'materialize/css/materialize.css')}" type="text/css">
+    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'maps.css')}" type="text/css">
 
     <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' ype='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 
 </head>
-<body style="background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: no-repeat; background-size: 100% 100%;">
+<body class="blue-grey lighten-5" style="/*background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: no-repeat; background-size: 100% 100%;*/">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header page-scroll">
@@ -84,93 +78,104 @@
     </nav>
 
     <header>
-        <div class="container">
-            <br><br><br>
-        </div>
+        <div><br/><br/><br/><br/></div>
     </header>
 
-    <div class="container" >
-        <div class="row">
-            <div class="large-12 columns" >
-                <div class="row" >
-                    <div class="large-4 small-12 columns" style="padding-left: 50px; padding-right: 50px; padding-top: 60px;">
-                        <div class="panel" style="background-color: transparent;">
-                            <!--<h3 style="font-family: 'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive; color: #1ab394;">Edificio</h3>-->
-                            <img src="${resource(dir: 'images', file: 'nombreLogo.png')}" align="right" style="background-color: transparent; width: 26%;">
-                            <img src="${resource(dir: 'images', file: 'logo1.png')}" align="right" style="background-color: transparent; width: 16%;">
-                            <br/>
-                            <div style="width: 52%; background: url('${resource(dir: "images", file: "fondo1.png")}'); background-color: #f7f7f7;padding-left: 24px;padding-right: 24px; border-radius: 5px; border: solid 1px; border-color: #a0a0a0;">
-                                <br/><br/>
-                                <g:textField name="selectedName" id="selectedName" placeholder="Digita número o nombre del edificio" value="" style="width: 80%;" ></g:textField>
-                                &nbsp;&nbsp;
-                                <g:submitButton name="pointer" value="Buscar" action="pointer"></g:submitButton>
-                                <br/><br/>
-                                <p>Los marcadores azules indican las entradas al campus, digita el nombre o número del edificio a buscar, un marcador rojo te indicará tu destino.</p>
-                                <br/>
-                            </div>
-                        </div>
+    <div class="content">
+        <div class="row transparent">
+            <br/>
+            <div class="col-sm-3 transparent">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">Información</span>
+                        <p>Los marcadores azules indican las entradas al campus. Digita el nombre o número del edificio a buscar y un marcador rojo te indicará tu destino.</p>
                     </div>
-                    <div class="large-8 columns" style="padding: 80px;">
-                        <div class="row">
-                            <div class="large-12 columns">
-                                <div class="panel" style="border: none;padding-top: 0;padding-bottom: 0;background-color: #fff;">
-                                    <div class="row">
-                                        <div id="googleMap" class="large-10 columns" style="width:100%;height:500px;"></div>
-                                    </div>
+                </div><br/>
+                <div id="input-building" class="input-field col s12">
+                    <i class="material-icons prefix">search</i>
+                    <input placeholder="Nombre o código" id="building-name" type="text" onChange="clearAutoCompleteInput()">
+                    <label for="building-name">Edificio</label>
+                </div><div><br/><br/><br/><br/><br/></div>
+                <div style="text-align: center">
+                    <a class="waves-effect waves-light btn" id="search-building"> Buscar </a><br/><br/>
+                </div>
+            </div>
+
+
+            <div class="col-sm-6 transparent" >
+                <div class="card white">
+                    <div>
+                        <div class="large-12 columns">
+                            <div class="panel" style="border: none;padding-top: 0;padding-bottom: 0;background-color: #fff;">
+                                <div class="row">
+                                    <div id="googleMap" class="large-10 columns" style="width:100%;height:550px;"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <g:hiddenField name="doorMarker" id="doorMarker" value="${resource(dir:'images',file:'maps/entry.png', absolute:'true')}"></g:hiddenField>
-                <g:hiddenField name="pointMarker" id="pointMarker" value="${resource(dir:'images',file:'maps/point2.png', absolute:'true')}"></g:hiddenField>
-                <g:hiddenField name="subjectMarker" id="subjectMarker" value="${resource(dir:'images',file:'maps/point6.png', absolute:'true')}"></g:hiddenField>
             </div>
+
+            <div class="col-sm-3">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">Horarios</span>
+                        <p>Selecciona cada clase, un marcador amarillo te indicará el lugar. Puedes mantener un marcador a la vez o acumular varios en el mapa.</p>
+                    </div>
+                </div>
+                <g:if test="${session.user != null}">
+                    <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
+                        <div >
+                            <br/>
+                            <div class="switch">
+                                <label>
+                                    Acumular&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="check-accumulate">
+                                    <span class="lever"></span>
+                                </label>
+                            </div><br/>
+                        </div>
+                            <ul class="collapsible" data-collapsible="expandable">
+                                <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
+                                    <li>
+                                        <div class="collapsible-header active"><i class="material-icons">schedule</i><p>${it.name}</p></div>
+                                        <div class="collapsible-body transparent">
+                                            <g:each in="${it.courses}" var="subj">
+                                                <div class="subject-area">
+                                                    <p class="title-subject">${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}</p>
+                                                    <g:each in="${subj.timeSlots}" var="subjectGroup">
+                                                        <g:if test="${subjectGroup.building != null}">
+                                                            <div class="day-subject waves-effect waves-light" data-loc="${subjectGroup.building.coordinates}" data-title="${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}" data-content="${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour} ${subjectGroup.building.code}-${subjectGroup.classroom}">
+                                                                <p class="subject-detail">${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour}<br/>
+                                                                ${subjectGroup.building.code}-${subjectGroup.classroom.replace('null', '')}</p>
+                                                            </div>
+                                                        </g:if>
+                                                    </g:each>
+                                                </div>
+                                            </g:each>
+                                        </div>
+                                    </li>
+                                </g:each>
+                            </ul>
+                    </g:if>
+                </g:if>
+            </div>
+            <g:hiddenField name="doorMarker" id="door-marker" value="${resource(dir:'images',file:'maps/entry.png', absolute:'true')}"></g:hiddenField>
+            <g:hiddenField name="pointMarker" id="point-marker" value="${resource(dir:'images',file:'maps/point2.png', absolute:'true')}"></g:hiddenField>
+            <g:hiddenField name="subjectMarker" id="subject-marker" value="${resource(dir:'images',file:'maps/point6.png', absolute:'true')}"></g:hiddenField>
         </div>
     </div>
-
-    <g:if test="${session.user != null}">
-        <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
-            <div id="divAcumulate">
-                <input type="checkbox" name="acumulate" id="acumulate"/>&nbsp;&nbsp;&nbsp;Acumular
-            </div>
-            <div id="accordion" class="accordionSchedules">
-                <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
-                    <h3>${it.name}</h3>
-                    <div>
-                        <g:each in="${it.courses}" var="subj">
-                            <div class="subjectArea">
-                                <p class="titleSubject">${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}</p>
-                                <g:each in="${subj.timeSlots}" var="subjectGroup">
-                                    <g:if test="${subjectGroup.building != null}">
-                                        <div class="daySubject" data-loc="${subjectGroup.building.coordinates}" data-title="${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}" data-content="${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour} ${subjectGroup.building.code}-${subjectGroup.classroom}">
-                                            <p>${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour}</p>
-                                            <p>${subjectGroup.building.code}-${subjectGroup.classroom}</p>
-                                        </div>
-                                    </g:if>
-                                </g:each>
-                            </div>
-                        </g:each>
-                    </div>
-                </g:each>
-            </div>
-        </g:if>
-    </g:if>
-    <br/><br/><br/><br/>
-
-    <asset:javascript src="foundation/vendor/jquery.js"/>
-    <asset:javascript src="foundation/foundation.min.js"/>
-    <script>
-        $(document).foundation();
-    </script>
-    <asset:javascript src="foundation/vendor/jquery.js"/>
-    <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
-    <asset:javascript src="foundation/foundation/foundation.js"/>
+    <script src="//maps.googleapis.com/maps/api/js"></script>
+    <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
+    <asset:javascript src="maps/maps.js"/>
+    <asset:javascript src="materialize/js/materialize.js"/>
+    <asset:javascript src="jquery-ui/jquery-ui.js"/>
     <g:javascript>
         arrayMarkers = [];
         $(function() {
-            $( ".daySubject" ).click( function(){
-                if( $("#acumulate").is(":checked") == false ){
+            $( ".day-subject" ).click( function(){
+                if( $("#check-accumulate").is(":checked") == false ){
                     for (var i = 0; i < arrayMarkers.length; i++) {
                         arrayMarkers[i].setMap(null);
                     };
@@ -182,7 +187,7 @@
                     title: String($(this).data('content')),
                     animation: google.maps.Animation.DROP,
                     content: String($(this).data('title')),
-                    icon: document.getElementById("subjectMarker").value
+                    icon: document.getElementById("subject-marker").value
                 });
                 var infowindow = new google.maps.InfoWindow({
                     content: String($(this).data('title'))
@@ -194,42 +199,48 @@
                 });
                 arrayMarkers.push(subjectMarker);
             });
-            $( "#accordion" ).accordion({
-                collapsible: true
-            });
 
-            $( "#pointer" ).button().click( function(){
-                var selected = document.getElementById('selectedName').value;
-                var url="${createLink(controller:'Building', action:'getItemByName')}";
-                var response = $.ajax({
-                    url: url,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: {
-                        selectedName: selected
-                    },
-                    success:function( finalPosition ) {
-                        var posMarker = String(finalPosition).split("&");
-                        var buildingMarker = new google.maps.Marker({
-                            position: new google.maps.LatLng(posMarker[0],posMarker[1]),
-                            map: map,
-                            title: String(selected),
-                            animation: google.maps.Animation.DROP,
-                            content: String(selected),
-                            icon: document.getElementById("pointMarker").value
-                        });
-                        var infowindow = new google.maps.InfoWindow({
-                            content: String(selected)
-                        });
-                        map.setCenter( new google.maps.LatLng(posMarker[0],posMarker[1]) );
-                        map.setZoom(15);
-                        google.maps.event.addListener(buildingMarker, 'click', function() {
-                            infowindow.open(map,buildingMarker);
-                        });
-                    }
-                });
+            $( "#search-building" ).click( function(){
+                var selected = document.getElementById('building-name').value;
+                if( selected != '' ){
+                    var url="${createLink(controller: 'Building', action: 'getItemByName')}";
+                    var response = $.ajax({
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: {
+                            selectedName: selected
+                        },
+                        success:function( finalPosition ) {
+                            var posMarker = String(finalPosition).split("&");
+                            var buildingMarker = new google.maps.Marker({
+                                position: new google.maps.LatLng(posMarker[0],posMarker[1]),
+                                map: map,
+                                title: String(selected),
+                                animation: google.maps.Animation.DROP,
+                                content: String(selected),
+                                icon: document.getElementById("point-marker").value
+                            });
+                            var infowindow = new google.maps.InfoWindow({
+                                content: String(selected)
+                            });
+                            map.setCenter( new google.maps.LatLng(posMarker[0],posMarker[1]) );
+                            map.setZoom(15);
+                            google.maps.event.addListener(buildingMarker, 'click', function() {
+                                infowindow.open(map,buildingMarker);
+                            });
+                        }
+                    });
+                }else{
+                    Materialize.toast("Selecciona el edificio a buscar", 4000);
+                }
             });
-            $( "#selectedName" ).autocomplete({
+            /*$("#building-name").keypress(function( event ) {
+              if ( event.which == 13 ) {
+                 $("#search-building").trigger('click');
+              }
+            });*/
+            $( "#building-name" ).autocomplete({
                 source: function( request, response ) {
                     $.ajax({
                         url: "${createLink(controller: 'Building', action: 'getAllNames')}",
@@ -251,11 +262,9 @@
                 }
             });
         });
+        function clearAutoCompleteInput() {
+            $("#building-name").val('');
+        }
     </g:javascript>
-    <script>
-        $(document).foundation();
-        var doc = document.documentElement;
-        doc.setAttribute('data-useragent', navigator.userAgent);
-    </script>
 </body>
 </html>
