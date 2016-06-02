@@ -1,6 +1,9 @@
 ---
 grails:
     profile: web
+    gorm:
+        failOnError: true
+        autoFlush: true
     codegen:
         defaultPackage: uncake
     spring:
@@ -71,8 +74,6 @@ grails:
                 scriptlets: html
                 taglib: none
                 staticparts: none
-    gorm:
-        failOnError: true
 ---
 hibernate:
     cache:

@@ -1,5 +1,7 @@
 package uncake
 
+import grails.validation.ValidationException
+
 class UserController {
 
     def index() {
@@ -33,7 +35,9 @@ class UserController {
             // Validation works, will check if the image is too big
 
 
-        if (!user.save( )) {
+        try {
+            !user.save( )
+        } catch (ValidationException ve){
             flash.message ="imagen muy grande"
             redirect( action:"index" )
             //render(view:'selectavatar', model:[user:user])

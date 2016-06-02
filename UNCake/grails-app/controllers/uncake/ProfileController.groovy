@@ -153,7 +153,7 @@ redirect(controller: "profile")
         def u = session.user
 
         if (u.password != params.actPass.encodeAsSHA1()) {
-            flash.message1 = "Esa no era tu contraseña"
+            flash.message1 = "Esa no era tu contraseÃ±a"
             redirect(action: "changepassword" )
         } else {
             u.password=params.pass2.encodeAsSHA1()

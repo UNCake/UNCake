@@ -1,6 +1,7 @@
 package uncake
 
 import grails.converters.JSON
+import grails.validation.ValidationException
 import groovyx.net.http.HTTPBuilder
 
 import static groovyx.net.http.Method.POST
@@ -47,7 +48,10 @@ class ScheduleController {
                     if (!Course.findByCode(v.codigo)) {
                         def course = new Course(list.last())
                         course.location = Location.findByName(params.selectedLoc)
-                        if (!course.save()) {
+                        try {
+                            course.save()
+                        } catch (ValidationException ve)
+                        {
                             println "error guardando curso"
                         }
                     }

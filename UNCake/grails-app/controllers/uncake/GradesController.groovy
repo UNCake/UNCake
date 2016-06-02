@@ -118,7 +118,7 @@ class GradesController {
         def studyPlan = uncake.StudyPlan.findByCode( codeStudyPlan )
         def studyPlanCreated = false
         def coursesToSave = getCoursesToSave( periods, periodNames )
-        coursesToSave.each{ it.save(failOnError: true) }
+        coursesToSave.each{ it.save() }
 
         newUser.academicRecord.each{
             if( it.studyPlan.code == studyPlan.code )
@@ -137,7 +137,7 @@ class GradesController {
             }
         }
         def academicRecordToSave = new uncake.AcademicRecord( studyPlan: studyPlan, credits: getSumCredits(periods), PAPA: getPAPA(periods), PA: getPA(periods), courses: coursesToSave )
-        newUser.addToAcademicRecord( academicRecordToSave ).save(failOnError: true)
+        newUser.addToAcademicRecord( academicRecordToSave ).save()
         render ""
     }
 
@@ -175,7 +175,7 @@ class GradesController {
             def periodNumber = ((uncake.Course)it).semesterNumber
             def periodName = ((uncake.Course)it).semester
             def typology = ((uncake.Course)it).typology
-            if( !typology.equals('Idioma y nivelaci髇') )
+            if( !typology.equals('Idioma y nivelaci贸n') )
                 subjectsPAPA.add( ((uncake.Course)it) )
             else
                 creditsLanguage += ((uncake.Course)it).credits
@@ -230,7 +230,7 @@ class GradesController {
 
         subjectsPA.each{
             if( ( (uncake.Course)it ).grade >= 3  ){
-                if( ( (uncake.Course)it ).typology.equals("Fundamentaci髇") )
+                if( ( (uncake.Course)it ).typology.equals("Fundamentaci贸n") )
                     creditsFundamentals += ( (uncake.Course)it ).credits
                 if( ( (uncake.Course)it ).typology.equals("Disciplinar") )
                     creditsDisciplinary += ( (uncake.Course)it ).credits
@@ -414,7 +414,7 @@ class GradesController {
 
     def getCoursesToSave = { periods, periodNames ->
         def coursesToSave = []
-        def typologies = [ 'B' : 'Fundamentaci髇', 'C' : 'Disciplinar', 'L' : 'Electiva', 'P' : 'Idioma y nivelaci髇' ]
+        def typologies = [ 'B' : 'Fundamentaci贸n', 'C' : 'Disciplinar', 'L' : 'Electiva', 'P' : 'Idioma y nivelaci贸n' ]
         periods.eachWithIndex{ it, i ->
             def periodsText = String.valueOf( it )
             while( periodsText.find( subjectPattern ) ){
