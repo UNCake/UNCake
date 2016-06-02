@@ -3,6 +3,9 @@ grails:
     profile: web
     codegen:
         defaultPackage: uncake
+    spring:
+        transactionManagement:
+            proxies: false
 info:
     app:
         name: '@info.app.name@'
