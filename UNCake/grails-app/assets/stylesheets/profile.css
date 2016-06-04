@@ -1,3 +1,9 @@
+body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
+}
+
 img.avatar {
     width: 20%;
     height: 20%;
@@ -11,25 +17,19 @@ img.avatar {
 
 .small-size {
     width: 100%;
-
-
-
 }
 
 .size-list{
-
     margin-bottom: 5px;
 }
 
 .size-btn{
     margin-left: 0.2%;
-
     margin-bottom: 5px;
 }
 
 .cont{
     display: flex;
-
 }
 
 .font-usuario{
@@ -45,12 +45,7 @@ img.avatar {
 }
 
 .center {
-
-
     top: 80%;
-
-
-
     /*width: 40%;
     height: 50%;*/
 }
