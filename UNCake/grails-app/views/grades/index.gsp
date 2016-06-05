@@ -1,34 +1,13 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: alej0
-  Date: 12/01/2016
-  Time: 21:09
---%>
-
 <%@ page import="uncake.User" contentType="text/html;charset=UTF-8" %>
 <html>
-
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="layout" content="navbarNoJS"/>
     <title>UNCake - Progreso</title>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'bootstrap/css/bootstrap.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'jquery-ui/jquery-ui.css')}" type="text/css" />
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'agency.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'materialize/css/materialize.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'grades.css')}" type="text/css">
-
-    <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+    <asset:stylesheet src="jquery-ui/jquery-ui.css"/>
+    <asset:stylesheet src="grades.css"/>
 </head>
 
 <body id="grades-body" class="blue-grey lighten-5">
@@ -41,38 +20,6 @@
             <a class="modal-action modal-close waves-effect waves-light btn light-blue lighten-3">Cancelar</a>
         </div>
     </div>
-
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header page-scroll">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand page-scroll" href="/home">UNCake</a>
-            </div>
-            <g:if test="${session.user != null}">
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="hidden"><a href="#page-top"></a></li>
-                        <li><a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a></li>
-                        <li><a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Salir</a></li>
-                    </ul>
-                </div>
-            </g:if>
-            <g:if test="${session.user == null}">
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="hidden"><a href="#page-top"></a></li>
-                        <li><a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a></li>
-                        <li><a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a></li>
-                    </ul>
-                </div>
-            </g:if>
-        </div>
-    </nav>
 
     <header>
         <div><br/><br/><br/><br/></div>
