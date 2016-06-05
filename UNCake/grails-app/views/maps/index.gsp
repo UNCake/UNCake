@@ -1,81 +1,14 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: alej0
-  Date: 04/10/2015
-  Time: 21:05
---%>
-
-<%@ page contentType="text/html;charset=UTF-8" %>
 <html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="layout" content="navbarNoJS"/>
     <title>UNCake - Edificios</title>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
 
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'bootstrap/css/bootstrap.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'agency.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'mapsSchedule.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'jquery-ui/jquery-ui.css')}" type="text/css" />
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'materialize/css/materialize.css')}" type="text/css">
-    <link rel="stylesheet" href="${createLinkTo(dir:'stylesheet',file:'maps.css')}" type="text/css">
-
-    <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' ype='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+    <asset:stylesheet src="mapsSchedule.css"/>
+    <asset:stylesheet src="jquery-ui/jquery-ui.css"/>
+    <asset:stylesheet src="maps.css"/>
 
 </head>
-<body class="blue-grey lighten-5" style="/*background: url('${resource(dir: "images", file: "home/fotoUN_5.jpg")}'); background-repeat: no-repeat; background-size: 100% 100%;*/">
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header page-scroll">
-                <button type="button" class="navbar-toggle" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand page-scroll" href="/home">UNCake</a>
-            </div>
-
-            <g:if test="${session.user != null}">
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="hidden">
-                            <a href="#page-top"></a>
-                        </li>
-                        <li>
-                            <a class="page-scroll" href="profile"><span class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
-                        </li>
-                        <li>
-                            <a class="page-scroll" href="logout"><span class="glyphicon glyphicon-log-out"></span>Salir</a>
-                        </li>
-                    </ul>
-                </div>
-            </g:if>
-
-            <g:if test="${session.user == null}"   >
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="hidden">
-                            <a href="#page-top"></a>
-                        </li>
-                        <li>
-                            <a class="page-scroll" href="register"><span class="glyphicon glyphicon-user"></span>Registrarme</a>
-                        </li>
-                        <li>
-                            <a class="page-scroll" href="login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
-                        </li>
-                    </ul>
-                </div>
-            </g:if>
-        </div>
-    </nav>
+<body class="blue-grey lighten-5">
 
     <header>
         <div><br/><br/><br/><br/></div>
