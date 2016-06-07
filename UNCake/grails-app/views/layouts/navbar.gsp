@@ -9,18 +9,14 @@
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <asset:stylesheet src="foundation/jquery-ui/jquery-ui.css"/>
     <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
     <asset:stylesheet src="agency.css"/>
-    <asset:stylesheet src="dialogueStyle.css"/>
 
     <asset:link rel="icon" href="favicon.ico" type="image/x-ico"/>
+
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet'
-          type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-
 
     <g:layoutHead/>
 </head>
@@ -83,6 +79,5 @@
 
 <asset:javascript src="jquery-2.2.0.min.js"/>
 <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
-<asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
 </body>
 </html>

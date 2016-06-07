@@ -6,7 +6,6 @@
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-    <asset:stylesheet src="jquery-ui/jquery-ui.css"/>
     <asset:stylesheet src="grades.css"/>
 </head>
 

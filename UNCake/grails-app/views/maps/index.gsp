@@ -4,7 +4,6 @@
     <title>UNCake - Edificios</title>
 
     <asset:stylesheet src="mapsSchedule.css"/>
-    <asset:stylesheet src="jquery-ui/jquery-ui.css"/>
     <asset:stylesheet src="maps.css"/>
 
 </head>
