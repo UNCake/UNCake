@@ -1,0 +1,22 @@
+body {
+    padding-top: 70px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    background-color: #08283D;
+    margin: 0
+}
+
+img {
+    display: block;
+    margin: auto;
+    height: auto;
+}
+
+#imgM {
+    max-width: 30%;
+}
+
+#logo {
+    max-width: 40%;
+}
