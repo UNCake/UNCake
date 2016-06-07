@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
-    <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:javascript src="jquery-2.2.0.min.js"/>
 
     <script>
 

@@ -81,7 +81,7 @@
 <div class="footer"><p style="color: black; text-align: center">UNCake &copy; 2016</p></div>
 
 
-<asset:javascript src="jquery-2.1.3.js"/>
+<asset:javascript src="jquery-2.2.0.min.js"/>
 <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
 <asset:javascript src="foundation/jquery-ui/jquery-ui.js"/>
 </body>

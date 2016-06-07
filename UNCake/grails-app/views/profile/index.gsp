@@ -4,11 +4,9 @@
     <meta name="layout" content="navbar"/>
     <title>Perfil</title>
 
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
     <asset:stylesheet src="schedule.css"/>
     <asset:stylesheet src="profile.css"/>
-
+    <!-- TODO Change view schedule
     <script>
         $(function () {
             $(".showSchedule").click(function () {
@@ -37,6 +35,7 @@
         });
 
     </script>
+    -->
 </head>
 
 <body style="  background-color:rgba(0, 0, 0, 0.2); ">

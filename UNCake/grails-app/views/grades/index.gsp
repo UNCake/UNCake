@@ -203,7 +203,7 @@
         </div>
     <div/>
 
-    <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:javascript src="jquery-2.2.0.min.js"/>
     <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
     <asset:javascript src="jquery-ui/jquery-ui.js"/>
     <asset:javascript src="materialize/js/materialize.js"/>

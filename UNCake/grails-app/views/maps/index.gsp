@@ -99,7 +99,7 @@
         </div>
     </div>
     <script src="//maps.googleapis.com/maps/api/js"></script>
-    <asset:javascript src="jquery-2.1.3.js"/>
+    <asset:javascript src="jquery-2.2.0.min.js"/>
     <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
     <asset:javascript src="maps/maps.js"/>
     <asset:javascript src="materialize/js/materialize.js"/>
