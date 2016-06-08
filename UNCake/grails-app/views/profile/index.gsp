@@ -98,7 +98,7 @@
                 </g:each>
             </g:form>
         </div>
-        <a href="progress" class="btn btn-primary btn-xs">Agregar historia academica</a>
+        <a href="grades" class="btn btn-primary btn-xs">Agregar historia academica</a>
     </div>
 
     <div class="row">

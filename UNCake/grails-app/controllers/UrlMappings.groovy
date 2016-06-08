@@ -6,7 +6,7 @@ class UrlMappings {
         "/register"(controller: "register", action: "index")
         "/changephoto"(controller:"user" , action:"index")
         "/logout"(controller: "logout", action: "index")
-        "/progress"(controller: "progress", action: "index")
+        "/grades"(controller: "grades", action: "index")
         "/schedule"(controller: "schedule", action: "index")
         "/changepasswordok"(controller: "profile", action: "changepasswordok")
         "/changepassword"(controller: "profile", action: "changepassword")
