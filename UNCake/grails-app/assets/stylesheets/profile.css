@@ -1,12 +1,16 @@
 body {
     padding-top: 40px;
     padding-bottom: 40px;
-    background-color: #eee;
+    background-color: #f7f7f7;
 }
 
-img.avatar {
-    width: 20%;
-    height: 20%;
+#avatar {
+    display: block;
+    margin: auto;
+    min-width: 80px;
+    min-height: 80px;
+    max-width: 15%;
+    max-height: 15%;
 }
 
 .form-profile {
@@ -19,14 +23,6 @@ img.avatar {
     width: 100%;
 }
 
-.size-list{
-    margin-bottom: 5px;
-}
-
-.size-btn{
-    margin-left: 0.2%;
-    margin-bottom: 5px;
-}
 
 .cont{
     display: flex;
