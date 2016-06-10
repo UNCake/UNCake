@@ -50,10 +50,10 @@
         <div class="card blue-grey darken-1">
             <div class="card-content white-text">
                 <g:if test="${session.user.avatar == null}">
-                    <img src="${resource(dir: 'images', file: 'avatar.png')}" id="avatar">
+                    <img src="${resource(dir: 'images', file: 'avatar.png')}" id="avatar-img">
                 </g:if>
                 <g:if test="${session.user.avatar != null}">
-                    <img id="avatar"
+                    <img id="avatar-img"
                          src="${createLink(controller: 'user', action: 'avatar_image', id: session.user.ident())}"/>
                 </g:if>
 
@@ -61,9 +61,27 @@
             </div>
 
             <div class="card-action">
-                <a href="/changephoto" title="Cambia foto.">Cambiar o subir una foto</a>
+                <a class="modal-trigger" href="#changephoto">Cambiar foto de perfil</a>
                 <a href="/changepassword" title="Cambia tu contraseña.">Cambiar Contraseña</a>
             </div>
+        </div>
+    </div>
+
+    <g:if test="${flash.message != null}">
+        <div id ="message" class="alert alert-danger">
+            <strong>${flash.message}</strong>
+        </div>
+    </g:if>
+
+
+
+    <div id="changephoto" class="modal">
+        <div class="modal-content">
+            <h4>Cambiar foto de perfil</h4>
+            <g:uploadForm controller="User" action="upload_avatar">
+                <input type="file" name="avatar" id="avatar" />
+                <button type="submit" class="btn waves-effect waves-green" > Subir </button>
+            </g:uploadForm>
         </div>
     </div>
 
@@ -84,26 +102,29 @@
                 </h4>
 
                 <div class="collection">
-                <g:if test="${academicRecords.size() == 0}">
-                    No tienes ninguna historia académica
-                </g:if>
-                <g:form action="delAcademicRecord">
-                    <g:each in="${academicRecords}" status="k" var="it">
-                        <div class="cont">
-                            <g:link class="collection-item small-size"
-                                    controller="grades" action="index"
-                                    params="${[plan: it.studyPlan.code + " & " + it.studyPlan.name]}">${it.studyPlan.name}</g:link>
-                            <button name="ind2" value="${k}" type="submit"
-                                    class="btn-large secondary-content"><i class="material-icons">delete</i></button>
-                            <div hidden><g:textArea name="dacademicrecord" value="${it.id}"/></div>
-                        </div>
+                    <g:if test="${academicRecords.size() == 0}">
+                        No tienes ninguna historia académica
+                    </g:if>
+                    <g:form action="delAcademicRecord">
+                        <g:each in="${academicRecords}" status="k" var="it">
+                            <div class="cont">
+                                <g:link class="collection-item small-size"
+                                        controller="grades" action="index"
+                                        params="${[plan: it.studyPlan.code + " & " + it.studyPlan.name]}">${it.studyPlan.name}</g:link>
+                                <button name="ind2" value="${k}" type="submit"
+                                        class="btn-large secondary-content"><i class="material-icons">delete</i>
+                                </button>
 
-                    </g:each>
-                </g:form>
-                    </div>
+                                <div hidden><g:textArea name="dacademicrecord" value="${it.id}"/></div>
+                            </div>
+
+                        </g:each>
+                    </g:form>
+                </div>
 
                 <p>
-                    <a href="grades" class="btn-floating waves-effect waves-light red"><i class="material-icons">add</i></a>
+                    <a href="grades" class="btn-floating waves-effect waves-light red"><i class="material-icons">add</i>
+                    </a>
                     Agregar historia académica
                 </p>
 
@@ -127,7 +148,8 @@
                                 <a val="${schedule.name}" class="showSchedule collection-item small-size">
                                     ${schedule.name}</a>
                                 <button name="ind1" value="${i}" type="submit"
-                                        class="btn-large secondary-content"><i class="material-icons">delete</i></button>
+                                        class="btn-large secondary-content"><i class="material-icons">delete</i>
+                                </button>
 
                                 <div hidden><g:textArea name="dschedule" value="${schedule.id}"/></div>
                             </div>
@@ -152,7 +174,8 @@
                 </div>
 
                 <p>
-                    <a href="schedule" class="btn-floating waves-effect waves-light red"><i class="material-icons">add</i></a>
+                    <a href="schedule" class="btn-floating waves-effect waves-light red"><i
+                            class="material-icons">add</i></a>
                     Agregar horario
                 </p>
 
@@ -193,6 +216,14 @@
 
 <asset:javascript src="jquery-2.2.0.min.js"/>
 <asset:javascript src="materialize/js/materialize.js"/>
+
+<script>
+    $(document).ready(function () {
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal-trigger').leanModal();
+        $('#message').delay(5000).fadeOut('slow');
+    });
+</script>
 
 </body>
 </html>

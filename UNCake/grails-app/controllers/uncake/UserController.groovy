@@ -19,7 +19,7 @@ class UserController {
             if (!okcontents.contains(f.getContentType())) {
                 flash.message = "Formato incorrecto, la foto debe ser : ${okcontents}"
                 //render(view:'selectavatar', model:[user:user])
-                redirect(action: "index")
+                redirect(controller: "profile" )
                 return
             }
 
@@ -39,11 +39,11 @@ class UserController {
             !user.save( )
         } catch (ValidationException ve){
             flash.message ="imagen muy grande"
-            redirect( action:"index" )
+            redirect(controller: "profile" )
             //render(view:'selectavatar', model:[user:user])
             return
         }
-        flash.message = "Avatar (${user.avatarType}, ${user.avatar.size()} bytes) uploaded."
+        //flash.message = "Avatar (${user.avatarType}, ${user.avatar.size()} bytes) uploaded."
         redirect(controller: "profile" )
 
     }

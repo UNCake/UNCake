@@ -4,7 +4,7 @@ body {
     background-color: #f7f7f7;
 }
 
-#avatar {
+#avatar-img {
     display: block;
     margin: auto;
     min-width: 80px;
@@ -23,16 +23,9 @@ body {
     width: 100%;
 }
 
-
 .cont{
     display: flex;
-}
-
-.font-usuario{
-    font-size: 36px;
-    text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-weight: 700;
+    display: -webkit-flex;
 }
 
 .size-img{
