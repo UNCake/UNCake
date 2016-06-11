@@ -5,47 +5,53 @@ import grails.validation.ValidationException
 class UserController {
 
     def index() {
-        render (view: "selectavatar") }
+        redirect(controller: "profile")
+    }
     private static final okcontents = ['image/png', 'image/jpeg', 'image/gif']
 
     def upload_avatar() {
 
-            def user = session.user // or however you select the current user
+        def user = session.user // or however you select the current user
 
-            // Get the avatar file from the multi-part request
-            def f = request.getFile('avatar')
+        // Get the avatar file from the multi-part request
+        if (request.getAttribute(CustomMultipartResolver.FILE_SIZE_EXCEEDED_ERROR)) {
+            flash.message = "La imagen es demasiado grande, no puede superar 2MB"
+            redirect(controller: "profile")
+            return
+        }
+        def f = request.getFile('avatar')
 
-            // List of OK mime-types
-            if (!okcontents.contains(f.getContentType())) {
-                flash.message = "Formato incorrecto, la foto debe ser : ${okcontents}"
-                //render(view:'selectavatar', model:[user:user])
-                redirect(controller: "profile" )
-                return
-            }
+        // List of OK mime-types
+        if(!f){
+            flash.message = "Selecciona una imagen"
+            redirect(controller: "profile")
+            return
+        }
 
-            // Save the image and mime type
+        if (!okcontents.contains(f.getContentType())) {
+            flash.message = "Formato incorrecto, la foto debe ser : ${okcontents}"
+            redirect(controller: "profile")
+            return
+        }
 
-                user.avatar = f.bytes
-                user.avatarType = f.contentType
+        // Save the image and mime type
 
+        user.avatar = f.bytes
+        user.avatarType = f.contentType
 
+        log.info("File uploaded: $user.avatarType")
 
-            log.info("File uploaded: $user.avatarType")
-
-            // Validation works, will check if the image is too big
-
+        // Validation works, will check if the image is too big
 
         try {
-            !user.save( )
-        } catch (ValidationException ve){
-            flash.message ="imagen muy grande"
-            redirect(controller: "profile" )
-            //render(view:'selectavatar', model:[user:user])
+            !user.save()
+        } catch (ValidationException ve) {
+            flash.message = "Ocurrio un error subiendo la imagen"
+            redirect(controller: "profile")
             return
         }
         //flash.message = "Avatar (${user.avatarType}, ${user.avatar.size()} bytes) uploaded."
-        redirect(controller: "profile" )
-
+        redirect(controller: "profile")
     }
 
     def avatar_image() {
