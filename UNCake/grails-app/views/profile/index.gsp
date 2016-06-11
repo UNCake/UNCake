@@ -62,26 +62,54 @@
 
             <div class="card-action">
                 <a class="modal-trigger" href="#changephoto">Cambiar foto de perfil</a>
-                <a href="/changepassword" title="Cambia tu contraseña.">Cambiar Contraseña</a>
+                <a class="modal-trigger" href="#changepassword">Cambiar Contraseña</a>
             </div>
         </div>
     </div>
 
     <g:if test="${flash.message != null}">
-        <div id ="message" class="alert alert-danger">
+        <div id="message" class="alert alert-danger">
             <strong>${flash.message}</strong>
         </div>
     </g:if>
-
-
 
     <div id="changephoto" class="modal">
         <div class="modal-content">
             <h4>Cambiar foto de perfil</h4>
             <g:uploadForm controller="User" action="upload_avatar">
-                <input type="file" name="avatar" id="avatar" />
-                <button type="submit" class="btn waves-effect waves-green" > Subir </button>
+                <input type="file" name="avatar" id="avatar"/>
+                <button type="submit" class="btn waves-effect waves-green">Subir</button>
             </g:uploadForm>
+        </div>
+    </div>
+
+    <div id="changepassword" class="modal">
+        <div class="modal-content">
+            <h4>Cambiar Contraseña</h4>
+
+            <g:form class="form-signin" action="changePass" method="post">
+
+                <div class="input-field col s6">
+                    <input id="actPass" type="password" class="validate" required name="actPass">
+                    <label for="actPass">Contraseña actual</label>
+                </div>
+
+                <div class="input-field col s6">
+                    <input title="La contraseña debe tener entre 7 y 15 caracteres" id="pass" type="password"
+                           class="validate" required pattern="[0-9a-zA-Z]{7,15}" name="pass"
+                           onchange="this.setCustomValidity(this.validity.patternMismatch ? this.title : '');
+                           if (this.checkValidity()) form.pwd2.pattern = this.value;">
+                    <label for="pass">Contraseña nueva</label>
+                </div>
+
+                <div class="input-field col s6">
+                    <input title="Las contraseñas deben coincidir" id="pass2" type="password"
+                           class="validate" required pattern="[0-9a-zA-Z]{7,15}" name="pass2"
+                           onchange="this.setCustomValidity(this.validity.patternMismatch ? this.title : '');">
+                    <label for="pass2">Confirma la contraseña</label>
+                </div>
+                <button type="submit" class="btn waves-effect waves-green">Cambiar contraseña</button>
+            </g:form>
         </div>
     </div>
 
