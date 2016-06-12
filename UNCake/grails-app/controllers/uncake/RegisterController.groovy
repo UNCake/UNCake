@@ -21,8 +21,9 @@ class RegisterController {
             redirect(controller:'register',action:'index')
         }else{
             try {
-                new User(email: params.email, password: params.pwd2.encodeAsSHA1(), name: params.nombre).save()
-                redirect(controller:'login')
+                def u = new User(email: params.email, password: params.pwd2.encodeAsSHA1(), name: params.nombre).save()
+                session.user = u
+                redirect(controller:'home')
             } catch(ValidationException ve) {
                 flash.message1="El email es invalido"
                 redirect(controller:'register')
