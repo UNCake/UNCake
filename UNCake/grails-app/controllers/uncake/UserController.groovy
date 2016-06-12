@@ -19,6 +19,12 @@ class UserController {
             redirect(controller: "profile")
             return
         }
+
+        if (request.getAttribute(CustomMultipartResolver.FILE_UPLOADING_ERROR)) {
+            flash.message = "Ocurrio un error subiendo la imagen"
+            redirect(controller: "profile")
+            return
+        }
         def f = request.getFile('avatar')
 
         // List of OK mime-types

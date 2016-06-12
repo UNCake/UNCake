@@ -2,6 +2,7 @@ package uncake;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
@@ -12,6 +13,7 @@ import java.util.LinkedHashMap;
 public class CustomMultipartResolver extends CommonsMultipartResolver {
 
     static final String FILE_SIZE_EXCEEDED_ERROR = "fileSizeExceeded";
+    static final String FILE_UPLOADING_ERROR = "fileUploadFailed";
 
     public MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) {
 
@@ -20,6 +22,10 @@ public class CustomMultipartResolver extends CommonsMultipartResolver {
         } catch (MaxUploadSizeExceededException e) {
             request.setAttribute(FILE_SIZE_EXCEEDED_ERROR, true);
             return new DefaultMultipartHttpServletRequest(request, new LinkedMultiValueMap<>(), new LinkedHashMap<>(), new LinkedHashMap<>());
+        }  catch (MultipartException e) {
+            request.setAttribute(FILE_UPLOADING_ERROR, true);
+            return new DefaultMultipartHttpServletRequest(request, new LinkedMultiValueMap<>(), new LinkedHashMap<>(), new LinkedHashMap<>());
         }
     }
+
 }

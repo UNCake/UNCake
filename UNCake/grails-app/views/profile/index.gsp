@@ -77,7 +77,15 @@
         <div class="modal-content">
             <h4>Cambiar foto de perfil</h4>
             <g:uploadForm controller="User" action="upload_avatar">
-                <input type="file" name="avatar" id="avatar"/>
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Archivo</span>
+                        <input type="file" name="avatar" id="avatar" accept="image/*">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                    </div>
+                </div>
                 <button type="submit" class="btn waves-effect waves-green">Subir</button>
             </g:uploadForm>
         </div>
