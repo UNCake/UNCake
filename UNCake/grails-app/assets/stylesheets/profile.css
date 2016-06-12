@@ -1,6 +1,5 @@
 body {
     padding-top: 40px;
-    padding-bottom: 40px;
     background-color: #f7f7f7;
 }
 
@@ -13,12 +12,6 @@ body {
     max-height: 15%;
 }
 
-.form-profile {
-    max-width: 600px;
-    padding: 15px;
-    margin: 0 auto;
-}
-
 .small-size {
     width: 100%;
 }
@@ -26,15 +19,4 @@ body {
 .cont{
     display: flex;
     display: -webkit-flex;
-}
-
-.size-img{
-    max-height:3%;
-    max-width: 3%;
-}
-
-.center {
-    top: 80%;
-    /*width: 40%;
-    height: 50%;*/
 }

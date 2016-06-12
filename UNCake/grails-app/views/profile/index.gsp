@@ -7,7 +7,6 @@
     <asset:stylesheet src="schedule.css"/>
     <asset:stylesheet src="profile.css"/>
 
-    <asset:stylesheet src="materialize/css/materialize.css"/>
     <!-- TODO Change view schedule
     <script>
         $(function () {

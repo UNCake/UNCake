@@ -145,9 +145,6 @@ redirect(controller: "profile")
         u.removeFromAcademicRecord(arToDelete).save()
         redirect(controller: "profile")
     }
-    def changepassword(){
-
-    }
 
     def changePass() {
         def u = session.user
@@ -161,10 +158,6 @@ redirect(controller: "profile")
             flash.message = "Contraseña cambiada correctamente"
             redirect(action: "index")
         }
-
-    }
-
-    def changepasswordok(){
 
     }
 
