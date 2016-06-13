@@ -4,15 +4,12 @@ package uncake
 class SecurityInterceptor {
 
     SecurityInterceptor() {
-        //poner aqui las paginas que solo se peudan ver si el usuario esta loggeado
-
-        //matchAll()
-        //        .except(controller:'user', action:'login')
+        match(controller:'profile')
     }
 
     boolean before() {
-        if (!session.user && actionName != "index" && controllerName != "login") {
-            redirect(controller: "login", action: "index")
+        if (!session.user) {
+            redirect(controller: "home", action: "index")
             return false
         }
         return true
