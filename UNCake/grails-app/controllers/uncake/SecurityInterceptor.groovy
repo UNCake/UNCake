@@ -5,6 +5,7 @@ class SecurityInterceptor {
 
     SecurityInterceptor() {
         match(controller:'profile')
+        match(controller:'user')
     }
 
     boolean before() {

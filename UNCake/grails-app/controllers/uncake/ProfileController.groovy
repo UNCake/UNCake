@@ -32,19 +32,11 @@ class ProfileController {
 
         [academicRecords: academicRecords,friends: friends,schedules: schedules, ftg: friendToGo]
 
-
-
     }
 
-
+/*
     def index2() {
-
-
         [ ftg: friendToGo]
-
-
-
-
     }
 
     def delFriend(){
@@ -105,13 +97,18 @@ redirect(controller: "profile")
         //render(view: "index", model: [ftg: friendToGo ])
     }
 
-
+*/
     def delSchedule(){
         def email=session.user.email
         def u=User.findWhere(email: email)
 
         def scheduleToDelete
-
+        
+        if(!params.ind1) {
+            redirect(controller: "profile")
+            return
+        }
+        
         if(u.schedules.size()==1){
 
 
@@ -119,6 +116,7 @@ redirect(controller: "profile")
 
         }else{
             println params.int("ind1")
+            
             scheduleToDelete = Schedule.findWhere(id:  (params.dschedule[params.int("ind1")]).toLong() )
         }
 
@@ -131,9 +129,13 @@ redirect(controller: "profile")
         def u=User.findWhere(email: email)
 
         def arToDelete
-
+        
+        if(!params.ind2) {
+            redirect(controller: "profile")
+            return
+        }
+        
         if(u.schedules.size()==1){
-
 
             arToDelete = AcademicRecord.findWhere(id: params.dacademicrecord.toLong())
 
@@ -148,7 +150,10 @@ redirect(controller: "profile")
 
     def changePass() {
         def u = session.user
-
+        if(!params.actPass) {
+            redirect(controller: "profile")
+            return
+        }
         if (u.password != params.actPass.encodeAsSHA1()) {
             flash.message = "Esa no era tu contraseña"
             redirect(action: "index" )

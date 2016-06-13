@@ -12,7 +12,12 @@ class UserController {
     def upload_avatar() {
 
         def user = session.user // or however you select the current user
-
+        
+        if(request.get) {
+            redirect(controller: "profile")
+            return
+        }
+        
         // Get the avatar file from the multi-part request
         if (request.getAttribute(CustomMultipartResolver.FILE_SIZE_EXCEEDED_ERROR)) {
             flash.message = "La imagen es demasiado grande, no puede superar 2MB"
