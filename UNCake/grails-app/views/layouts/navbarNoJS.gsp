@@ -8,8 +8,7 @@
         <g:layoutTitle default="UNCake"/>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    
-    <asset:stylesheet src="bootstrap/css/bootstrap.min.css"/>
+
     <asset:stylesheet src="agency.css"/>
     <asset:stylesheet src="materialize/css/materialize.css"/>
 
@@ -24,53 +23,44 @@
 
 <body>
 
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header page-scroll">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand page-scroll" href="/home">UNCake</a>
-        </div>
-        <g:if test="${session.user != null}">
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="hidden">
-                        <a href="#page-top"></a>
-                    </li>
+<div class="navbar-fixed">
+    <nav class="navbar-default">
+        <div class="nav-wrapper">
+            <a href="/home" class="brand-logo navbar-brand">UNCake</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 
-                    <li>
-                        <a class="page-scroll" href="/profile"><span
-                                class="glyphicon glyphicon-user"></span>Hola ${session.user.name.split()[0]}!</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="/logout"><span class="glyphicon glyphicon-log-out"></span>Salir</a>
-                    </li>
+            <g:if test="${session.user != null}">
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="/profile"> <i class="material-icons left">account_circle</i>
+                        Hola ${session.user.name.split()[0]}!</a></li>
+                    <li><a href="/logout"><i class="material-icons left">exit_to_app</i>
+                        Salir</a></li>
                 </ul>
-            </div>
-        </g:if>
-        <g:if test="${session.user == null}">
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="hidden">
-                        <a href="#page-top"></a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="/register"><span class="glyphicon glyphicon-user"></span>Registrarme
-                        </a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="/login"><span class="glyphicon glyphicon-log-in"></span>Ingresar</a>
-                    </li>
+                <ul class="side-nav" id="mobile-demo">
+                    <li><a href="/profile"> <i class="material-icons left">account_circle</i>
+                        Hola ${session.user.name.split()[0]}!</a></li>
+                    <li><a href="/logout"><i class="material-icons left">exit_to_app</i>
+                        Salir</a></li>
                 </ul>
-            </div>
-        </g:if>
-    </div>
-</nav>
+            </g:if>
+
+            <g:if test="${session.user == null}">
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="/register"> <i class="material-icons left">account_circle</i>
+                        Registrarme</a></li>
+                    <li><a href="/login"><i class="material-icons left">exit_to_app</i>
+                        Ingresar</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li><a href="/register"> <i class="material-icons left">account_circle</i>
+                        Registrarme</a></li>
+                    <li><a href="/login"><i class="material-icons left">exit_to_app</i>
+                        Ingresar</a></li>
+                </ul>
+            </g:if>
+        </div>
+    </nav>
+</div>
 
 
 <g:layoutBody/>
