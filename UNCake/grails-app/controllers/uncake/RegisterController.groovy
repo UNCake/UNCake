@@ -6,15 +6,11 @@ class RegisterController {
 
     def index() {
         if(session.user!=null){
-            render{
-                div(id: "myDiv", "Ya iniciaste sesión, si no eres ${session.user.name} y quieres registrate oprime atrás y luego el botón de salir")
-            }
-
+            redirect(controller:'home')
         }
-
     }
-    def doRegister = {
 
+    def doRegister = {
 
         if(User.findWhere(email: params.email)){
             flash.message1="El email ya existe"
