@@ -9,7 +9,7 @@
 
 <body>
 
-<div class="container center-contatiner-r">
+<div class="container">
     <g:form class="form-signin" action="doRegister" method="post">
     <form class="form-signin">
         <h2 class="form-signin-heading " align="center">Registrate ya!</h2>
@@ -27,14 +27,17 @@
         </div>-->
         <div class="form-group" >
             <label class="sr-only">Contraseña</label>
-            <input title="La contraseña debe tener entre 7 y 15 caracteres alfanuméricos" type="password"  class="form-control" placeholder="Contraseña" required pattern="[0-9a-zA-Z]{7,15}" name="pwd1" onchange="
+            <input title="La contraseña debe tener entre 7 y 15 caracteres alfanuméricos" type="password"
+                   class="form-control" placeholder="Contraseña" required pattern="[0-9a-zA-Z]{7,15}"
+                   name="pwd1" onchange="
                 this.setCustomValidity(this.validity.patternMismatch ? this.title : '');
                 if(this.checkValidity()) form.pwd2.pattern = this.value;" >
 
         </div>
         <div class="form-group" >
             <label class="sr-only">Confirma la contraseña</label>
-            <input title="Las contraseñas deben coincidir" type="password"  class="form-control" placeholder="Confirma la contraseña" required pattern="[0-9a-zA-Z]{7,15}" name="pwd2" onchange="
+            <input title="Las contraseñas deben coincidir" type="password"  class="form-control"
+                   placeholder="Confirma la contraseña" required pattern="[0-9a-zA-Z]{7,15}" name="pwd2" onchange="
                 this.setCustomValidity(this.validity.patternMismatch ? this.title : '');" >
         </div>
         <div class="error errorm">${flash.message1}</div>
