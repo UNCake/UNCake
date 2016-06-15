@@ -20,10 +20,6 @@
         </div>
     </div>
 
-    <header>
-        <div><br/><br/><br/><br/></div>
-    </header>
-
     <div class="content">
         <div class="row transparent">
             <div class="col s10 offset-s1">

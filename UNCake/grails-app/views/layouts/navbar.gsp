@@ -63,11 +63,6 @@
     </nav>
 </div>
 
-<g:layoutBody/>
-
-<div class="footer"><p style="color: black; text-align: center">UNCake &copy; 2016</p></div>
-
-
 <asset:javascript src="jquery-2.2.0.min.js"/>
 <asset:javascript src="materialize/js/materialize.js"/>
 <script>
@@ -75,5 +70,9 @@
         $(".button-collapse").sideNav();
     })
 </script>
+
+<g:layoutBody/>
+<div class="footer"><p style="color: black; text-align: center">UNCake &copy; 2016</p></div>
+
 </body>
 </html>
