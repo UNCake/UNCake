@@ -1,7 +1,7 @@
 <%@ page import="uncake.GradesController" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <meta name="layout" content="navbarNoJS"/>
+    <meta name="layout" content="navbar"/>
     <title>Perfil</title>
 
     <asset:stylesheet src="schedule.css"/>
@@ -43,16 +43,14 @@
 
 <div class="container">
 
-    <br>
-
     <div class="row">
         <div class="card blue-grey darken-1">
             <div class="card-content white-text">
                 <g:if test="${session.user.avatar == null}">
-                    <img src="${resource(dir: 'images', file: 'avatar.png')}" id="avatar-img">
+                    <img src="${resource(dir: 'images', file: 'avatar.png')}" id="avatar-img" class="circle">
                 </g:if>
                 <g:if test="${session.user.avatar != null}">
-                    <img id="avatar-img"
+                    <img id="avatar-img" class="circle"
                          src="${createLink(controller: 'user', action: 'avatar_image', id: session.user.ident())}"/>
                 </g:if>
 
@@ -248,9 +246,6 @@
 </div>
 
 </div>
-
-<asset:javascript src="jquery-2.2.0.min.js"/>
-<asset:javascript src="materialize/js/materialize.js"/>
 
 <script>
     $(document).ready(function () {

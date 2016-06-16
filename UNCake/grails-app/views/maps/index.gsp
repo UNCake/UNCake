@@ -1,6 +1,6 @@
 <html class="no-js" lang="en" data-useragent="Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)">
 <head>
-    <meta name="layout" content="navbarNoJS"/>
+    <meta name="layout" content="navbar"/>
     <title>UNCake - Edificios</title>
 
     <asset:stylesheet src="mapsSchedule.css"/>
@@ -9,14 +9,10 @@
 </head>
 <body class="blue-grey lighten-5">
 
-    <header>
-        <div><br/><br/><br/><br/></div>
-    </header>
-
     <div class="content">
         <div class="row transparent">
             <br/>
-            <div class="col-sm-3 transparent">
+            <div class="col m3 transparent">
                 <div class="card blue-grey darken-1">
                     <div class="card-content white-text">
                         <span class="card-title">Información</span>
@@ -34,7 +30,7 @@
             </div>
 
 
-            <div class="col-sm-6 transparent" >
+            <div class="col m6 transparent" >
                 <div class="card white">
                     <div>
                         <div class="large-12 columns">
@@ -48,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col m3">
                 <div class="card blue-grey darken-1">
                     <div class="card-content white-text">
                         <span class="card-title">Horarios</span>
@@ -98,10 +94,7 @@
         </div>
     </div>
     <script src="//maps.googleapis.com/maps/api/js"></script>
-    <asset:javascript src="jquery-2.2.0.min.js"/>
-    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
     <asset:javascript src="maps/maps.js"/>
-    <asset:javascript src="materialize/js/materialize.js"/>
     <asset:javascript src="jquery-ui/jquery-ui.js"/>
     <g:javascript>
         arrayMarkers = [];
