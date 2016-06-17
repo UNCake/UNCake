@@ -2,6 +2,11 @@ body {
     background-color: #f7f7f7;
 }
 
+h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 #avatar-img {
     display: block;
     margin: auto;

@@ -245,6 +245,9 @@ nav ul a {
     font-weight: 400;
     letter-spacing: 1px;
     color: #222; /*#c4c4c4;*/
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .navbar-default .nav li a:hover,
