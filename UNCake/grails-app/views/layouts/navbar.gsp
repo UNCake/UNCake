@@ -32,13 +32,29 @@
 
             <g:if test="${session.user != null}">
                 <ul class="right hide-on-med-and-down">
-                    <li><a href="/profile"> <i class="material-icons left">account_circle</i>
-                        Hola ${session.user.name.split()[0]}!</a></li>
+                    <li class="valign-wrapper">
+                        <g:if test="${session.user.avatar == null}">
+                            <i class="material-icons left">account_circle</i>
+                        </g:if>
+                        <g:if test="${session.user.avatar != null}">
+                            <img class="circle" style="height: 30px; width: 30px"
+                                 src="${createLink(controller: 'user', action: 'avatar_image', id: session.user.ident())}"/>
+                        </g:if>
+                        <a href="/profile" class="valign">
+                            Hola ${session.user.name.split()[0]}!</a></li>
                     <li><a href="/logout"><i class="material-icons left">exit_to_app</i>
                         Salir</a></li>
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
-                    <li><a href="/profile"> <i class="material-icons left">account_circle</i>
+                    <li class="valign-wrapper">
+                        <g:if test="${session.user.avatar == null}">
+                            <i class="material-icons left">account_circle</i>
+                        </g:if>
+                        <g:if test="${session.user.avatar != null}">
+                            <img class="circle" style="height: 30px; width: 30px"
+                                 src="${createLink(controller: 'user', action: 'avatar_image', id: session.user.ident())}"/>
+                        </g:if>
+                        <a href="/profile" class="valign">
                         Hola ${session.user.name.split()[0]}!</a></li>
                     <li><a href="/logout"><i class="material-icons left">exit_to_app</i>
                         Salir</a></li>
