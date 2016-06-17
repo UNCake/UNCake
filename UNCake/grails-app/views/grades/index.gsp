@@ -1,7 +1,7 @@
 <%@ page import="uncake.User" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <meta name="layout" content="navbarNoJS"/>
+    <meta name="layout" content="navbar"/>
     <title>UNCake - Progreso</title>
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -198,14 +198,10 @@
         </div>
     <div/>
 
-    <asset:javascript src="jquery-2.2.0.min.js"/>
-    <asset:javascript src="bootstrap/js/bootstrap.min.js"/>
     <asset:javascript src="jquery-ui/jquery-ui.js"/>
-    <asset:javascript src="materialize/js/materialize.js"/>
     <g:javascript>
         $(document).ready(function() {
             $('select').material_select();
-            $('.caret').html('');
         });
         google.load("visualization", "1.1", {packages:["bar", "corechart", "imagebarchart", "table"]});
         const PAPA = 'PAPA', PA = 'PA', PERIOD_NAMES = 'period_names', SUBJECTS = 'subjects', ADVANCE_COMP = 'advance_comp', ADVANCE = 'advance', PLAN = 'plan';
