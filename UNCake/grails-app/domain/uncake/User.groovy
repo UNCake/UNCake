@@ -7,15 +7,15 @@ class User {
     String password
     byte[] avatar
     String avatarType
-    //Posible avatar Img avt
+
     static hasMany = [academicRecord: AcademicRecord, friends: User, schedules: Schedule]
     static constraints = {
         name blank: false
-        email blank: false, email: true
+        email blank: false
         password blank: false
         friends nullable: true
         academicRecord nullable: true
-        avatar(nullable:true, maxSize: 1000000 /* 1000k */)
+        avatar(nullable:true, maxSize: 2097152 /* 2MB */)
         avatarType(nullable:true)
     }
 }

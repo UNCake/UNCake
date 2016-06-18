@@ -5,6 +5,7 @@ class Schedule {
     Integer credits
     String name
     String image
+    static belongsTo = [user: User]
     static hasMany = [courses: Groups]
     static constraints = {
         courses nullable: true
