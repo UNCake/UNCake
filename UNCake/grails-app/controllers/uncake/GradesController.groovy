@@ -114,28 +114,25 @@ class GradesController {
         def periodNames = getPeriodNames(academicRecord)
         def newUser = User.findById(((User) session.user).id)
         def codeStudyPlan = Integer.parseInt(String.valueOf(academicRecord.find(planPattern)).split('\\|')[0].trim())
-        def studyPlanCreated = false
+        def academicRecordToSave
 
         newUser.academicRecord.each {
             if (it.studyPlan.code == codeStudyPlan)
-                studyPlanCreated = true
-        }
-        if (studyPlanCreated) {
-            def delStudyPlan = []
-
-            newUser.academicRecord.each {
-                if (AcademicRecord.findById(it.id).studyPlan.code == codeStudyPlan)
-                    delStudyPlan.add(it)
-            }
-
-            delStudyPlan.each {
-                newUser.removeFromAcademicRecord(AcademicRecord.findById(((AcademicRecord) it).id))
-            }
+                academicRecordToSave = it
         }
 
-        def academicRecordToSave = new AcademicRecord(studyPlan: StudyPlan.findByCode(codeStudyPlan),
-                credits: getSumCredits(periods), PAPA: getPAPA(periods), PA: getPA(periods))
-        newUser.addToAcademicRecord(academicRecordToSave)
+        if (academicRecordToSave) {
+            academicRecordToSave.credits = getSumCredits(periods)
+            academicRecordToSave.PAPA = getPAPA(periods).last()
+            academicRecordToSave.PA = getPA(periods).last()
+            academicRecordToSave.courses = null
+            academicRecordToSave.save()
+        }else {
+            academicRecordToSave = new AcademicRecord(studyPlan: StudyPlan.findByCode(codeStudyPlan),
+                    credits: getSumCredits(periods), PAPA: getPAPA(periods).last(), PA: getPA(periods).last())
+            newUser.addToAcademicRecord(academicRecordToSave)
+        }
+
         getCoursesToSave(academicRecordToSave, periods, periodNames)
         academicRecordToSave.save()
         render ""
@@ -149,6 +146,7 @@ class GradesController {
         def periods = []
         def periodsToSort = []
         def subjectsPAPA = []
+        def subjectsPA = []
         def gradesPAPAPerPeriod = []
         def creditsPAPAPerPeriod = []
         def PAPAPerPeriod = []
@@ -175,8 +173,14 @@ class GradesController {
             def periodNumber = it.semesterNumber
             def periodName = it.semester
             def typology = it.typology
-            if (!typology.equals('Idioma y nivelación'))
+            if (!typology.equals('Idioma y nivelación')) {
                 subjectsPAPA.add(it)
+                def subject = subjectsPA.find{a -> a.code == it.code}
+                if (subject && subject.grade < it.grade){
+                    subjectsPA.remove(subject)
+                }
+                subjectsPA.add(it)
+            }
             else
                 creditsRemedial += it.credits
             if (!(periodNumber + "&&&" + periodName in periodsToSort)) {
@@ -186,19 +190,6 @@ class GradesController {
         }
         periodsToSort.each {
             periods[Integer.parseInt(it.split("&&&")[0]) - 1] = it.split("&&&")[1]
-        }
-        def subjectsPA = subjectsPAPA
-        subjectsPAPA.eachWithIndex { subject, i ->
-            subjectsPAPA.eachWithIndex { subject2, j ->
-                if (i != j) {
-                    if (subject.code == subject2.code) {
-                        if (subject.grade < subject2.grade)
-                            subjectsPA.remove(i)
-                        else
-                            subjectsPA.remove(j)
-                    }
-                }
-            }
         }
 
         periods.eachWithIndex { period, i ->
