@@ -10,5 +10,6 @@ class AcademicRecord {
     static hasMany = [courses: ARCourse]
 
     static constraints = {
+        courses nullable: true
     }
 }

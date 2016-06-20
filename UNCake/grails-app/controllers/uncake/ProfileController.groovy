@@ -21,8 +21,6 @@ class ProfileController {
 
         }
 
-
-
         //Pasa a la vista los amigos
         def friends=[]
         for (fr in u.friends) {
