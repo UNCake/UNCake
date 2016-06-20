@@ -124,7 +124,7 @@ redirect(controller: "profile")
 
     def delAcademicRecord(){
         def email=session.user.email
-        def u=User.findWhere(email: email)
+        def u = (User) User.findWhere(email: email)
 
         def arToDelete
         
@@ -133,16 +133,13 @@ redirect(controller: "profile")
             return
         }
         
-        if(u.schedules.size()==1){
-
-            arToDelete = AcademicRecord.findWhere(id: params.dacademicrecord.toLong())
-
+        if(u.schedules.size() == 1){
+            arToDelete = AcademicRecord.findWhere(id: params.dacademicrecord.toLong(), user: u)
         }else{
-
-            arToDelete = AcademicRecord.findWhere(id:  (params.dacademicrecord[params.int("ind2")]).toLong() )
+            arToDelete = AcademicRecord.findWhere(id: params.dacademicrecord[params.int("ind2")].toLong(), user: u)
         }
 
-        u.removeFromAcademicRecord(arToDelete).save()
+        arToDelete.delete()
         redirect(controller: "profile")
     }
 
