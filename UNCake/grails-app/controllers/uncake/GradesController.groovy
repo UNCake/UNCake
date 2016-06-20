@@ -126,13 +126,12 @@ class GradesController {
             academicRecordToSave.PAPA = getPAPA(periods).last()
             academicRecordToSave.PA = getPA(periods).last()
             academicRecordToSave.courses = null
-            academicRecordToSave.save()
         }else {
             academicRecordToSave = new AcademicRecord(studyPlan: StudyPlan.findByCode(codeStudyPlan),
                     credits: getSumCredits(periods), PAPA: getPAPA(periods).last(), PA: getPA(periods).last())
             newUser.addToAcademicRecord(academicRecordToSave)
         }
-
+        academicRecordToSave.save()
         getCoursesToSave(academicRecordToSave, periods, periodNames)
         academicRecordToSave.save()
         render ""
@@ -232,8 +231,8 @@ class GradesController {
         subjectsPAPA.sort { it.semester }
         subjectsPAPA.each {
             def sub = it
-            subjectsToPrint.add(String.valueOf(sub.code + '\\t' + sub.name +
-                    '\\t\\t\\t\\t\\t' + sub.credits + '\\t\\t\\t' + sub.grade))
+            subjectsToPrint.add(String.valueOf(sub.code + '\t' + sub.name +
+                    '\t\\t\\t\\t\\t' + sub.credits + '\t\\t\\t' + sub.grade))
         }
 
         def plan = ((AcademicRecord) academicRecordToShow).studyPlan
@@ -415,8 +414,19 @@ class GradesController {
                 def grade = Double.parseDouble(subject.split('\t')[SUBJECT_GRADE])
                 def typology = typologies[subject.split('\t')[SUBJECT_TYPOLOGY]]
 
-                def newCourse = new ARCourse(academicRecord: academicRecord, code: code, name: name, typology: typology, credits: credits, grade: grade,
-                        semester: String.valueOf(periodNames[i]), semesterNumber: i + 1)
+                def newCourse = ARCourse.findByAcademicRecordAndCode(academicRecord, code)
+
+                if(newCourse){
+                    newCourse.typology = typology
+                    newCourse.credits = credits
+                    newCourse.grade = grade
+                    newCourse.semester = String.valueOf(periodNames[i])
+                    newCourse.semesterNumber = i + 1
+                } else {
+                    newCourse = new ARCourse(academicRecord: academicRecord, code: code, name: name,
+                            typology: typology, credits: credits, grade: grade,
+                            semester: String.valueOf(periodNames[i]), semesterNumber: i + 1)
+                }
                 newCourse.save()
                 periodsText = periodsText.replace(subject, "")
             }
@@ -426,8 +436,19 @@ class GradesController {
                 def name = subject.split('\t')[SUBJECT_NAME]
                 def credits = Integer.parseInt(subject.split('\t')[SUBJECT_CREDITS])
                 def typology = typologies[subject.split('\t')[SUBJECT_TYPOLOGY]]
-                def newCourse = new ARCourse(academicRecord: academicRecord, code: code, name: name, typology: typology, credits: credits, grade: 5,
-                        semester: String.valueOf(periodNames[i]), semesterNumber: i + 1)
+                def newCourse = ARCourse.findByAcademicRecordAndCode(academicRecord, code)
+
+                if(newCourse){
+                    newCourse.typology = typology
+                    newCourse.credits = credits
+                    newCourse.grade = 5
+                    newCourse.semester = String.valueOf(periodNames[i])
+                    newCourse.semesterNumber = i + 1
+                } else {
+                    newCourse = new ARCourse(academicRecord: academicRecord, code: code, name: name,
+                            typology: typology, credits: credits, grade: 5,
+                            semester: String.valueOf(periodNames[i]), semesterNumber: i + 1)
+                }
                 newCourse.save()
                 periodsText = periodsText.replace(subject, "")
             }
