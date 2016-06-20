@@ -55,7 +55,7 @@ class UserController {
         // Validation works, will check if the image is too big
 
         try {
-            !user.save()
+            user.save()
         } catch (ValidationException ve) {
             flash.message = "Ocurrio un error subiendo la imagen"
             redirect(controller: "profile")

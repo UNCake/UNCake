@@ -133,12 +133,12 @@ redirect(controller: "profile")
             return
         }
         
-        if(u.schedules.size() == 1){
+        if(u.academicRecord.size() == 1){
             arToDelete = AcademicRecord.findWhere(id: params.dacademicrecord.toLong(), user: u)
         }else{
             arToDelete = AcademicRecord.findWhere(id: params.dacademicrecord[params.int("ind2")].toLong(), user: u)
         }
-
+        u.removeFromAcademicRecord(arToDelete)
         arToDelete.delete()
         redirect(controller: "profile")
     }

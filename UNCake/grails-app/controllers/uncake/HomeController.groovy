@@ -1,12 +1,8 @@
 package uncake
 
-import grails.converters.JSON
-
 class HomeController {
-    def index() {
-        [userlist: User.list().name]
-    }
-
+    def index() {}
+/*
     def saveFriend = {
         def friend = User.findWhere(name:params.diagNombre, email: params.diagMail)
         def user= User.find(session.user)
@@ -25,5 +21,5 @@ class HomeController {
             render nulluser as JSON
         }
     }
-
+    */
 }
