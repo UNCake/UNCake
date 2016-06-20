@@ -219,6 +219,7 @@
                     drawTable( dataCalculate[SUBJECTS] );
                 }
             });
+
             $( "#calculate-papa" ).click( function() {
                 var academicRecord = removeAccent( $( "#academic-record" ).val() );
                 if( academicRecord.length > 0 ){
@@ -241,6 +242,7 @@
                                 drawComponents( dataCalculate[ADVANCE_COMP] );
                                 drawTable( dataCalculate[SUBJECTS] );
                                 dataVisible = true;
+                                $("#btn-save").show();
                             }
                         }
                     });
@@ -337,6 +339,7 @@
                             drawComponents( dataCalculate[ADVANCE_COMP] );
                             drawTable( dataCalculate[SUBJECTS] );
                             dataVisible = true;
+                            $("#btn-save").hide();
                         },
                         error: function( data ){
                             Materialize.toast("¡Ocurrió un error al cargar la historia académica!", 4000, "light-blue lighten-3 z-depth-2");
