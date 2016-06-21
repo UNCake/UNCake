@@ -12,4 +12,8 @@ class Groups {
         code nullable: false
         timeSlots nullable: true
     }
+
+    static mapping = {
+        timeSlots batchSize: 10
+    }
 }

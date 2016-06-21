@@ -9,4 +9,8 @@ class Prerequisite {
     static constraints = {
         prerequistes nullable: true
     }
+
+    static mapping = {
+        prerequistes batchSize: 10
+    }
 }

@@ -15,4 +15,8 @@ class TimeSlot {
         classroom nullable: true
         building nullable: true
     }
+
+    static mapping = {
+        building fetch: 'join'
+    }
 }

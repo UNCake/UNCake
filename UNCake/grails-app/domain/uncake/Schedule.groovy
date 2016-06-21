@@ -13,4 +13,8 @@ class Schedule {
         name nullable: true
         image nullable: true, maxSize: 9999999
     }
+
+    static mapping = {
+        courses batchSize: 10
+    }
 }

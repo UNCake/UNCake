@@ -21,4 +21,8 @@ class StudyPlan {
         freeChoiceCredits nullable: true
         remedialCredits nullable: true
     }
+
+    static mapping = {
+        courses batchSize: 20
+    }
 }

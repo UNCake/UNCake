@@ -12,4 +12,8 @@ class AcademicRecord {
     static constraints = {
         courses nullable: true
     }
+
+    static mapping = {
+        courses batchSize: 10
+    }
 }

@@ -18,4 +18,9 @@ class User {
         avatar(nullable:true, maxSize: 2097152 /* 2MB */)
         avatarType(nullable:true)
     }
+
+    static mapping = {
+        schedules batchSize: 5
+        academicRecord batchSize: 5
+    }
 }

@@ -14,4 +14,7 @@ class Building {
         location nullable: true
     }
 
+    static mapping = {
+        location fetch: 'join'
+    }
 }

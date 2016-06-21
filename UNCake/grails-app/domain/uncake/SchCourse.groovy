@@ -7,4 +7,8 @@ class SchCourse extends Course{
     static constraints = {
         groups nullable: true
     }
+
+    static mapping = {
+        groups batchSize: 10
+    }
 }
