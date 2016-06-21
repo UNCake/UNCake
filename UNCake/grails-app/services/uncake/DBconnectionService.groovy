@@ -28,11 +28,10 @@ class DBconnectionService {
 
                     for (def i = 0; i < source.size(); i++) {
                         source[i] = Utility.stripAccents(source[i]).toUpperCase().replaceAll("'", "")
-                        if (source[i].contains('FACULTAD')) {
-                            faculty = source[i]
-                        } else if (i + 1 < source.size() && source[i + 1].contains('semaforo')) {
-                            new StudyPlan(location: loc, faculty: faculty, code: source[i + 1].find(/[0-9]+/),
-                                    name: source[i], type: it).save( )
+
+                        if (!source[i].contains('FACULTAD') && i + 1 < source.size() && source[i + 1].contains('semaforo')) {
+                            new StudyPlan(location: loc, code: source[i + 1].find(/[0-9]+/),
+                                    name: source[i], type: it).save()
                         }
                     }
 
@@ -75,14 +74,14 @@ class DBconnectionService {
                             it.TR[1].TD[0].TABLE.each {
 
                                 it.TBODY.TR[0].TD[1].DIV.each {
-                                    pr = getCourseInfo(it, value[1], sp)
+                                    pr = getCourseInfo(it, sp)
                                     if (pr != null) sp.addToCourses(pr)
                                 }
 
                                 it.TBODY.TR[0].TD[1].TABLE.each {
 
                                     it.TBODY.TR[0].TD[1].DIV.each {
-                                        pr = getCourseInfo(it, value[1], sp)
+                                        pr = getCourseInfo(it, sp)
                                         if (pr != null) sp.addToCourses(pr)
                                     }
                                 }
@@ -106,7 +105,7 @@ class DBconnectionService {
         Construye los objetos Prerequisite, a partir de la informacion de la materia
      */
 
-    def getCourseInfo(it, typology, plan) {
+    def getCourseInfo(it, plan) {
         def fcode, credits, name
 
         fcode = it.DIV[1].A.H5.text()
@@ -118,12 +117,11 @@ class DBconnectionService {
             def course = Course.find{code == fcode}
 
             if (course == null) {
-                course = new Course(name: name, code: fcode, credits: credits,
-                        typology: typology, location: plan.location)
-                    course.save()
+                course = new Course(name: name, code: fcode, credits: credits)
+                course.save()
             }
 
-            def pre = new Prerequisite(course: course, code: plan.code+"-"+fcode)
+            def pre = new Prerequisite(course: course, studyPlan: plan)
             pre.save()
 
             return pre

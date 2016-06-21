@@ -3,6 +3,7 @@ package uncake
 class StudyPlan {
 
     Integer code
+    Location location
     String type
     String name
     Integer fundamentalCredits
@@ -13,6 +14,7 @@ class StudyPlan {
     static hasMany = [courses: Prerequisite]
     static constraints = {
         code nullable: false, unique: true
+        location nullable: true
         name blank: false
         type blank: false
         courses nullable: true

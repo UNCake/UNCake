@@ -15,5 +15,6 @@ class Groups {
 
     static mapping = {
         timeSlots batchSize: 10
+        course fetch: 'join'
     }
 }
