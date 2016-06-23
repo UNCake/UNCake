@@ -103,7 +103,7 @@
             <ul>
                 <li><a class="btn-floating red" id="showTable"><i class="material-icons">view_module</i></a></li>
                 <li><a class="btn-floating yellow darken-1" id="showList"><i class="material-icons">view_list</i></a></li>
-                <li><a class="btn-floating green" id="printSchedule" download><i class="material-icons" >get_app</i></a></li>
+                <li><a class="btn-floating green" id="downloadSchedule" download><i class="material-icons" >get_app</i></a></li>
 
                 <g:if test="${session.user != null}">
                     <!-- Modal Trigger -->
@@ -113,15 +113,15 @@
 
             </ul>
         </div>
-
+    <div id="schedulePanel">
         <ul class="collection with-header hide" id="scheduleList">
-            <li class="collection-header" id="listMon"><h6>Lunes</h6></li>
-            <li class="collection-header" id="listTue"><h6>Martes</h6></li>
-            <li class="collection-header" id="listWed"><h6>Miércoles</h6></li>
-            <li class="collection-header" id="listThu"><h6>Jueves</h6></li>
-            <li class="collection-header" id="listFri"><h6>Viernes</h6></li>
-            <li class="collection-header" id="listSat"><h6>Sábado</h6></li>
-            <li class="collection-header" id="listSun"><h6>Domingo</h6></li>
+            <li class="collection-header blue-grey lighten-5" id="listMon"><h6>Lunes</h6></li>
+            <li class="collection-header blue-grey lighten-5" id="listTue"><h6>Martes</h6></li>
+            <li class="collection-header blue-grey lighten-5" id="listWed"><h6>Miércoles</h6></li>
+            <li class="collection-header blue-grey lighten-5" id="listThu"><h6>Jueves</h6></li>
+            <li class="collection-header blue-grey lighten-5" id="listFri"><h6>Viernes</h6></li>
+            <li class="collection-header blue-grey lighten-5" id="listSat"><h6>Sábado</h6></li>
+            <li class="collection-header blue-grey lighten-5" id="listSun"><h6>Domingo</h6></li>
         </ul>
 
 
@@ -147,6 +147,7 @@
             <div id="listSchedule"></div>
 
         </div>
+    </div>
 
     </div>
 
@@ -557,7 +558,7 @@
                 }
         );
 
-        $("#printSchedule").on('click', 'a',
+        $("#downloadSchedule").click(
                 function () {
                     delete schedule["name"]
                     delete schedule["image"]
@@ -576,7 +577,7 @@
                          */
                     })
 
-                    html2canvas($('#scheduleDiv'), {
+                    html2canvas($('#schedulePanel'), {
                         onrendered: function (canvas) {
 
                             var imgData = canvas.toDataURL("image/jpeg", 1.0);
