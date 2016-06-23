@@ -70,7 +70,7 @@
             <label for="course">Materia</label>
         </div>
 
-        <div id="progressbarCourses">
+        <div id="progressbarCourses" class="hide">
             <div class="preloader-wrapper big active">
                 <div class="spinner-layer spinner-green-only">
                     <div class="circle-clipper left">
@@ -114,14 +114,14 @@
             </ul>
         </div>
 
-        <ul class="collection with-header" id="scheduleList">
+        <ul class="collection with-header hide" id="scheduleList">
             <li class="collection-header" id="listMon"><h6>Lunes</h6></li>
             <li class="collection-header" id="listTue"><h6>Martes</h6></li>
             <li class="collection-header" id="listWed"><h6>Miércoles</h6></li>
             <li class="collection-header" id="listThu"><h6>Jueves</h6></li>
             <li class="collection-header" id="listFri"><h6>Viernes</h6></li>
             <li class="collection-header" id="listSat"><h6>Sábado</h6></li>
-            <li class="collection-header" id="listSun"><h6>Sábado</h6></li>
+            <li class="collection-header" id="listSun"><h6>Domingo</h6></li>
         </ul>
 
 
@@ -161,7 +161,7 @@
 
         </div>
 
-        <div id="progressbarGroups">
+        <div id="progressbarGroups" class="hide">
             <div class="preloader-wrapper small active">
                 <div class="spinner-layer spinner-blue-only">
                     <div class="circle-clipper left">
@@ -216,9 +216,6 @@
     $(function () {
 
         $('select').material_select();
-        $("#scheduleList").hide();
-        $("#progressbarCourses").hide();
-        $("#progressbarGroups").hide();
 
         var courses
         var groups = {}
@@ -293,7 +290,7 @@
 
         var updateCourses = function () {
             var url = "${createLink(controller:'Schedule', action:'searchCourses')}";
-            $("#progressbarCourses").show();
+            $("#progressbarCourses").removeClass("hide");
             var response = $.ajax({
                 url: url,
                 contentType: "application/json; charset=utf-8",
@@ -312,7 +309,8 @@
                                 .append($('<li>', {value: key, class: "collection-item"})
                                         .text(value.code + " " + value.name));
                     });
-                    $("#progressbarCourses").hide();
+
+                    $("#progressbarCourses").addClass("hide");
                     $("#listCourses li").click(function () {
                         $("#selectedCoursesCol").removeClass('hidden');
                         $("#msgCol").addClass('hidden');
@@ -333,7 +331,7 @@
             var url = "${createLink(controller:'Schedule', action:'searchGroups')}";
             var name = courses[code].name;
             var code = courses[code].code;
-            $("#progressbarGroups").show();
+            $("#progressbarGroups").removeClass("hide");
             groups[name] = {};
             var response = $.ajax({
                 url: url,
@@ -378,7 +376,7 @@
                     $('#accordionGroup ol li').click(function () {
                         drawGroup(this.id, this.value, $(this).closest('ol').attr('id'))
                     });
-                    $("#progressbarGroups").hide();
+                    $("#progressbarGroups").addClass("hide");
                 },
                 error: function (request, status, error) {
                     delete groups[name];
@@ -595,13 +593,13 @@
         );
 
         $("#showList").click(function() {
-          $("#scheduleDiv").hide()
-          $("#scheduleList").show()
+          $("#scheduleDiv").hide();
+          $("#scheduleList").removeClass("hide");
         });
 
         $("#showTable").click(function() {
-          $("#scheduleDiv").show()
-          $("#scheduleList").hide()
+          $("#scheduleDiv").show();
+          $("#scheduleList").addClass("hide");
         });
 
         $('.modal-trigger').leanModal();
