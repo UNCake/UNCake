@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ defaultCodec="none" %>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta name="layout" content="navbar"/>
@@ -96,24 +98,6 @@
 
     <div class="col m6">
 
-        <div class="fixed-action-btn horizontal click-to-toggle" >
-            <a class="btn-floating btn-large red">
-                <i class="material-icons">menu</i>
-            </a>
-            <ul>
-                <li><a class="btn-floating red"><i class="material-icons">view_module</i></a></li>
-                <li><a class="btn-floating yellow darken-1"><i class="material-icons">view_list</i></a></li>
-                <li><a class="btn-floating green" ><i class="material-icons" >get_app</i></a></li>
-
-                <g:if test="${session.user != null}">
-                    <!-- Modal Trigger -->
-                    <li><a class="btn-floating blue modal-trigger" id="showSaveSchedule" href="#modalSave">
-                    <i class="material-icons">save</i></a></li>
-                </g:if>
-
-            </ul>
-        </div>
-
         <div class="responsive-table" id="scheduleDiv">
             <table id="scheduleTable">
                 <thead>
@@ -136,6 +120,14 @@
             <div id="listSchedule"></div>
 
         </div>
+
+        <g:if test="${session.user != null}">
+            <div>
+                <!-- Modal Trigger -->
+                <a id="showSaveSchedule" class="waves-effect waves-light btn modal-trigger"
+                   href="#modalSave">Guardar</a>
+            </div>
+        </g:if>
 
         <div>
             <a class="waves-effect waves-light btn" id="printSchedule" download>Descargar</a>
@@ -204,7 +196,7 @@
 
 <asset:javascript src="html2canvas.js"/>
 <script src="https://parall.ax/parallax/js/jspdf.js"></script>
-<g:javascript>
+<script>
 
     $(function () {
 
@@ -589,6 +581,6 @@
 
         $('.modal-trigger').leanModal();
     });
-</g:javascript>
+</script>
 </body>
 </html>

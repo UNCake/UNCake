@@ -79,10 +79,6 @@ progress {
     background-color: #eee;
 }
 
-#showSaveSchedule {
-    float: right;
-}
-
 #scheduleTable {
     table-layout: fixed;
 }

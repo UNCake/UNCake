@@ -11,7 +11,7 @@ class UserController {
 
     def upload_avatar() {
 
-        def user = session.user // or however you select the current user
+        def user = User.findById(session.user.id) // or however you select the current user
         
         if(request.get) {
             redirect(controller: "profile")

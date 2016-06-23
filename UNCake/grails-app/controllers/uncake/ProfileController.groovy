@@ -144,7 +144,7 @@ redirect(controller: "profile")
     }
 
     def changePass() {
-        def u = session.user
+        def u = User.findById(session.user.id)
         if(!params.actPass) {
             redirect(controller: "profile")
             return
