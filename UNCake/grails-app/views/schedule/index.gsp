@@ -94,16 +94,16 @@
         </div>
     </div>
 
-    <div class="col m6">
+    <div class="col s12 m6">
 
         <div class="fixed-action-btn horizontal click-to-toggle" >
             <a class="btn-floating btn-large red">
                 <i class="material-icons">menu</i>
             </a>
             <ul>
-                <li><a class="btn-floating red"><i class="material-icons">view_module</i></a></li>
-                <li><a class="btn-floating yellow darken-1"><i class="material-icons">view_list</i></a></li>
-                <li><a class="btn-floating green" ><i class="material-icons" >get_app</i></a></li>
+                <li><a class="btn-floating red" id="showTable"><i class="material-icons">view_module</i></a></li>
+                <li><a class="btn-floating yellow darken-1" id="showList"><i class="material-icons">view_list</i></a></li>
+                <li><a class="btn-floating green" id="printSchedule" download><i class="material-icons" >get_app</i></a></li>
 
                 <g:if test="${session.user != null}">
                     <!-- Modal Trigger -->
@@ -113,6 +113,17 @@
 
             </ul>
         </div>
+
+        <ul class="collection with-header" id="scheduleList">
+            <li class="collection-header" id="listMon"><h6>Lunes</h6></li>
+            <li class="collection-header" id="listTue"><h6>Martes</h6></li>
+            <li class="collection-header" id="listWed"><h6>Miércoles</h6></li>
+            <li class="collection-header" id="listThu"><h6>Jueves</h6></li>
+            <li class="collection-header" id="listFri"><h6>Viernes</h6></li>
+            <li class="collection-header" id="listSat"><h6>Sábado</h6></li>
+            <li class="collection-header" id="listSun"><h6>Sábado</h6></li>
+        </ul>
+
 
         <div class="responsive-table" id="scheduleDiv">
             <table id="scheduleTable">
@@ -137,13 +148,9 @@
 
         </div>
 
-        <div>
-            <a class="waves-effect waves-light btn" id="printSchedule" download>Descargar</a>
-        </div>
-
     </div>
 
-    <div class="col m3">
+    <div class="col s12 m3">
 
         <div class="card blue-grey darken-1" id="msgCol">
             <div class="card-content white-text">
@@ -209,6 +216,9 @@
     $(function () {
 
         $('select').material_select();
+        $("#scheduleList").hide();
+        $("#progressbarCourses").hide();
+        $("#progressbarGroups").hide();
 
         var courses
         var groups = {}
@@ -584,8 +594,15 @@
                 }
         );
 
-        $("#progressbarCourses").hide();
-        $("#progressbarGroups").hide();
+        $("#showList").click(function() {
+          $("#scheduleDiv").hide()
+          $("#scheduleList").show()
+        });
+
+        $("#showTable").click(function() {
+          $("#scheduleDiv").show()
+          $("#scheduleList").hide()
+        });
 
         $('.modal-trigger').leanModal();
     });
