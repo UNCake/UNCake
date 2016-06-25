@@ -31,18 +31,18 @@ class DBconnectionService {
                             .getText('ISO-8859-1')
                     source = source.findAll(pattern)
 
-                    String faculty = ''
-
                     for (def i = 0; i < source.size(); i++) {
                         source[i] = Utility.stripAccents(source[i]).toUpperCase().replaceAll("'", "")
 
                         if (!source[i].contains('FACULTAD') && i + 1 < source.size() && source[i + 1].contains('semaforo')) {
-                            new StudyPlan(location: loc, code: source[i + 1].find(/[0-9]+/),
-                                    name: source[i], type: it).save()
+                            def sp = new StudyPlan(location: loc, code: source[i + 1].find(/[0-9]+/),
+                                    name: source[i], type: it)
+                            sp.save()
+                            searchCourses(loc, sp.code, sp.type)
                         }
                     }
 
-                } catch (Exception e) {
+                } catch (IOException e) {
                     println "Sia sede $loc.name no disponible"
                 }
             }
@@ -167,7 +167,7 @@ class DBconnectionService {
                         }
                     }
 
-                    searchGroups(course, location, v.codigo)
+                    searchGroups(course, location, v.codigo, false)
                     course.save()
                 }
             }
@@ -180,11 +180,15 @@ class DBconnectionService {
         }
     }
 
-    def searchGroups(course, location, code) {
+    def searchGroups(course, location, code, update) {
         def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
         def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
         def group
+
+        if (update && TimeCategory.minus(course.lastUpdated, new Date()).minutes > 30) {
+            return
+        }
 
         http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
             body = [
