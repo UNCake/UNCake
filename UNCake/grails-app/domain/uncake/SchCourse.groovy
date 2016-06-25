@@ -2,6 +2,8 @@ package uncake
 
 class SchCourse extends Course{
 
+    Date lastUpdated
+    String studyPlan
     static hasMany = [groups: Groups]
 
     static constraints = {

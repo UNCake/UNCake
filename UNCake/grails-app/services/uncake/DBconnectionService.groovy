@@ -1,7 +1,13 @@
 package uncake
 
+import grails.converters.JSON
 import grails.transaction.Transactional
+import grails.validation.ValidationException
+import groovy.time.TimeCategory
+import groovy.time.TimeDuration
 import groovyx.net.http.HTTPBuilder
+
+import static groovyx.net.http.Method.POST
 
 @Transactional
 class DBconnectionService {
@@ -10,6 +16,7 @@ class DBconnectionService {
         Se encarga de poblar la base de datos con los planes de estudio
         y sus materias.
      */
+
     def initDB() {
 
         def pattern = ~"'.+'"
@@ -112,9 +119,9 @@ class DBconnectionService {
         credits = it.DIV[1].A.DIV[1].text()
         name = it.DIV[2].DIV[1].H4.text()
 
-        if (fcode !=null && fcode != "") {
+        if (fcode != null && fcode != "") {
 
-            def course = Course.find{code == fcode}
+            def course = Course.find { code == fcode }
 
             if (course == null) {
                 course = new Course(name: name, code: fcode, credits: credits)
@@ -129,4 +136,118 @@ class DBconnectionService {
 
         return null
     }
+
+    def searchCourses(location, codeStudyPlan, type) {
+        def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
+        def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
+        def course
+
+        http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
+
+            body = [
+                    "jsonrpc": "2.0",
+                    "method" : "buscador.obtenerAsignaturas",
+                    "params" : ["", "PRE", "", type, codeStudyPlan, "", 1, 999]
+            ]
+
+            // success response handler
+            response.success = { resp, json ->
+
+                json.result.asignaturas.list.each { v ->
+
+                    course = SchCourse.findByCodeAndStudyPlan(v.codigo, codeStudyPlan)
+
+                    if (!course) {
+                        course = new SchCourse(name: v.nombre, code: v.codigo, credits: v.creditos,
+                                typology: v.tipologia, studyPlan: codeStudyPlan)
+                        try {
+                            course.save()
+                        } catch (ValidationException ve) {
+                            println "error guardando curso"
+                        }
+                    }
+
+                    searchGroups(course, location, v.codigo)
+                    course.save()
+                }
+            }
+
+            // failure response handler
+            response.failure = { resp ->
+                println "Unexpected error: ${resp.statusLine.statusCode}"
+                println "${resp.statusLine.reasonPhrase}"
+            }
+        }
+    }
+
+    def searchGroups(course, location, code) {
+        def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
+        def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
+        def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+        def group
+
+        http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
+            body = [
+                    "jsonrpc": "2.0",
+                    "method" : "buscador.obtenerGruposAsignaturas",
+                    "params" : [code, "0"]
+            ]
+
+            // success response handler
+            response.success = { resp, json ->
+                json.result.list.each { a ->
+
+                    group = Groups.findByCourseAndCode(course, a.codigo)
+
+                    if(!group) {
+                        group = new Groups(teacher: (a.nombredocente.trim().size() == 0) ? 'Profesor no asignado' : a.nombredocente,
+                                            code: a.codigo, availableSpots: a.cuposdisponibles, totalSpots: a.cupostotal,
+                                            timeSlots: [], course: course)
+                        group.save()
+                        course.addToGroups(group)
+                        course.save()
+                    } else {
+                        group.teacher =  (a.nombredocente.trim().size() == 0) ? 'Profesor no asignado' : a.nombredocente
+                        group.availableSpots = a.cuposdisponibles
+                        group.totalSpots = a.cupostotal
+                        group.save()
+                    }
+
+                    days.each { d -> setTimeSlot(group["timeSlots"], d, a, location) }
+                    group.save()
+                }
+            }
+
+            // failure response handler
+            response.failure = { resp ->
+                println "Unexpected error: ${resp.statusLine.statusCode}"
+                println ${ resp.statusLine.reasonPhrase }
+            }
+        }
+    }
+
+    def setTimeSlot(group, day, timeslot, loc) {
+        def time = 'horario_' + day
+
+        if (timeslot[time] == '--') {
+            return
+        }
+
+        def hours = timeslot[time].split(' ')
+        def place = 'aula_' + day
+        def rooms = timeslot[place].split(' ')
+
+        for (def i = 0; i < hours.size(); i++) {
+
+            def t = hours[i].split('-')
+            def p = rooms[i].split('-')
+
+            group.add(new TimeSlot(
+                    startHour: t[0].toInteger(),
+                    endHour: t[1].toInteger(),
+                    classroom: (p.size() > 1) ? p[1] : 'no', "day": day,
+                    building: loc.name != "BOGOTA" ? null :Building.findByCode(p[0])))
+        }
+    }
+
 }
