@@ -35,10 +35,14 @@ class DBconnectionService {
                         source[i] = Utility.stripAccents(source[i]).toUpperCase().replaceAll("'", "")
 
                         if (!source[i].contains('FACULTAD') && i + 1 < source.size() && source[i + 1].contains('semaforo')) {
-                            def sp = new StudyPlan(location: loc, code: source[i + 1].find(/[0-9]+/),
-                                    name: source[i], type: it)
-                            sp.save()
-                            searchCourses(loc, sp.code, sp.type)
+                            def code = source[i + 1].find(/[0-9]+/)
+
+                            if(code) {
+                                def sp = new StudyPlan(location: loc, code: code,
+                                        name: source[i], type: it)
+                                sp.save()
+                                //searchCourses(loc, sp, sp.type)
+                            }
                         }
                     }
 
@@ -137,17 +141,17 @@ class DBconnectionService {
         return null
     }
 
-    def searchCourses(location, codeStudyPlan, type) {
+    def searchCourses(location, studyPlan, type) {
         def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
-        def course
+        def course, plan
 
         http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
 
             body = [
                     "jsonrpc": "2.0",
                     "method" : "buscador.obtenerAsignaturas",
-                    "params" : ["", "PRE", "", type, codeStudyPlan, "", 1, 999]
+                    "params" : ["", "PRE", "", type, studyPlan.code, "", 1, 999]
             ]
 
             // success response handler
@@ -155,20 +159,29 @@ class DBconnectionService {
 
                 json.result.asignaturas.list.each { v ->
 
-                    course = SchCourse.findByCodeAndStudyPlan(v.codigo, codeStudyPlan)
+                    course = SchCourse.findByCode(v.codigo)
+                    plan = SchType.findByStudyPlanAndTypology(studyPlan, v.tipologia)
+                    if(!plan) {
+                        plan = new SchType(studyPlan: studyPlan, typology: v.tipologia)
+                        plan.save()
+                    }
 
                     if (!course) {
-                        course = new SchCourse(name: v.nombre, code: v.codigo, credits: v.creditos,
-                                typology: v.tipologia, studyPlan: codeStudyPlan)
+                        course = new SchCourse(name: v.nombre, code: v.codigo, credits: v.creditos)
                         try {
+                            course.save()
+                            course.addToPlans(plan)
+                            searchGroups(course, location, v.codigo, false)
                             course.save()
                         } catch (ValidationException ve) {
                             println "error guardando curso"
                         }
+                    } else {
+                        if (!course.plans.contains(plan)) {
+                            course.addToPlans(plan)
+                            course.save()
+                        }
                     }
-
-                    searchGroups(course, location, v.codigo, false)
-                    course.save()
                 }
             }
 
@@ -203,15 +216,15 @@ class DBconnectionService {
 
                     group = Groups.findByCourseAndCode(course, a.codigo)
 
-                    if(!group) {
+                    if (!group) {
                         group = new Groups(teacher: (a.nombredocente.trim().size() == 0) ? 'Profesor no asignado' : a.nombredocente,
-                                            code: a.codigo, availableSpots: a.cuposdisponibles, totalSpots: a.cupostotal,
-                                            timeSlots: [], course: course)
+                                code: a.codigo, availableSpots: a.cuposdisponibles, totalSpots: a.cupostotal,
+                                timeSlots: [], course: course)
                         group.save()
                         course.addToGroups(group)
                         course.save()
                     } else {
-                        group.teacher =  (a.nombredocente.trim().size() == 0) ? 'Profesor no asignado' : a.nombredocente
+                        group.teacher = (a.nombredocente.trim().size() == 0) ? 'Profesor no asignado' : a.nombredocente
                         group.availableSpots = a.cuposdisponibles
                         group.totalSpots = a.cupostotal
                         group.save()
@@ -225,7 +238,7 @@ class DBconnectionService {
             // failure response handler
             response.failure = { resp ->
                 println "Unexpected error: ${resp.statusLine.statusCode}"
-                println ${ resp.statusLine.reasonPhrase }
+                println $ { resp.statusLine.reasonPhrase }
             }
         }
     }
@@ -250,7 +263,7 @@ class DBconnectionService {
                     startHour: t[0].toInteger(),
                     endHour: t[1].toInteger(),
                     classroom: (p.size() > 1) ? p[1] : 'no', "day": day,
-                    building: loc.name != "BOGOTA" ? null :Building.findByCode(p[0])))
+                    building: loc.name != "BOGOTA" ? null : Building.findByCode(p[0])))
         }
     }
 
