@@ -1,18 +1,11 @@
 package uncake
 
 import java.time.Duration
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.temporal.ChronoUnit
-
-import static grails.async.Promises.*
-import grails.async.PromiseList
 import grails.converters.JSON
 import grails.transaction.Transactional
 import grails.validation.ValidationException
-import groovy.time.TimeCategory
-import groovy.time.TimeDuration
 import groovyx.net.http.HTTPBuilder
 
 import static groovyx.net.http.Method.POST
@@ -25,45 +18,50 @@ class DBconnectionService {
         y sus materias.
      */
 
-    def initDB() {
+    def searchStudyPlans(loc) {
 
         def pattern = ~"'.+'"
         def type = ['PRE', 'POS']
         def source, html
-
+        println "Iniciando sp " + loc.name
         //Se cargan los planes de estudio por sede
-        Location.list().each { loc ->
-            type.each {
-                try {
-                    source = new URL(loc.url + '/academia/scripts/catalogo-programas/items_catalogo_' + it + '.js')
-                            .getText('ISO-8859-1')
-                    source = source.findAll(pattern)
+        type.each {
+            try {
+                source = new URL(loc.url + '/academia/scripts/catalogo-programas/items_catalogo_' + it + '.js')
+                        .getText('ISO-8859-1')
+                source = source.findAll(pattern)
 
-                    for (def i = 0; i < source.size(); i++) {
-                        source[i] = Utility.stripAccents(source[i]).toUpperCase().replaceAll("'", "")
+                for (def i = 0; i < source.size(); i++) {
+                    source[i] = Utility.stripAccents(source[i]).toUpperCase().replaceAll("'", "")
 
-                        if (!source[i].contains('FACULTAD') && i + 1 < source.size() && source[i + 1].contains('semaforo')) {
-                            def code = source[i + 1].find(/[0-9]+/)
+                    if (!source[i].contains('FACULTAD') && i + 1 < source.size() && source[i + 1].contains('semaforo')) {
+                        def code = source[i + 1].find(/[0-9]+/)
 
-                            if(code) {
-                                def sp = new StudyPlan(location: loc, code: code,
-                                        name: source[i], type: it)
-                                sp.save()
-                            }
+                        if (code) {
+                            def sp = new StudyPlan(location: loc, code: code,
+                                    name: source[i], type: it)
+                            sp.save()
                         }
                     }
-
-                } catch (IOException e) {
-                    println "Sia sede $loc.name no disponible"
                 }
+
+            } catch (IOException e) {
+                println "Sia sede $loc.name no disponible"
             }
         }
+    }
 
-        //Se almacenan las materias de cada plan de estudios (pregrado)
-        StudyPlan.findAllByType("PRE").each { sp ->
-            
-            searchCourses(sp.location, sp, sp.type)
-            /*
+
+    def initStudyPlans(locations, type) {
+        //Se almacenan las materias de cada plan de estudios
+
+        locations.each { name ->
+            def loc = Location.findByName(name)
+            println "Iniciando gr " + name
+            StudyPlan.findAllByTypeAndLocation(type, loc).each { sp ->
+
+                searchCourses(sp.location, sp, sp.type)
+                /*
             try {
                 source = new HTTPBuilder(sp.location.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
                         '&tipo=' + sp.type + '&tipoVista=semaforo&nodo=1&parametro=on')
@@ -117,8 +115,8 @@ class DBconnectionService {
             } catch (Exception e) {
                 println "Programa academico $sp.name de la sede $sp.location.name no disponible"
             }*/
+            }
         }
-
     }
 
     /*
@@ -155,10 +153,10 @@ class DBconnectionService {
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
         def course
 
-        def courseType = ["PRE": ["B", "C",  "L", "P"], "POS": [ "O", "T"]]
+        def courseType = ["PRE": ["B", "C", "L", "P"], "POS": ["O", "T"]]
         def plan = [:]
 
-        courseType[type].each {t ->
+        courseType[type].each { t ->
             def pl = new SchType(studyPlan: studyPlan, typology: t)
             pl.save()
             plan.put(t, pl)
@@ -212,7 +210,7 @@ class DBconnectionService {
         def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
         def group, teacher
 
-        if(course.lastUpdated) {
+        if (course.lastUpdated) {
             LocalDateTime lastUpdated = LocalDateTime.ofInstant(course.lastUpdated.toInstant(), ZoneId.systemDefault());
 
             if (update && Duration.between(lastUpdated, LocalDateTime.now()).toMinutes() > 30) {
@@ -231,9 +229,8 @@ class DBconnectionService {
             response.success = { resp, json ->
                 json.result.list.each { a ->
 
-                    if (update) {
-                        group = Groups.findByCourseAndCode(course, a.codigo, [cache: true])
-                    } else { group = null}
+                    group = Groups.findByCourseAndCode(course, a.codigo, [cache: true])
+
                     teacher = a.nombredocente.trim().size() == 0 ? 'Profesor no asignado' : a.nombredocente
 
                     if (!group) {

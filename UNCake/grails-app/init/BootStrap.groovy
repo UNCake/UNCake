@@ -7,7 +7,7 @@ class BootStrap {
     def init = { servletContext ->
         println "Consultando db..."
         println "db :" + StudyPlan.count()
-        if(!StudyPlan.count()) {
+        if(!Location.count()) {
             //Inicializacion de Sedes
 
             println "Iniciando db..."
@@ -19,7 +19,9 @@ class BootStrap {
             new Location(name: 'ORINOQUIA', url: 'http://siaori.unal.edu.co').save()
             new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co').save()
             new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co').save()
+        }
 
+        if(!Building.count()) {
             new Building(code: '101', name: '101 - TORRE DE ENFERMERIA ', coordinates: '4.635181486487435&-74.08243864774704', Location: Location.findByName("BOGOTA")).save()
             new Building(code: '102', name: '102 - BIBLIOTECA CENTRAL GABRIEL GARCIA MARQUEZ', coordinates: '4.63540605513496&-74.08303678035736', Location: Location.findByName("BOGOTA")).save()
             new Building(code: '104', name: '104 - AUDITORIO LEON DE GREIFF', coordinates: '4.6357776626211376&-74.08204972743988', Location: Location.findByName("BOGOTA")).save()
@@ -157,9 +159,17 @@ class BootStrap {
             new Building(code: '8', name: '8 - Bloque 8', coordinates: '6.263619533463357&-75.5734920501709', Location: Location.findByName('MEDELLIN')).save()
             new Building(code: '6', name: '6 - Bloque 6', coordinates: '6.264376732971618&-75.57407140731812', Location: Location.findByName('MEDELLIN')).save()
             new Building(code: '2', name: '2 - Bloque 2', coordinates: '6.26347022638842&-75.57430744171143', Location: Location.findByName('MEDELLIN')).save()*/
-
-            DBconnectionService.initDB()
         }
+
+        Location.list().each {
+            loc -> if(!StudyPlan.countByLocation(loc)){
+                DBconnectionService.searchStudyPlans()
+            }
+        }
+
+        def initST_Gr = ["BOGOTA"]
+        def type = "PRE"
+        DBconnectionService.initStudyPlans(initST_Gr, type)
     }
     def destroy = {
     }
