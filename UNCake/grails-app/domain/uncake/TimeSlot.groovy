@@ -17,6 +17,6 @@ class TimeSlot {
     }
 
     static mapping = {
-        building fetch: 'join'
+        cache: true
     }
 }

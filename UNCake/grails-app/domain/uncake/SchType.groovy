@@ -7,4 +7,9 @@ class SchType {
 
     static constraints = {
     }
+
+    static mapping = {
+        studyPlan cache: true
+        cache: true
+    }
 }

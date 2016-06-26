@@ -8,4 +8,8 @@ class Course {
 
     static constraints = {
     }
+
+    static mapping = {
+        cache: true
+    }
 }

@@ -10,6 +10,8 @@ class SchCourse extends Course{
     }
 
     static mapping = {
-        groups batchSize: 20
+        groups batchSize: 20, cache: true
+        plans fetch: 'join', cache: true
+        cache: true
     }
 }

@@ -26,5 +26,6 @@ class StudyPlan {
 
     static mapping = {
         courses batchSize: 20
+        cache: true
     }
 }
