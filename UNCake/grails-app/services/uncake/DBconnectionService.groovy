@@ -1,5 +1,13 @@
 package uncake
 
+import java.time.Duration
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
+
+import static grails.async.Promises.*
+import grails.async.PromiseList
 import grails.converters.JSON
 import grails.transaction.Transactional
 import grails.validation.ValidationException
@@ -41,7 +49,6 @@ class DBconnectionService {
                                 def sp = new StudyPlan(location: loc, code: code,
                                         name: source[i], type: it)
                                 sp.save()
-                                //searchCourses(loc, sp, sp.type)
                             }
                         }
                     }
@@ -51,10 +58,12 @@ class DBconnectionService {
                 }
             }
         }
-/*
+
         //Se almacenan las materias de cada plan de estudios (pregrado)
         StudyPlan.findAllByType("PRE").each { sp ->
-
+            
+            searchCourses(sp.location, sp, sp.type)
+            /*
             try {
                 source = new HTTPBuilder(sp.location.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
                         '&tipo=' + sp.type + '&tipoVista=semaforo&nodo=1&parametro=on')
@@ -107,9 +116,9 @@ class DBconnectionService {
 
             } catch (Exception e) {
                 println "Programa academico $sp.name de la sede $sp.location.name no disponible"
-            }
+            }*/
         }
-*/
+
     }
 
     /*
@@ -144,7 +153,16 @@ class DBconnectionService {
     def searchCourses(location, studyPlan, type) {
         def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
-        def course, plan
+        def course
+
+        def courseType = ["PRE": ["B", "C",  "L", "P"], "POS": [ "O", "T"]]
+        def plan = [:]
+
+        courseType[type].each {t ->
+            def pl = new SchType(studyPlan: studyPlan, typology: t)
+            pl.save()
+            plan.put(t, pl)
+        }
 
         http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
 
@@ -159,26 +177,21 @@ class DBconnectionService {
 
                 json.result.asignaturas.list.each { v ->
 
-                    course = SchCourse.findByCode(v.codigo)
-                    plan = SchType.findByStudyPlanAndTypology(studyPlan, v.tipologia)
-                    if(!plan) {
-                        plan = new SchType(studyPlan: studyPlan, typology: v.tipologia)
-                        plan.save()
-                    }
+                    course = SchCourse.findByCode(v.codigo, [cache: true])
 
                     if (!course) {
                         course = new SchCourse(name: v.nombre, code: v.codigo, credits: v.creditos)
                         try {
+                            course.addToPlans(plan[v.tipologia])
                             course.save()
-                            course.addToPlans(plan)
                             searchGroups(course, location, v.codigo, false)
-                            course.save()
                         } catch (ValidationException ve) {
+                            ve.printStackTrace()
                             println "error guardando curso"
                         }
                     } else {
-                        if (!course.plans.contains(plan)) {
-                            course.addToPlans(plan)
+                        if (!course.plans.contains(plan[v.tipologia])) {
+                            course.addToPlans(plan[v.tipologia])
                             course.save()
                         }
                     }
@@ -197,10 +210,14 @@ class DBconnectionService {
         def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
         def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
-        def group
+        def group, teacher
 
-        if (update && TimeCategory.minus(course.lastUpdated, new Date()).minutes > 30) {
-            return
+        if(course.lastUpdated) {
+            LocalDateTime lastUpdated = LocalDateTime.ofInstant(course.lastUpdated.toInstant(), ZoneId.systemDefault());
+
+            if (update && Duration.between(lastUpdated, LocalDateTime.now()).toMinutes() > 30) {
+                return
+            }
         }
 
         http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
@@ -214,23 +231,25 @@ class DBconnectionService {
             response.success = { resp, json ->
                 json.result.list.each { a ->
 
-                    group = Groups.findByCourseAndCode(course, a.codigo)
+                    if (update) {
+                        group = Groups.findByCourseAndCode(course, a.codigo, [cache: true])
+                    } else { group = null}
+                    teacher = a.nombredocente.trim().size() == 0 ? 'Profesor no asignado' : a.nombredocente
 
                     if (!group) {
-                        group = new Groups(teacher: (a.nombredocente.trim().size() == 0) ? 'Profesor no asignado' : a.nombredocente,
-                                code: a.codigo, availableSpots: a.cuposdisponibles, totalSpots: a.cupostotal,
-                                timeSlots: [], course: course)
-                        group.save()
-                        course.addToGroups(group)
-                        course.save()
+                        group = new Groups(teacher: teacher, code: a.codigo, availableSpots: a.cuposdisponibles,
+                                totalSpots: a.cupostotal, course: course)
                     } else {
-                        group.teacher = (a.nombredocente.trim().size() == 0) ? 'Profesor no asignado' : a.nombredocente
+                        group.teacher = teacher
                         group.availableSpots = a.cuposdisponibles
                         group.totalSpots = a.cupostotal
-                        group.save()
+                        group.timeSlots.clear()
                     }
 
-                    days.each { d -> setTimeSlot(group["timeSlots"], d, a, location) }
+                    if (update) {
+                        println "request for " + course.name
+                        days.each { d -> setTimeSlot(group, d, a, location) }
+                    }
                     group.save()
                 }
             }
@@ -253,13 +272,14 @@ class DBconnectionService {
         def hours = timeslot[time].split(' ')
         def place = 'aula_' + day
         def rooms = timeslot[place].split(' ')
+        def t, p
 
         for (def i = 0; i < hours.size(); i++) {
 
-            def t = hours[i].split('-')
-            def p = rooms[i].split('-')
+            t = hours[i].split('-')
+            p = rooms[i].split('-')
 
-            group.add(new TimeSlot(
+            group.addToTimeSlots(new TimeSlot(
                     startHour: t[0].toInteger(),
                     endHour: t[1].toInteger(),
                     classroom: (p.size() > 1) ? p[1] : 'no', "day": day,
