@@ -163,7 +163,7 @@ class BootStrap {
 
         Location.list().each {
             loc -> if(!StudyPlan.countByLocation(loc)){
-                DBconnectionService.searchStudyPlans()
+                DBconnectionService.searchStudyPlans(loc)
             }
         }
 

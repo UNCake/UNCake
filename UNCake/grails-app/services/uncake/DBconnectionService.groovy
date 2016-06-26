@@ -38,9 +38,11 @@ class DBconnectionService {
                         def code = source[i + 1].find(/[0-9]+/)
 
                         if (code) {
-                            def sp = new StudyPlan(location: loc, code: code,
-                                    name: source[i], type: it)
-                            sp.save()
+                            def sp = StudyPlan.findByCode(code)
+                            if(!sp) {
+                                sp = new StudyPlan(location: loc, code: code, name: source[i], type: it)
+                                sp.save()
+                            }
                         }
                     }
                 }
