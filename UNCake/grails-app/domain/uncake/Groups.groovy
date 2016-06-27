@@ -12,6 +12,8 @@ class Groups {
     static constraints = {
         code nullable: false
         timeSlots nullable: true
+        availableSpots nullable: true
+        totalSpots nullable: true
     }
 
     static mapping = {

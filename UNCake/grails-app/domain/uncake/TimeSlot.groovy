@@ -7,6 +7,7 @@ class TimeSlot {
     Integer endHour
     String classroom
     Building building
+    static belongsTo = [group: Groups]
 
     static constraints = {
         day nullable: true

@@ -39,7 +39,7 @@ class DBconnectionService {
 
                         if (code) {
                             def sp = StudyPlan.findByCode(code)
-                            if(!sp) {
+                            if (!sp) {
                                 sp = new StudyPlan(location: loc, code: code, name: source[i], type: it)
                                 sp.save()
                             }
@@ -61,8 +61,9 @@ class DBconnectionService {
             def loc = Location.findByName(name)
             println "Iniciando gr " + name
             StudyPlan.findAllByTypeAndLocation(type, loc).each { sp ->
-
-                searchCourses(sp.location, sp, sp.type)
+                LocalDateTime iniTT = LocalDateTime.now()
+                searchCourses(sp.location, sp, sp.type, true)
+                println sp.name + " ms :" + Duration.between(iniTT, LocalDateTime.now()).toMillis()
                 /*
             try {
                 source = new HTTPBuilder(sp.location.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
@@ -150,7 +151,7 @@ class DBconnectionService {
         return null
     }
 
-    def searchCourses(location, studyPlan, type) {
+    def searchCourses(location, studyPlan, type, init) {
         def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
         def course
@@ -184,10 +185,10 @@ class DBconnectionService {
                         try {
                             course.addToPlans(plan[v.tipologia])
                             course.save()
-                            searchGroups(course, location, v.codigo, false)
+                            if (init) searchGroups(course, location, v.codigo, false)
                         } catch (ValidationException ve) {
                             ve.printStackTrace()
-                            println "error guardando curso"
+                            println "error guardando curso " + v.codigo
                         }
                     } else {
                         if (!course.plans.contains(plan[v.tipologia])) {
@@ -215,7 +216,7 @@ class DBconnectionService {
         if (course.lastUpdated) {
             LocalDateTime lastUpdated = LocalDateTime.ofInstant(course.lastUpdated.toInstant(), ZoneId.systemDefault());
 
-            if (update && Duration.between(lastUpdated, LocalDateTime.now()).toMinutes() > 30) {
+            if (update && Duration.between(lastUpdated, LocalDateTime.now()).toMinutes() < 30) {
                 return
             }
         }
@@ -231,8 +232,11 @@ class DBconnectionService {
             response.success = { resp, json ->
                 json.result.list.each { a ->
 
-                    group = Groups.findByCourseAndCode(course, a.codigo, [cache: true])
-
+                    if (update) {
+                        group = Groups.findByCourseAndCode(course, a.codigo, [cache: true])
+                    } else {
+                        group = null
+                    }
                     teacher = a.nombredocente.trim().size() == 0 ? 'Profesor no asignado' : a.nombredocente
 
                     if (!group) {
@@ -244,12 +248,10 @@ class DBconnectionService {
                         group.totalSpots = a.cupostotal
                         group.timeSlots.clear()
                     }
-
+                    group.save()
                     if (update) {
-                        println "request for " + course.name
                         days.each { d -> setTimeSlot(group, d, a, location) }
                     }
-                    group.save()
                 }
             }
 
@@ -271,18 +273,18 @@ class DBconnectionService {
         def hours = timeslot[time].split(' ')
         def place = 'aula_' + day
         def rooms = timeslot[place].split(' ')
-        def t, p
+        def t, p, ts
 
         for (def i = 0; i < hours.size(); i++) {
 
             t = hours[i].split('-')
             p = rooms[i].split('-')
 
-            group.addToTimeSlots(new TimeSlot(
-                    startHour: t[0].toInteger(),
+            ts = new TimeSlot( group: group,  startHour: t[0].toInteger(),
                     endHour: t[1].toInteger(),
                     classroom: (p.size() > 1) ? p[1] : 'no', "day": day,
-                    building: loc.name != "BOGOTA" ? null : Building.findByCode(p[0])))
+                    building: loc.name != "BOGOTA" ? null : Building.findByCode(p[0],  [cache: true]))
+            ts.save()
         }
     }
 

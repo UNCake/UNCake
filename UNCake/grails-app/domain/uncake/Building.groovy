@@ -15,6 +15,7 @@ class Building {
     }
 
     static mapping = {
-        location fetch: 'join'
+        location fetch: 'join', cache: true
+        cache: true
     }
 }
