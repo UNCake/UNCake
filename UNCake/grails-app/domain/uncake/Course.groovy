@@ -10,6 +10,7 @@ class Course {
     }
 
     static mapping = {
+        code index: 'Code_Idx'
         cache: true
     }
 }

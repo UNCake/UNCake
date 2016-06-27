@@ -3,7 +3,7 @@ package uncake
 class SchCourse extends Course{
 
     Date lastUpdated
-    static hasMany = [groups: Groups, plans: SchType]
+    static hasMany = [groups: Groups]
 
     static constraints = {
         groups nullable: true
@@ -11,7 +11,6 @@ class SchCourse extends Course{
 
     static mapping = {
         groups batchSize: 20, cache: true
-        plans fetch: 'join', cache: true
         cache: true
     }
 }

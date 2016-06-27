@@ -20,5 +20,7 @@ class Groups {
         timeSlots batchSize: 10, cache: true
         course fetch: 'join', cache: true
         cache: true
+        teacher index: 'Teacher_Idx'
+        code index: 'Code_Idx'
     }
 }
