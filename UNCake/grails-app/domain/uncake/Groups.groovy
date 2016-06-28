@@ -18,9 +18,9 @@ class Groups {
 
     static mapping = {
         timeSlots batchSize: 10, cache: true
-        course fetch: 'join', cache: true
+        course fetch: 'join', index: 'Course_idx', cache: true
         cache: true
         teacher index: 'Teacher_Idx'
-        code index: 'Code_Idx'
+        code index: 'Code_Idx,Course_idx'
     }
 }

@@ -67,7 +67,7 @@ class DBconnectionService {
             println "Iniciando gr " + name
             StudyPlan.findAllByTypeAndLocation(type, loc).each { sp ->
                 LocalDateTime iniTT = LocalDateTime.now()
-                searchCourses(sp.location, sp, sp.type, false)
+                searchCourses(sp.location, sp, sp.type, true)
                 println sp.name + " ms :" + Duration.between(iniTT, LocalDateTime.now()).toMillis()
                 /*
             try {
@@ -211,15 +211,15 @@ class DBconnectionService {
         def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
         def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
-        def group, teacher
+        def group, teacher, counter = 0
 
-        if (course.lastUpdated) {
-            LocalDateTime lastUpdated = LocalDateTime.ofInstant(course.lastUpdated.toInstant(), ZoneId.systemDefault());
+        LocalDateTime lastUpdated = LocalDateTime.ofInstant(course.lastUpdated.toInstant(), ZoneId.systemDefault());
 
-            if (update && Duration.between(lastUpdated, LocalDateTime.now()).toMinutes() < 30) {
-                return
-            }
+        if (update && Duration.between(lastUpdated, LocalDateTime.now()).toMinutes() < 30) {
+            return
         }
+
+        Session session = sessionFactory.currentSession
 
         http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
             body = [
@@ -233,7 +233,7 @@ class DBconnectionService {
                 json.result.list.each { a ->
 
                     if (update) {
-                        group = Groups.findByCourseAndCode(course, a.codigo, [cache: true])
+                        group = Groups.findByCourseAndCode(course, a.codigo)
                     } else {
                         group = null
                     }
@@ -249,8 +249,13 @@ class DBconnectionService {
                         group.timeSlots.clear()
                     }
                     group.save()
-                    if (update) {
-                        days.each { d -> setTimeSlot(group, d, a, location) }
+
+                    days.each { d -> setTimeSlot(group, d, a, location) }
+
+                    counter++
+                    if (counter % 5 == 0) {
+                        session.flush()
+                        session.clear()
                     }
                 }
             }
@@ -280,10 +285,10 @@ class DBconnectionService {
             t = hours[i].split('-')
             p = rooms[i].split('-')
 
-            ts = new TimeSlot( group: group,  startHour: t[0].toInteger(),
+            ts = new TimeSlot(group: group, startHour: t[0].toInteger(),
                     endHour: t[1].toInteger(),
                     classroom: (p.size() > 1) ? p[1] : 'no', "day": day,
-                    building: loc.name != "BOGOTA" ? null : Building.findByCode(p[0],  [cache: true]))
+                    building: loc.name != "BOGOTA" ? null : Building.findByCode(p[0], [cache: true]))
             ts.save()
         }
     }
