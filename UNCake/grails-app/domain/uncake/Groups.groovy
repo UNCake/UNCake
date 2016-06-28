@@ -6,7 +6,6 @@ class Groups {
     String code
     Integer availableSpots
     Integer totalSpots
-    Collection timeSlots
     static hasMany = [timeSlots: TimeSlot]
     static belongsTo = [course: SchCourse]
     static constraints = {
@@ -17,7 +16,7 @@ class Groups {
     }
 
     static mapping = {
-        timeSlots batchSize: 10, cache: true
+        timeSlots batchSize: 10, cascade: "all-delete-orphan", cache: true
         course fetch: 'join', index: 'Course_idx', cache: true
         cache: true
         teacher index: 'Teacher_Idx'
