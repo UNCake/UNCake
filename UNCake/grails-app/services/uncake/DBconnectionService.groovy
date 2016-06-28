@@ -1,5 +1,8 @@
 package uncake
 
+import org.hibernate.Session
+import org.hibernate.Transaction
+
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -12,6 +15,8 @@ import static groovyx.net.http.Method.POST
 
 @Transactional
 class DBconnectionService {
+
+    def sessionFactory
     static transactional = false
     /*
         Se encarga de poblar la base de datos con los planes de estudio
@@ -62,7 +67,7 @@ class DBconnectionService {
             println "Iniciando gr " + name
             StudyPlan.findAllByTypeAndLocation(type, loc).each { sp ->
                 LocalDateTime iniTT = LocalDateTime.now()
-                searchCourses(sp.location, sp, sp.type, true)
+                searchCourses(sp.location, sp, sp.type, false)
                 println sp.name + " ms :" + Duration.between(iniTT, LocalDateTime.now()).toMillis()
                 /*
             try {
@@ -154,16 +159,9 @@ class DBconnectionService {
     def searchCourses(location, studyPlan, type, init) {
         def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
-        def course
+        def course, counter = 0
 
-        def courseType = ["PRE": ["B", "C", "L", "P"], "POS": ["O", "T"]]
-        def plan = [:]
-
-        courseType[type].each { t ->
-            def pl = new SchType(studyPlan: studyPlan, typology: t)
-            pl.save()
-            plan.put(t, pl)
-        }
+        Session session = sessionFactory.currentSession
 
         http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
 
@@ -181,20 +179,22 @@ class DBconnectionService {
                     course = SchCourse.findByCode(v.codigo, [cache: true])
 
                     if (!course) {
-                        course = new SchCourse(name: v.nombre, code: v.codigo, credits: v.creditos)
                         try {
-                            course.addToPlans(plan[v.tipologia])
+                            course = new SchCourse(name: v.nombre, code: v.codigo, credits: v.creditos)
                             course.save()
                             if (init) searchGroups(course, location, v.codigo, false)
                         } catch (ValidationException ve) {
                             ve.printStackTrace()
                             println "error guardando curso " + v.codigo
                         }
-                    } else {
-                        if (!course.plans.contains(plan[v.tipologia])) {
-                            course.addToPlans(plan[v.tipologia])
-                            course.save()
-                        }
+                    }
+
+                    new SchType(course: course, studyPlan: studyPlan, typology: v.tipologia).save()
+                    counter++
+
+                    if (counter % 25 == 0) {
+                        session.flush()
+                        session.clear()
                     }
                 }
             }
