@@ -186,7 +186,7 @@ class DBconnectionService {
                             try {
                                 course = new SchCourse(name: v.nombre, code: v.codigo, credits: v.creditos)
                                 course.save()
-                                if (init) searchGroups(course, location, v.codigo, false)
+                                if (init) searchGroups(course, location, false)
                             } catch (ValidationException ve) {
                                 ve.printStackTrace()
                                 println "error guardando curso " + v.codigo
@@ -211,14 +211,13 @@ class DBconnectionService {
         }
     }
 
-    def searchGroups(course, location, code, update) {
+    def searchGroups(course, location, update) {
         def url = (location.name == 'MEDELLIN') ? location.url + ":9401/" : location.url
         def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
         def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
         def group, teacher, counter = 0
 
         LocalDateTime lastUpdated = LocalDateTime.ofInstant(course.lastUpdated.toInstant(), ZoneId.systemDefault());
-
         if (update && Duration.between(lastUpdated, LocalDateTime.now()).toMinutes() < 30) {
             return
         }
@@ -229,7 +228,7 @@ class DBconnectionService {
             body = [
                     "jsonrpc": "2.0",
                     "method" : "buscador.obtenerGruposAsignaturas",
-                    "params" : [code, "0"]
+                    "params" : [course.code, "0"]
             ]
 
             // success response handler

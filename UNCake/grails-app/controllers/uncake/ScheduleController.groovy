@@ -8,7 +8,7 @@ import static groovyx.net.http.Method.POST
 
 class ScheduleController {
 
-    //def DBconnectionService
+    def DBconnectionService
     def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
 
     def index() {
@@ -43,32 +43,21 @@ class ScheduleController {
     def searchGroups() {
 
         def loc = Location.findByName(params.selectedLoc)
-        def url = (params.selectedLoc == 'MEDELLIN') ? loc.url + ":9401/" : loc.url
-        def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
+        def course = SchCourse.findByCode(params.code)
+
+        DBconnectionService.searchGroups(course, loc, true)
+        course = SchCourse.findById(course.id)
 
         def groups = []
-        http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
-            body = [
-                    "jsonrpc": "2.0",
-                    "method" : "buscador.obtenerGruposAsignaturas",
-                    "params" : [params.code, "0"]
-            ]
 
-            // success response handler
-            response.success = { resp, json ->
-                json.result.list.each { a ->
-                    def temp = ["teacher"       : (a.nombredocente.trim().size() == 0)? 'Profesor no asignado': a.nombredocente, "code": a.codigo,
-                                "availableSpots": a.cuposdisponibles, "totalSpots": a.cupostotal, "timeSlots": []]
-                    days.each { d -> setTimeSlot(temp["timeSlots"], d, a, loc) }
-                    groups.add(temp)
-                }
+        course.groups.each { gr ->
+            def ts = ["teacher": gr.teacher, "code": gr.code, "availableSpots": gr.availableSpots,
+                      "totalSpots": gr.totalSpots, "course": gr.course.code, "timeSlots": []]
+            gr.timeSlots.each { t ->
+                ts["timeSlots"] << TimeSlot.findById(t.id)
             }
 
-            // failure response handler
-            response.failure = { resp ->
-                println "Unexpected error: ${resp.statusLine.statusCode}"
-                println $ { resp.statusLine.reasonPhrase }
-            }
+            groups << ts
         }
 
         render groups as JSON
