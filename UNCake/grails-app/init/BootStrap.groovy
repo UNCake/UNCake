@@ -17,7 +17,7 @@ class BootStrap {
             new Location(name: 'MANIZALES', url: 'http://sia.manizales.unal.edu.co').save()
             new Location(name: 'MEDELLIN', url: 'http://sia.medellin.unal.edu.co').save()
             new Location(name: 'ORINOQUIA', url: 'http://siaori.unal.edu.co').save()
-            new Location(name: 'PALMIRA', url: 'http://sia2.palmira.unal.edu.co').save()
+            new Location(name: 'PALMIRA', url: 'http://sia.palmira.unal.edu.co').save()
             new Location(name: 'TUMACO', url: 'http://siatum.unal.edu.co').save()
         }
 
@@ -163,13 +163,18 @@ class BootStrap {
 
         Location.list().each {
             loc -> if(!StudyPlan.countByLocation(loc)){
-                DBconnectionService.searchStudyPlans(loc)
+                //DBconnectionService.searchStudyPlans(loc)
             }
         }
 
-        def initST_Gr = ["BOGOTA"]
-        def type = "PRE"
-        DBconnectionService.initStudyPlans(initST_Gr, type)
+        def initST_Gr = []
+        def type = ["PRE","POS"]
+
+        initST_Gr.each { lc ->
+            type.each { t ->
+                DBconnectionService.initStudyPlans(lc, t)
+            }
+        }
     }
     def destroy = {
     }

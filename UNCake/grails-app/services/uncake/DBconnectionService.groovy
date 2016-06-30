@@ -59,72 +59,73 @@ class DBconnectionService {
     }
 
 
-    def initStudyPlans(locations, type) {
+    def initStudyPlans(location, type) {
         //Se almacenan las materias de cada plan de estudios
+        def loc = Location.findByName(location)
+        LocalDateTime iniTT = LocalDateTime.now()
+        print "Iniciando gr " + location
+        StudyPlan.findAllByTypeAndLocation(type, loc).each { sp ->
+            //LocalDateTime iniTT = LocalDateTime.now()
+            searchCourses(sp.location, sp, sp.type, true)
+            //println sp.name + " ms :" + Duration.between(iniTT, LocalDateTime.now()).toMillis()
+            /*
+        try {
+            source = new HTTPBuilder(sp.location.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
+                    '&tipo=' + sp.type + '&tipoVista=semaforo&nodo=1&parametro=on')
+            html = source.get([:])
 
-        locations.each { name ->
-            def loc = Location.findByName(name)
-            println "Iniciando gr " + name
-            StudyPlan.findAllByTypeAndLocation(type, loc).each { sp ->
-                LocalDateTime iniTT = LocalDateTime.now()
-                searchCourses(sp.location, sp, sp.type, true)
-                println sp.name + " ms :" + Duration.between(iniTT, LocalDateTime.now()).toMillis()
-                /*
-            try {
-                source = new HTTPBuilder(sp.location.url + '/academia/catalogo-programas/semaforo.do?plan=' + sp.code +
-                        '&tipo=' + sp.type + '&tipoVista=semaforo&nodo=1&parametro=on')
-                html = source.get([:])
+            type = [["fundamentalCredits", "B"], ["disciplinaryCredits", "C"], ["freeChoiceCredits", "L"]]
+            def pr
 
-                type = [["fundamentalCredits", "B"], ["disciplinaryCredits", "C"], ["freeChoiceCredits", "L"]]
-                def pr
+            html."**".findAll { it.@id.text().find(/arco_[0-9]+/) }.TABLE.TBODY.each {
 
-                html."**".findAll { it.@id.text().find(/arco_[0-9]+/) }.TABLE.TBODY.each {
+                    def value = -1
+                    def component = it.TR[0].TD[0].text().toUpperCase()
+                    //Se obtiene la cantidad de creditos por componente
+                    if (component.contains("FUND")) {
+                        value = type[0]
+                        sp[value[0]] = component.find(/[0-9]+/).toInteger()
+                    } else if (component.contains("DISC") || component.contains("GRAD")) {
+                        value = type[1]
+                        if (sp[value[0]] == null) sp[value[0]] = 0
+                        sp[value[0]] += component.find(/[0-9]+/).toInteger()
+                    }else if (component.contains("LIBRE")) {
+                        value = type[2]
+                        sp[value[0]] = component.find(/[0-9]+/).toInteger()
+                    }
 
-                        def value = -1
-                        def component = it.TR[0].TD[0].text().toUpperCase()
-                        //Se obtiene la cantidad de creditos por componente
-                        if (component.contains("FUND")) {
-                            value = type[0]
-                            sp[value[0]] = component.find(/[0-9]+/).toInteger()
-                        } else if (component.contains("DISC") || component.contains("GRAD")) {
-                            value = type[1]
-                            if (sp[value[0]] == null) sp[value[0]] = 0
-                            sp[value[0]] += component.find(/[0-9]+/).toInteger()
-                        }else if (component.contains("LIBRE")) {
-                            value = type[2]
-                            sp[value[0]] = component.find(/[0-9]+/).toInteger()
-                        }
+                    if (value != -1) {
 
-                        if (value != -1) {
+                        it.TR[1].TD[0].TABLE.each {
 
-                            it.TR[1].TD[0].TABLE.each {
+                            it.TBODY.TR[0].TD[1].DIV.each {
+                                pr = getCourseInfo(it, sp)
+                                if (pr != null) sp.addToCourses(pr)
+                            }
+
+                            it.TBODY.TR[0].TD[1].TABLE.each {
 
                                 it.TBODY.TR[0].TD[1].DIV.each {
                                     pr = getCourseInfo(it, sp)
                                     if (pr != null) sp.addToCourses(pr)
                                 }
-
-                                it.TBODY.TR[0].TD[1].TABLE.each {
-
-                                    it.TBODY.TR[0].TD[1].DIV.each {
-                                        pr = getCourseInfo(it, sp)
-                                        if (pr != null) sp.addToCourses(pr)
-                                    }
-                                }
                             }
-
                         }
-                }
 
-                println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
-                        ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")
-                sp.save( )
-
-            } catch (Exception e) {
-                println "Programa academico $sp.name de la sede $sp.location.name no disponible"
-            }*/
+                    }
             }
+
+            println sp.name + " " +sp.disciplinaryCredits + " " + sp.freeChoiceCredits + " " + sp.fundamentalCredits +
+                    ((sp.courses != null) ? "courses " + sp.courses.size() : "no courses")
+            sp.save( )
+
+        } catch (Exception e) {
+            println "Programa academico $sp.name de la sede $sp.location.name no disponible"
+        }*/
+
         }
+
+        println " ms :" + Duration.between(iniTT, LocalDateTime.now()).toMillis()
     }
 
     /*
@@ -174,27 +175,31 @@ class DBconnectionService {
             // success response handler
             response.success = { resp, json ->
 
-                json.result.asignaturas.list.each { v ->
+                if (!json.result) {
+                    println "no hay asignaturas"
+                } else {
+                    json.result.asignaturas.list.each { v ->
 
-                    course = SchCourse.findByCode(v.codigo, [cache: true])
+                        course = SchCourse.findByCode(v.codigo, [cache: true])
 
-                    if (!course) {
-                        try {
-                            course = new SchCourse(name: v.nombre, code: v.codigo, credits: v.creditos)
-                            course.save()
-                            if (init) searchGroups(course, location, v.codigo, false)
-                        } catch (ValidationException ve) {
-                            ve.printStackTrace()
-                            println "error guardando curso " + v.codigo
+                        if (!course) {
+                            try {
+                                course = new SchCourse(name: v.nombre, code: v.codigo, credits: v.creditos)
+                                course.save()
+                                if (init) searchGroups(course, location, v.codigo, false)
+                            } catch (ValidationException ve) {
+                                ve.printStackTrace()
+                                println "error guardando curso " + v.codigo
+                            }
                         }
-                    }
 
-                    new SchType(course: course, studyPlan: studyPlan, typology: v.tipologia).save()
-                    counter++
+                        new SchType(course: course, studyPlan: studyPlan, typology: v.tipologia).save()
+                        counter++
 
-                    if (counter % 25 == 0) {
-                        session.flush()
-                        session.clear()
+                        if (counter % 25 == 0) {
+                            session.flush()
+                            session.clear()
+                        }
                     }
                 }
             }
@@ -202,7 +207,6 @@ class DBconnectionService {
             // failure response handler
             response.failure = { resp ->
                 println "Unexpected error: ${resp.statusLine.statusCode}"
-                println "${resp.statusLine.reasonPhrase}"
             }
         }
     }
@@ -263,7 +267,6 @@ class DBconnectionService {
             // failure response handler
             response.failure = { resp ->
                 println "Unexpected error: ${resp.statusLine.statusCode}"
-                println $ { resp.statusLine.reasonPhrase }
             }
         }
     }
