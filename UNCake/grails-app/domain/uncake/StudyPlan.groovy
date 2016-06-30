@@ -27,5 +27,7 @@ class StudyPlan {
     static mapping = {
         courses batchSize: 20
         cache: true
+        location index: "Loc_Idx"
+        name index: "Loc_Idx,Name_Idx"
     }
 }

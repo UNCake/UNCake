@@ -7,6 +7,8 @@ import groovyx.net.http.HTTPBuilder
 import static groovyx.net.http.Method.POST
 
 class ScheduleController {
+
+    //def DBconnectionService
     def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
 
     def index() {
@@ -24,45 +26,15 @@ class ScheduleController {
     }
 
     def searchCourses() {
-        def url = (params.selectedLoc == 'MEDELLIN') ? Location.findByName(params.selectedLoc).url + ":9401/" :
-                Location.findByName(params.selectedLoc).url
-        def http = new HTTPBuilder(url + '/buscador/JSON-RPC')
-        def codeStudyPlan = StudyPlan.findByNameAndLocation(params.studyplan, Location.findByName(params.selectedLoc)).code
+        def location = Location.findByName(params.selectedLoc)
+        def studyPlan = StudyPlan.findByNameAndLocation(params.studyplan, location)
 
         def list = []
-        http.request(POST, groovyx.net.http.ContentType.JSON) { req ->
 
-            body = [
-                    "jsonrpc": "2.0",
-                    "method" : "buscador.obtenerAsignaturas",
-                    "params" : ["", "PRE", "", params.type, codeStudyPlan, "", 1, 999]
-            ]
-
-            // success response handler
-            response.success = { resp, json ->
-
-                json.result.asignaturas.list.each { v ->
-                    list.add(["name": v.nombre, "typology": v.tipologia,
-                              "code": v.codigo, "credits": v.creditos])
-
-                    if (!Course.findByCode(v.codigo)) {
-                        def course = new Course(list.last())
-                        course.location = Location.findByName(params.selectedLoc)
-                        try {
-                            course.save()
-                        } catch (ValidationException ve)
-                        {
-                            println "error guardando curso"
-                        }
-                    }
-                }
-            }
-
-            // failure response handler
-            response.failure = { resp ->
-                println "Unexpected error: ${resp.statusLine.statusCode}"
-                println "${resp.statusLine.reasonPhrase}"
-            }
+        SchType.findAllByStudyPlan(studyPlan).each {c ->
+            Course course = c.course
+            list.add(["name": course.name, "typology": c.typology,
+                      "code": course.code, "credits": course.credits])
         }
 
         render list as JSON
