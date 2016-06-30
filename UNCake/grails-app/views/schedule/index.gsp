@@ -105,12 +105,6 @@
                 <li><a class="btn-floating yellow darken-1" id="showList"><i class="material-icons">view_list</i></a></li>
                 <li><a class="btn-floating green" id="downloadSchedule" download><i class="material-icons" >get_app</i></a></li>
 
-                <g:if test="${session.user != null}">
-                    <!-- Modal Trigger -->
-                    <li><a class="btn-floating blue modal-trigger" id="showSaveSchedule" href="#modalSave">
-                    <i class="material-icons">save</i></a></li>
-                </g:if>
-
             </ul>
         </div>
     <div id="schedulePanel">
