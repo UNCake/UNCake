@@ -1,9 +1,12 @@
 body {
-    text-align: center;
     font-family: 'Montserrat', sans-serif;
     color: white;
     background-color: #08283D;
     margin: 0
+}
+
+h3, h6, p{
+    text-align: center;
 }
 
 img {

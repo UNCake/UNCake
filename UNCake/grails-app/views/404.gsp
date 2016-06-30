@@ -16,9 +16,9 @@
 
     <asset:image id="logo" src="maintenance/nombreLogoPeq.png"/>
 
-    <h1><asset:image id="imgM" src="maintenance/noahora.jpg"/>Página no encontrada.</h1>
+    <h3><asset:image id="imgM" src="maintenance/noahora.jpg"/>Página no encontrada.</h3>
 
-    <h3>¿Seguro que esta página existe?</h3>
+    <h6>¿Seguro que esta página existe?</h6>
 
     <p>Comunícate con nosotros en</p>
     <a href="https://www.facebook.com/UNCake/"><asset:image id="facebook" src="facebook.png"/></a>
