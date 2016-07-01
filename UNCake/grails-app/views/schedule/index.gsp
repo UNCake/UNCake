@@ -63,6 +63,11 @@
             <label for="menuType">Tipología</label>
         </div>
 
+        <div class="input-field">
+            <i class="material-icons prefix">search</i>
+            <input id="teacher" type="text" class="validate">
+            <label for="teacher">Profesor</label>
+        </div>
 
         <div class="input-field">
             <i class="material-icons prefix">search</i>
@@ -216,6 +221,8 @@
         var groups = {}
         var schedule = {}
         var days = $.parseJSON('${days.encodeAsJSON()}')
+        var typingTimer;
+        var doneTypingInterval = 2000;
 
         for (var i = 6; i <= 21; i++) {
             $("#scheduleTable").append('<tr id="r' + i + '"><th>' + i + '</th></tr>')
@@ -286,6 +293,7 @@
         var updateCourses = function () {
             var url = "${createLink(controller:'Schedule', action:'searchCourses')}";
             $("#progressbarCourses").removeClass("hide");
+            $('#listCourses').empty();
             var response = $.ajax({
                 url: url,
                 contentType: "application/json; charset=utf-8",
@@ -298,7 +306,6 @@
                 },
                 success: function (resCourses) {
                     courses = resCourses
-                    $('#listCourses').empty();
                     $.each(courses, function (key, value) {
                         $('#listCourses')
                                 .append($('<li>', {value: key, class: "collection-item"})
@@ -417,6 +424,39 @@
             updatePlans()
             $("#listCourses").empty()
         });
+
+        $("#teacher").keyup(function () {
+            clearTimeout(typingTimer);
+            var teacher = $("#teacher").val()
+            if(teacher.length >= 3) {
+
+                typingTimer = setTimeout(function(){
+                var url = "${createLink(controller: 'Schedule', action: 'searchTeacher')}";
+                $("#progressbarCourses").removeClass("hide");
+                $('#listCourses').empty();
+                var response = $.ajax({
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    crossDomain: true,
+                    data: { teacher: teacher },
+                    success: function (resCourses) {
+                        courses = resCourses
+                        $.each(courses, function (key, value) {
+                                $('#listCourses').append($('<li>', {value: key, class: "collection-item"})
+                                            .text(value.code + " " + value.name));
+                            });
+
+                            $("#progressbarCourses").addClass("hide");
+                    },
+                    error: function (request, status, error) {
+                        alert(error)
+                    }
+                });
+                }, doneTypingInterval);
+            }
+        });
+
 
         $("#course").keyup(function () {
             var course = $(this).val().toLowerCase();
