@@ -334,6 +334,12 @@
             var name = courses[code].name;
             var code = courses[code].code;
             $("#progressbarGroups").removeClass("hide");
+            var loc = $("#loc").val();
+            if(loc == null) {
+                $("#progressbarGroups").addClass("hide");
+                alert("Escoge una sede")
+                return
+            }
             groups[name] = {};
             var response = $.ajax({
                 url: url,
@@ -341,7 +347,7 @@
                 dataType: "json",
                 crossDomain: true,
                 data: {
-                    selectedLoc: $("#loc").val(),
+                    selectedLoc: loc,
                     code: code
                 },
                 success: function (group) {
@@ -429,7 +435,6 @@
             clearTimeout(typingTimer);
             var teacher = $("#teacher").val()
             if(teacher.length >= 3) {
-
                 typingTimer = setTimeout(function(){
                 var url = "${createLink(controller: 'Schedule', action: 'searchTeacher')}";
                 $("#progressbarCourses").removeClass("hide");
@@ -442,12 +447,23 @@
                     data: { teacher: teacher },
                     success: function (resCourses) {
                         courses = resCourses
+                        var empty = true
                         $.each(courses, function (key, value) {
-                                $('#listCourses').append($('<li>', {value: key, class: "collection-item"})
-                                            .text(value.code + " " + value.name));
-                            });
+                        $('#listCourses').append($('<li>', {value: key, class: "collection-item"})
+                                               .text(value.code + " " + value.name));
+                            empty = false
+                        });
 
-                            $("#progressbarCourses").addClass("hide");
+                        $("#progressbarCourses").addClass("hide");
+                        if(empty){ Materialize.toast("No se encontraron materias", 4000)}
+
+                        $("#listCourses li").click(function () {
+                            $("#selectedCoursesCol").removeClass('hidden');
+                            $("#msgCol").addClass('hidden');
+                            if (!(courses[this.value].name in groups)) {
+                                updateGroups(this.value);
+                            }
+                        });
                     },
                     error: function (request, status, error) {
                         alert(error)
