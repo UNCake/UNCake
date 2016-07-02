@@ -14,7 +14,7 @@
     <div class="col s12 m3">
 
         <div class="input-field">
-            <select class="icons" id="loc">
+            <select class="icons" id="loc" autocomplete="off">
                 <option value="" disabled selected>Selecciona tu sede</option>
                 <option value="AMAZONIA" data-icon="${resource(dir: 'images', file: 'amazonia.jpg')}"
                         class="circle">Amazonia</option>
@@ -36,25 +36,25 @@
             <label>Sede</label>
         </div>
 
-        <div id="filters" class="row hide">
+        <div id="filters" class="row hide" >
             <div class="input-field col s12">
                 <label>Buscar por</label>
                 <br>
             </div>
             <div class="input-field col s12 m4">
-                <input name="search" type="radio" id="f_teacher">
+                <input name="search" type="radio" id="f_teacher" autocomplete="off">
                 <label for="f_teacher">
                     Docente
                 </label>
             </div>
             <div class="input-field col s12 m4">
-                <input name="search" type="radio" id="f_course">
+                <input name="search" type="radio" id="f_course" autocomplete="off">
                 <label for="f_course">
                     Materia
                 </label>
             </div>
             <div class="input-field col s12 m4">
-                <input name="search" type="radio" id="f_plan">
+                <input name="search" type="radio" id="f_plan" autocomplete="off">
                 <label for="f_plan">
                     Plan
                 </label>
