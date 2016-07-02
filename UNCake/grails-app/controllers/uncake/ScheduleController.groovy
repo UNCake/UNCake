@@ -55,6 +55,20 @@ class ScheduleController {
         render list as JSON
     }
 
+    def searchCourse() {
+        def list = []
+        def courses = []
+
+        SchCourse.findAllByNameIlike('%'+params.course+'%').each {c ->
+            if(!courses.contains(c)) {
+                list.add(["name": c.name, "code": c.code, "credits": c.credits])
+                courses.add(c)
+            }
+        }
+
+        render list as JSON
+    }
+
     def searchGroups() {
 
         def loc = Location.findByName(params.selectedLoc)

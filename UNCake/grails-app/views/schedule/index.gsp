@@ -98,7 +98,15 @@
             <div class="input-field">
                 <i class="material-icons prefix">search</i>
                 <input id="teacher" type="text" class="validate">
-                <label for="teacher">Profesor</label>
+                <label for="teacher">Docente</label>
+            </div>
+        </div>
+
+        <div id="filCourse" class="hide">
+            <div class="input-field">
+                <i class="material-icons prefix">search</i>
+                <input id="courseF" type="text" class="validate">
+                <label for="courseF">Materia</label>
             </div>
         </div>
 
@@ -501,6 +509,47 @@
             }
         });
 
+        $("#courseF").keyup(function () {
+            clearTimeout(typingTimer);
+            var courseF = $("#courseF").val()
+            if(courseF.length >= 3) {
+                typingTimer = setTimeout(function(){
+                    var url = "${createLink(controller: 'Schedule', action: 'searchCourse')}";
+                    $("#progressbarCourses").removeClass("hide");
+                    $('#listCourses').empty();
+                    var response = $.ajax({
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        crossDomain: true,
+                        data: { course: courseF },
+                        success: function (resCourses) {
+                        courses = resCourses
+                        var empty = true
+                        $.each(courses, function (key, value) {
+                        $('#listCourses').append($('<li>', {value: key, class: "collection-item"})
+                                               .text(value.code + " " + value.name));
+                            empty = false
+                        });
+
+                        $("#progressbarCourses").addClass("hide");
+                        if(empty){ Materialize.toast("No se encontraron materias", 4000)}
+
+                        $("#listCourses li").click(function () {
+                            $("#selectedCoursesCol").removeClass('hidden');
+                            $("#msgCol").addClass('hidden');
+                            if (!(courses[this.value].name in groups)) {
+                                updateGroups(this.value);
+                            }
+                        });
+                    },
+                    error: function (request, status, error) {
+                        alert(error)
+                    }
+                });
+                }, doneTypingInterval);
+            }
+        });
 
         $("#course").keyup(function () {
             var course = $(this).val().toLowerCase();
