@@ -36,43 +36,70 @@
             <label>Sede</label>
         </div>
 
-
-        <div class="input-field">
-            <select id="menuTypePlan">
-                <option value="PRE" selected="selected">Pregrado</option>
-                <option value="POS">Posgrado</option>
-            </select>
-            <label for="menuTypePlan">Tipo</label>
+        <div id="filters" class="row hide">
+            <div class="input-field col s12">
+                <label>Buscar por</label>
+                <br>
+            </div>
+            <div class="input-field col s12 m4">
+                <input name="search" type="radio" id="f_teacher">
+                <label for="f_teacher">
+                    Docente
+                </label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input name="search" type="radio" id="f_course">
+                <label for="f_course">
+                    Materia
+                </label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input name="search" type="radio" id="f_plan">
+                <label for="f_plan">
+                    Plan
+                </label>
+            </div>
         </div>
 
+        <div id="filPlan" class="hide">
+            <div class="input-field">
+                <select id="menuTypePlan">
+                    <option value="PRE" selected="selected">Pregrado</option>
+                    <option value="POS">Posgrado</option>
+                </select>
+                <label for="menuTypePlan">Tipo</label>
+            </div>
 
-        <div class="input-field">
-            <input id="plans" class="dropdown-button" placeholder="Selecciona un plan" data-activates="dropdownPlans">
-            <ul id="dropdownPlans" class="dropdown-content"></ul>
-            <label class="active" for="plans">Planes</label>
+
+            <div class="input-field">
+                <input id="plans" class="dropdown-button" placeholder="Selecciona un plan" data-activates="dropdownPlans">
+                <ul id="dropdownPlans" class="dropdown-content"></ul>
+                <label class="active" for="plans">Planes</label>
+            </div>
+
+            <div class="input-field">
+                <select name="menuType" id="menuType">
+                    <option value="">Todas</option>
+                    <option value="B">Fundamentación</option>
+                    <option value="C">Disciplinar</option>
+                    <option value="L">Libre elección</option>
+                    <option value="P">Nivelación</option>
+                </select>
+                <label for="menuType">Tipología</label>
+            </div>
+            <div class="input-field">
+                <i class="material-icons prefix">search</i>
+                <input id="course" type="text" class="validate">
+                <label for="course">Materia</label>
+            </div>
         </div>
 
-        <div class="input-field">
-            <select name="menuType" id="menuType">
-                <option value="">Todas</option>
-                <option value="B">Fundamentación</option>
-                <option value="C">Disciplinar</option>
-                <option value="L">Libre elección</option>
-                <option value="P">Nivelación</option>
-            </select>
-            <label for="menuType">Tipología</label>
-        </div>
-
-        <div class="input-field">
-            <i class="material-icons prefix">search</i>
-            <input id="teacher" type="text" class="validate">
-            <label for="teacher">Profesor</label>
-        </div>
-
-        <div class="input-field">
-            <i class="material-icons prefix">search</i>
-            <input id="course" type="text" class="validate">
-            <label for="course">Materia</label>
+        <div id="filTeacher" class="hide">
+            <div class="input-field">
+                <i class="material-icons prefix">search</i>
+                <input id="teacher" type="text" class="validate">
+                <label for="teacher">Profesor</label>
+            </div>
         </div>
 
         <div id="progressbarCourses" class="hide">
@@ -214,7 +241,7 @@
 <g:javascript>
 
     $(function () {
-
+         Materialize.toast("Primero selecciona tu sede", 4000)
         $('select').material_select();
 
         var courses
@@ -288,6 +315,7 @@
         $("#loc").change(function () {
             updatePlans();
             $('#listCourses').empty();
+            $("#filters").removeClass("hide");
         });
 
         var updateCourses = function () {
@@ -641,6 +669,24 @@
 
                 }
         );
+
+        $("#f_teacher").click(function() {
+          $("#filPlan").addClass("hide");
+          $("#filCourse").addClass("hide");
+          $("#filTeacher").removeClass("hide");
+        });
+
+        $("#f_plan").click(function() {
+          $("#filTeacher").addClass("hide");
+          $("#filCourse").addClass("hide");
+          $("#filPlan").removeClass("hide");
+        });
+
+        $("#f_course").click(function() {
+          $("#filPlan").addClass("hide");
+          $("#filTeacher").addClass("hide");
+          $("#filCourse").removeClass("hide");
+        });
 
         $("#showList").click(function() {
           $("#scheduleDiv").hide();
