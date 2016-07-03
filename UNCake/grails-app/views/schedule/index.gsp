@@ -41,19 +41,19 @@
                 <label>Buscar por</label>
                 <br>
             </div>
-            <div class="input-field col s12 m4">
+            <div class="input-field col s12 m12 l4">
                 <input name="search" type="radio" id="f_teacher" autocomplete="off">
                 <label for="f_teacher">
                     Docente
                 </label>
             </div>
-            <div class="input-field col s12 m4">
+            <div class="input-field col s12 m12 l4">
                 <input name="search" type="radio" id="f_course" autocomplete="off">
                 <label for="f_course">
                     Materia
                 </label>
             </div>
-            <div class="input-field col s12 m4">
+            <div class="input-field col s12 m12 l4">
                 <input name="search" type="radio" id="f_plan" autocomplete="off">
                 <label for="f_plan">
                     Plan
@@ -604,6 +604,12 @@
             $("#scheduleTable td").each(function () {
                 if ($(this).val().indexOf(code) >= 0) {
                     clearSlot(this);
+                }
+            });
+
+            $("#scheduleList li").each(function () {
+                if ($(this).val() != "" && $(this).val() == code) {
+                    $(this).remove();
                 }
             });
 
