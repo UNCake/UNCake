@@ -218,6 +218,7 @@ class DBconnectionService {
         def group, teacher, counter = 0
 
         LocalDateTime lastUpdated = LocalDateTime.ofInstant(course.lastUpdated.toInstant(), ZoneId.systemDefault());
+        
         if (update && Duration.between(lastUpdated, LocalDateTime.now()).toMinutes() < 30) {
             return
         }
@@ -233,28 +234,19 @@ class DBconnectionService {
 
             // success response handler
             response.success = { resp, json ->
+                if (update) {
+                    def query = Groups.findAllByCourse(course)
+                    query.each {g -> g.delete() }
+                }
                 json.result.list.each { a ->
 
-                    if (update) {
-                        group = Groups.findByCourseAndCode(course, a.codigo)
-                    } else {
-                        group = null
-                    }
                     teacher = a.nombredocente.trim().size() == 0 ? 'Profesor no asignado' : a.nombredocente
 
-                    if (!group) {
-                        group = new Groups(teacher: teacher, code: a.codigo, availableSpots: a.cuposdisponibles,
+                    group = new Groups(teacher: teacher, code: a.codigo, availableSpots: a.cuposdisponibles,
                                 totalSpots: a.cupostotal, course: course)
-                    } else {
-                        group.teacher = teacher
-                        group.availableSpots = a.cuposdisponibles
-                        group.totalSpots = a.cupostotal
-                        group.timeSlots.clear()
-                    }
                     group.save()
 
                     days.each { d -> setTimeSlot(group, d, a, location) }
-
                     counter++
                     if (counter % 5 == 0) {
                         session.flush()
@@ -267,6 +259,10 @@ class DBconnectionService {
             response.failure = { resp ->
                 println "Unexpected error: ${resp.statusLine.statusCode}"
             }
+        }
+
+        if (update) {
+            course.lastUpdated = new Date()
         }
     }
 
