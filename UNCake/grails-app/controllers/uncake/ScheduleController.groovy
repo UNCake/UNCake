@@ -31,7 +31,7 @@ class ScheduleController {
 
         def list = []
 
-        SchType.findAllByStudyPlan(studyPlan).each {c ->
+        SchType.findAllByStudyPlan(studyPlan).each { c ->
             Course course = c.course
             list.add(["name": course.name, "typology": c.typology,
                       "code": course.code, "credits": course.credits])
@@ -44,9 +44,9 @@ class ScheduleController {
         def list = []
         def courses = []
 
-        Groups.findAllByTeacherIlike('%'+params.teacher+'%').each {c ->
+        Groups.findAllByTeacherIlike('%' + params.teacher + '%').each { c ->
             Course course = c.course
-            if(!courses.contains(course)) {
+            if (!courses.contains(course)) {
                 list.add(["name": course.name, "code": course.code, "credits": course.credits])
                 courses.add(course)
             }
@@ -59,8 +59,8 @@ class ScheduleController {
         def list = []
         def courses = []
 
-        SchCourse.findAllByNameIlike('%'+params.course+'%').each {c ->
-            if(!courses.contains(c)) {
+        SchCourse.findAllByNameIlike('%' + params.course + '%').each { c ->
+            if (!courses.contains(c)) {
                 list.add(["name": c.name, "code": c.code, "credits": c.credits])
                 courses.add(c)
             }
@@ -80,7 +80,7 @@ class ScheduleController {
         def groups = []
 
         course.groups.each { gr ->
-            def ts = ["teacher": gr.teacher, "code": gr.code, "availableSpots": gr.availableSpots,
+            def ts = ["teacher"   : gr.teacher, "code": gr.code, "availableSpots": gr.availableSpots,
                       "totalSpots": gr.totalSpots, "course": gr.course.code, "timeSlots": []]
 
             TimeSlot.findAllByGroup(gr).each { t ->
@@ -101,10 +101,13 @@ class ScheduleController {
         if (reqSchedule.size() > 1) {
             def user = User.find(session.user)
             def schedule = new Schedule(credits: 0, user: user)
-            def name, empty = true
+            def name, empty = true, exists = false
 
             reqSchedule.each { key, val ->
-                if (key == "name") name = val
+                if (key == "name") {
+                    name = val
+                    if(Schedule.findByUserAndName(user,name)) exists = true
+                }
                 else {
                     def course = SchCourse.findByCode(val.course)
                     schedule.addToCourses(Groups.findByCodeAndCourse(val.code, course))
@@ -112,12 +115,13 @@ class ScheduleController {
                 }
             }
 
-            schedule.name = name
-
-            if(!empty) {
+            if (!empty & !exists) {
+                schedule.name = name
                 schedule.save()
                 res = [1]
-            }else{
+            } else if (exists){
+                res = [4]
+            } else {
                 res = [2]
             }
         }
@@ -126,17 +130,14 @@ class ScheduleController {
     }
 
     def showSchedule() {
+        def user = User.find(session.user)
         def res = []
-        if (params.friend != null) {
-            def user = User.findByName(params.friend)
-            if (!user.schedules.isEmpty())
-                res.add(user.schedules.first().image)
-        } else {
-            def schedule = Schedule.findByName(params.name)
-            if (schedule != null) {
-                res.add(schedule.image)
-            }
+
+        def schedule = Schedule.findByNameAndUser(params.name)
+        if (schedule != null) {
+            res.add(schedule.image)
         }
+
 
         render res as JSON
     }

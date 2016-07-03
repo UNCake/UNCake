@@ -145,6 +145,12 @@
                 <li><a class="btn-floating yellow darken-1" id="showList"><i class="material-icons">view_list</i></a></li>
                 <li><a class="btn-floating green" id="downloadSchedule" download><i class="material-icons" >get_app</i></a></li>
 
+                <g:if test="${session.user != null}">
+                    <!-- Modal Trigger -->
+                    <li><a class="btn-floating blue modal-trigger" id="showSaveSchedule" href="#modalSave">
+                    <i class="material-icons">save</i></a></li>
+                </g:if>
+
             </ul>
         </div>
     <div id="schedulePanel">
@@ -705,6 +711,8 @@
                                 Materialize.toast("Horario " + $("#nameSc").val() + " guardardo.", 4000)
                             } else if (r[2] == 3) {
                                 Materialize.toast("No se puede guardar el horario.", 4000)
+                            } else if (r[0] == 4) {
+                                Materialize.toast("Ya tienes un horario con ese nombre.", 4000)
                             } else {
                                 Materialize.toast("El horario no puede ser vacio.", 4000)
                             }

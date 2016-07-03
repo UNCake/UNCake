@@ -14,5 +14,7 @@ class Schedule {
 
     static mapping = {
         courses batchSize: 10
+        user index: "User_idx"
+        name index: "User_idx,Name_idx"
     }
 }
