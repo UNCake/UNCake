@@ -148,16 +148,36 @@
             </ul>
         </div>
     <div id="schedulePanel">
-        <ul class="collection with-header hide" id="scheduleList">
-            <li class="collection-header blue-grey lighten-5" id="listMon"><h6>Lunes</h6></li>
-            <li class="collection-header blue-grey lighten-5" id="listTue"><h6>Martes</h6></li>
-            <li class="collection-header blue-grey lighten-5" id="listWed"><h6>Miércoles</h6></li>
-            <li class="collection-header blue-grey lighten-5" id="listThu"><h6>Jueves</h6></li>
-            <li class="collection-header blue-grey lighten-5" id="listFri"><h6>Viernes</h6></li>
-            <li class="collection-header blue-grey lighten-5" id="listSat"><h6>Sábado</h6></li>
-            <li class="collection-header blue-grey lighten-5" id="listSun"><h6>Domingo</h6></li>
-        </ul>
 
+        <div class="hide" id="scheduleList">
+            <ul class="collection with-header" id="lunes">
+                <li value="" class="collection-header blue-grey lighten-5"><h6>Lunes</h6></li>
+            </ul>
+
+            <ul class="collection with-header" id="martes">
+                <li value="" class="collection-header blue-grey lighten-5"><h6>Martes</h6></li>
+            </ul>
+
+            <ul class="collection with-header" id="miercoles">
+                <li value="" class="collection-header blue-grey lighten-5"><h6>Miércoles</h6></li>
+            </ul>
+
+            <ul class="collection with-header" id="jueves">
+                <li value="" class="collection-header blue-grey lighten-5"><h6>Jueves</h6></li>
+            </ul>
+
+            <ul class="collection with-header" id="viernes">
+                <li value="" class="collection-header blue-grey lighten-5"><h6>Viernes</h6></li>
+            </ul>
+
+            <ul class="collection with-header" id="sabado">
+                <li value="" class="collection-header blue-grey lighten-5"><h6>Sábado</h6></li>
+            </ul>
+
+            <ul class="collection with-header" id="domingo">
+                <li value="" class="collection-header blue-grey lighten-5"><h6>Domingo</h6></li>
+            </ul>
+        </div>
 
         <div class="responsive-table" id="scheduleDiv">
             <table id="scheduleTable">
@@ -596,6 +616,12 @@
 
             var gr = groups[name][id]
 
+            $("#scheduleList li").each(function () {
+                if ($(this).val() != "" && $(this).val() == code) {
+                    $(this).remove();
+                }
+            });
+
             $("#scheduleTable td").each(function () {
                 if ($(this).val().indexOf(code) >= 0) {
                     clearSlot(this);
@@ -629,12 +655,16 @@
 
             } else {
                 schedule[name] = gr;
+                var lname = name
                 var colors = ["#f49595", "#f9eb97", "#c6f9ac", "#a8d9f6", "#e2bbfd", "#84d8b8",
                     "#b4e7cf", "#eed7cb", "#eeeba1", "#f8bbf9"]
                 var color = colors[Math.random() * 10 | 0]
                 for (var i in gr["timeSlots"]) {
                     var ts = gr["timeSlots"][i]
                     if (ts.startHour > 0) {
+
+                        $("#"+ts.day+"").append($('<li>', {value: code, class: "collection-item truncate"})
+                                .text(ts.startHour + "-" + ts.endHour+" "+ lname));
                         slot = "#scheduleTable #r" + ts.startHour + " #" + days.indexOf(ts.day) * ts.startHour;
                         name = (name.length > 15) ? name.substr(0, 15) + '...' : name;
                         $(slot).html(name + "<br> Gr." + gr["code"]);
@@ -649,7 +679,6 @@
                             $(slot).val(code);
                             $(slot).hide();
                         }
-
                     }
                 }
             }
