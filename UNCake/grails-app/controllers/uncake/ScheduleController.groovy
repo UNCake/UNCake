@@ -82,8 +82,9 @@ class ScheduleController {
         course.groups.each { gr ->
             def ts = ["teacher": gr.teacher, "code": gr.code, "availableSpots": gr.availableSpots,
                       "totalSpots": gr.totalSpots, "course": gr.course.code, "timeSlots": []]
-            gr.timeSlots.each { t ->
-                ts["timeSlots"] << TimeSlot.findById(t.id)
+
+            TimeSlot.findAllByGroup(gr).each { t ->
+                ts["timeSlots"] << t
             }
 
             groups << ts

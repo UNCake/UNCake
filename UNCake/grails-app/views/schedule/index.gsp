@@ -407,7 +407,6 @@
                     code: code
                 },
                 success: function (group) {
-
                     var content = $('<li>', {value: name, id: code});
                     content.append('<div class="collapsible-header"> <a id="deleteCourse" > <i class="tiny material-icons">not_interested</i></a>' + code + ' ' + name + '</div>')
                     var item = $('<div>', {class: "collapsible-body"});
@@ -421,7 +420,6 @@
                             if (ts.startHour > 0)
                                 minSch += ts.day.substring(0, 2) + ': ' + ts.startHour + ' - ' + ts.endHour + '  ';
                         }
-
                         div.append($('<li>', {value: code, id: key})
                                 .html(value.code + ' - ' + value.teacher + '<p>' + minSch + '</p>' +
                                         'Cupos disp. ' + value["availableSpots"] + '/' + value["totalSpots"] +
