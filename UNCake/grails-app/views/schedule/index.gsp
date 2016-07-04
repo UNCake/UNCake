@@ -275,7 +275,7 @@
 <g:javascript>
 
     $(function () {
-         Materialize.toast("Primero selecciona tu sede", 4000)
+
         $('select').material_select();
 
         var courses
@@ -717,7 +717,7 @@
                             } else if (r[2] == 3) {
                                 Materialize.toast("No se puede guardar el horario.", 4000)
                             } else if (r[0] == 4) {
-                                Materialize.toast("Ya tienes un horario con ese nombre.", 4000)
+                                Materialize.toast("Se actualizo el horario " + $("#nameSc").val(), 4000)
                             } else {
                                 Materialize.toast("El horario no puede ser vacio.", 4000)
                             }
@@ -796,7 +796,7 @@
         $('.modal-trigger').leanModal();
 
         var load = $.parseJSON('${schedule}')
-        
+
         if(load != null){
             $("#loc").val(load.loc).change();
             courses = load.courses
@@ -806,7 +806,9 @@
                 drawCourse(value.name, value.code, groups[value.name])
               drawGroup(value.id, value.code, value.name)
             })
-        }
+
+            $("#nameSc").val(load.name)
+        } else {Materialize.toast("Primero selecciona tu sede", 4000)}
     });
 </g:javascript>
 </body>

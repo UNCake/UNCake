@@ -105,12 +105,13 @@ class ScheduleController {
         if (reqSchedule.size() > 1) {
             def user = User.find(session.user)
             def schedule = new Schedule(credits: 0, user: user)
-            def name, empty = true, exists = false
+            def name, empty = true, exists = false, prev
 
             reqSchedule.each { key, val ->
                 if (key == "name") {
                     name = val
-                    if(Schedule.findByUserAndName(user,name)) exists = true
+                    prev = Schedule.findByUserAndName(user,name)
+                    if(prev) exists = true
                 } else if (key == "loc"){
                     schedule.location = Location.findByName(val)
                 }
@@ -121,12 +122,13 @@ class ScheduleController {
                 }
             }
 
-            if (!empty & !exists) {
+            if (!empty) {
+                if (exists) {
+                    res = [4]
+                    prev.delete()
+                } else res = [1]
                 schedule.name = name
                 schedule.save()
-                res = [1]
-            } else if (exists){
-                res = [4]
             } else {
                 res = [2]
             }
@@ -138,7 +140,7 @@ class ScheduleController {
     def showSchedule(name) {
         def user = User.find(session.user)
         def schedule = Schedule.findByUserAndName(user, name)
-        def res = ['courses': [], 'groups':[:], 'loc':'', 'schedule' : []]
+        def res = ['name': name, 'courses': [], 'groups':[:], 'loc':'', 'schedule' : []]
 
 
         schedule.courses.each { gr_sch ->
