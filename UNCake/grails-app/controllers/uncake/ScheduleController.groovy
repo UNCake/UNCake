@@ -12,10 +12,14 @@ class ScheduleController {
     def days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
 
     def index() {
+        def schedule = null
+        if(params.name) {
+            schedule = showSchedule(params.name)
+        }
         def courseType = ["PRE": ["Todas"         : "", "Fundamentación": "B", "Disciplinar": "C",
                                   "Libre elección": "L", "Nivelación": "P"],
                           "POS": ["Todas": "", "Obligatorio": "O", "Elegible": "T"]]
-        [locs: Location.list().name, courseType: courseType, days: days]
+        [locs: Location.list().name, courseType: courseType, days: days, schedule: schedule as JSON]
     }
 
     def searchByLoc() {
@@ -107,6 +111,8 @@ class ScheduleController {
                 if (key == "name") {
                     name = val
                     if(Schedule.findByUserAndName(user,name)) exists = true
+                } else if (key == "loc"){
+                    schedule.location = Location.findByName(val)
                 }
                 else {
                     def course = SchCourse.findByCode(val.course)
@@ -129,16 +135,41 @@ class ScheduleController {
         render res as JSON
     }
 
-    def showSchedule() {
+    def showSchedule(name) {
         def user = User.find(session.user)
-        def res = []
+        def schedule = Schedule.findByUserAndName(user, name)
+        def res = ['courses': [], 'groups':[:], 'loc':'', 'schedule' : []]
 
-        def schedule = Schedule.findByNameAndUser(params.name)
-        if (schedule != null) {
-            res.add(schedule.image)
+
+        schedule.courses.each { gr_sch ->
+            def course = SchCourse.findById(gr_sch.course.id)
+
+            def groups = [], index
+
+            if(course != null) {
+
+                course.groups.eachWithIndex { gr, i ->
+                    def ts = ["id": i, "teacher"   : gr.teacher, "code": gr.code, "availableSpots": gr.availableSpots,
+                              "totalSpots": gr.totalSpots, "course": gr.course.code, "timeSlots": []]
+
+                    TimeSlot.findAllByGroup(gr).each { t ->
+                        ts["timeSlots"] << t
+                    }
+
+                    if (gr_sch == gr) index = i
+
+                    groups << ts
+                }
+
+                res['courses'].add(["name": course.name, "code": course.code, "credits": course.credits])
+                res['groups'][course.name] = groups
+                res['schedule'].add(["id" : index, "name": course.name, "code": course.code])
+                if (res['loc'] == '') {
+                    res['loc'] = schedule.location.name
+                }
+            }
         }
 
-
-        render res as JSON
+        return res
     }
 }

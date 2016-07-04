@@ -413,43 +413,47 @@
                     code: code
                 },
                 success: function (group) {
-                    var content = $('<li>', {value: name, id: code});
-                    content.append('<div class="collapsible-header"> <a id="deleteCourse" > <i class="tiny material-icons">not_interested</i></a>' + code + ' ' + name + '</div>')
-                    var item = $('<div>', {class: "collapsible-body"});
-
-                    var div = $('<ol>', {class: 'selectableItem', id: name, value: code});
                     groups[name] = group;
-                    $.each(group, function (key, value) {
-                        var minSch = ""
-                        for (var i in value["timeSlots"]) {
-                            var ts = value["timeSlots"][i]
-                            if (ts.startHour > 0)
-                                minSch += ts.day.substring(0, 2) + ': ' + ts.startHour + ' - ' + ts.endHour + '  ';
-                        }
-                        div.append($('<li>', {value: code, id: key})
-                                .html(value.code + ' - ' + value.teacher + '<p>' + minSch + '</p>' +
-                                        'Cupos disp. ' + value["availableSpots"] + '/' + value["totalSpots"] +
-                                        '<progress value="' + value["availableSpots"] + '" max="' + value["totalSpots"] + '"/>'));
-                    });
-                    item.append(div);
-                    content.append(item);
-
-                    $('#accordionGroup').append(content);
-                    $('.collapsible').collapsible({
-                        accordion: true
-                    });
-
-                    $('#accordionGroup ol li').off("click")
-
-                    $('#accordionGroup ol li').click(function () {
-                        drawGroup(this.id, this.value, $(this).closest('ol').attr('id'))
-                    });
+                    drawCourse(name, code, group)
                     $("#progressbarGroups").addClass("hide");
                 },
                 error: function (request, status, error) {
                     delete groups[name];
                     alert(error)
                 }
+            });
+        }
+
+        var drawCourse = function(name, code, group) {
+            var content = $('<li>', {value: name, id: code});
+            content.append('<div class="collapsible-header"> <a id="deleteCourse" > <i class="tiny material-icons">not_interested</i></a>' + code + ' ' + name + '</div>')
+            var item = $('<div>', {class: "collapsible-body"});
+            var div = $('<ol>', {class: 'selectableItem', id: name, value: code});
+
+            $.each(group, function (key, value) {
+                var minSch = ""
+                for (var i in value["timeSlots"]) {
+                    var ts = value["timeSlots"][i]
+                    if (ts.startHour > 0)
+                        minSch += ts.day.substring(0, 2) + ': ' + ts.startHour + ' - ' + ts.endHour + '  ';
+                }
+                div.append($('<li>', {value: code, id: key})
+                        .html(value.code + ' - ' + value.teacher + '<p>' + minSch + '</p>' +
+                                'Cupos disp. ' + value["availableSpots"] + '/' + value["totalSpots"] +
+                                '<progress value="' + value["availableSpots"] + '" max="' + value["totalSpots"] + '"/>'));
+            });
+            item.append(div);
+            content.append(item);
+
+            $('#accordionGroup').append(content);
+            $('.collapsible').collapsible({
+                accordion: true
+            });
+
+            $('#accordionGroup ol li').off("click")
+
+            $('#accordionGroup ol li').click(function () {
+                drawGroup(this.id, this.value, $(this).closest('ol').attr('id'))
             });
         }
 
@@ -699,6 +703,7 @@
                 function () {
                     var url = "${createLink(controller:'Schedule', action:'buildSchedule')}";
                     schedule["name"] = $("#nameSc").val();
+                    schedule["loc"] = $("#loc").val()
                     $.ajax({
                         type: "POST",
                         url: url,
@@ -789,6 +794,19 @@
         });
 
         $('.modal-trigger').leanModal();
+
+        var load = $.parseJSON('${schedule}')
+        
+        if(load != null){
+            $("#loc").val(load.loc).change();
+            courses = load.courses
+            groups = load.groups
+
+            $.each(load.schedule, function(key, value) {
+                drawCourse(value.name, value.code, groups[value.name])
+              drawGroup(value.id, value.code, value.name)
+            })
+        }
     });
 </g:javascript>
 </body>

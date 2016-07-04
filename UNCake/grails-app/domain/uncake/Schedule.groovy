@@ -4,6 +4,7 @@ class Schedule {
 
     Integer credits
     String name
+    Location location
     static belongsTo = [user: User]
     static hasMany = [courses: Groups]
     static constraints = {

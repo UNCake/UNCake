@@ -261,17 +261,18 @@ class DBconnectionService {
                         session.clear()
                     }
                 }
+
+                if (update) {
+                    course = SchCourse.findByCode(course.code)
+                    course.lastUpdated = new Date()
+                    course.save()
+                }
             }
 
             // failure response handler
             response.failure = { resp ->
                 println "Unexpected error: ${resp.statusLine.statusCode}"
             }
-        }
-
-        if (update) {
-            course.lastUpdated = new Date()
-            course.save()
         }
     }
 

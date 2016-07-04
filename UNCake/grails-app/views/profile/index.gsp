@@ -7,36 +7,6 @@
     <asset:stylesheet src="schedule.css"/>
     <asset:stylesheet src="profile.css"/>
 
-    <!-- TODO Change view schedule
-    <script>
-        $(function () {
-            $(".showSchedule").click(function () {
-                var url = "${createLink(controller: 'Schedule', action: 'showSchedule')}";
-                console.log($(this).html())
-                var response = $.ajax({
-                    url: url,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: {
-                        name: $(this).html().trim()
-                    },
-                    success: function (schedule) {
-                        console.log(schedule);
-                        if (schedule != "[]") {
-                            $("#divSch").html(schedule[0]);
-                        }
-                    },
-
-                    error: function (request, status, error) {
-                        alert(error)
-                    }
-                });
-                $("#modalCr").modal("show");
-            });
-        });
-
-    </script>
-    -->
 </head>
 
 <body>
@@ -178,8 +148,9 @@
                     <g:form action="delSchedule">
                         <g:each in="${schedules}" status="i" var="schedule">
                             <div class="cont">
-                                <a val="${schedule.name}" class="showSchedule collection-item small-size">
-                                    ${schedule.name}</a>
+                                <g:link class="collection-item small-size"
+                                        controller="schedule" action="index"
+                                        params="${[name: schedule.name]}">${schedule.name}</g:link>
                                 <button name="ind1" value="${i}" type="submit"
                                         class="btn-large secondary-content"><i class="material-icons">delete</i>
                                 </button>
