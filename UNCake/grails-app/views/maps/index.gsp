@@ -63,14 +63,14 @@
                                 </label>
                             </div><br/>
                         </div>
-                            <ul id="schedules" class="collapsible" data-collapsible="expandable">
+                            <ul id="schedules" class="collapsible" data-collapsible="accordion" >
                                 <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
                                     <li>
-                                        <div class="collapsible-header active"><i class="material-icons">schedule</i><p>${it.name}</p></div>
+                                        <div class="collapsible-header"><i class="material-icons">schedule</i><p>${it.name}</p></div>
                                         <div class="collapsible-body transparent">
                                             <g:each in="${it.courses}" var="subj">
                                                 <div class="subject-area">
-                                                    <p class="title-subject">${String.valueOf(subj.course.name)}</p>
+                                                    <p class="title-subject truncate indigo lighten-4">${String.valueOf(subj.course.name)}</p>
                                                     <g:each in="${subj.timeSlots}" var="subjectGroup">
                                                         <g:if test="${subjectGroup.building != null}">
                                                             <div class="day-subject waves-effect waves-light" data-loc="${subjectGroup.building.coordinates}" data-title="${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}" data-content="${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour} ${subjectGroup.building.code}-${subjectGroup.classroom}">
