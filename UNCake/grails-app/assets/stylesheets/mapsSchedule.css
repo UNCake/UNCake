@@ -5,6 +5,10 @@
     border-radius: 5px;
     background-color: white;
 }
+#schedules {
+    height: 40vh;
+    overflow-y: auto;
+}
 .title-subject{
     text-align: center;
 }

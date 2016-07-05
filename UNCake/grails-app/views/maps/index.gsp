@@ -16,7 +16,7 @@
                 <div class="card blue-grey darken-1">
                     <div class="card-content white-text">
                         <span class="card-title">Información</span>
-                        <p>Los marcadores azules indican las entradas al campus. Digita el nombre o número del edificio a buscar y un marcador rojo te indicará tu destino.</p>
+                        <p>Los marcadores azules indican las entradas al campus. Digita el nombre o número del edificio a buscar y un marcador rojo te indicará la ubicación del destino.</p>
                     </div>
                 </div><br/>
                 <div id="input-building" class="input-field col s12">
@@ -63,14 +63,14 @@
                                 </label>
                             </div><br/>
                         </div>
-                            <ul class="collapsible" data-collapsible="expandable">
+                            <ul id="schedules" class="collapsible" data-collapsible="expandable">
                                 <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
                                     <li>
                                         <div class="collapsible-header active"><i class="material-icons">schedule</i><p>${it.name}</p></div>
                                         <div class="collapsible-body transparent">
                                             <g:each in="${it.courses}" var="subj">
                                                 <div class="subject-area">
-                                                    <p class="title-subject">${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}</p>
+                                                    <p class="title-subject">${String.valueOf(subj.course.name)}</p>
                                                     <g:each in="${subj.timeSlots}" var="subjectGroup">
                                                         <g:if test="${subjectGroup.building != null}">
                                                             <div class="day-subject waves-effect waves-light" data-loc="${subjectGroup.building.coordinates}" data-title="${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}" data-content="${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour} ${subjectGroup.building.code}-${subjectGroup.classroom}">
