@@ -5,6 +5,7 @@
 
     <asset:stylesheet src="mapsSchedule.css"/>
     <asset:stylesheet src="maps.css"/>
+    <script src="//maps.googleapis.com/maps/api/js"></script>
 
 </head>
 <body class="blue-grey lighten-5">
@@ -93,7 +94,7 @@
             <g:hiddenField name="subjectMarker" id="subject-marker" value="${resource(dir:'images',file:'maps/point6.png', absolute:'true')}"></g:hiddenField>
         </div>
     </div>
-    <script src="//maps.googleapis.com/maps/api/js"></script>
+
     <asset:javascript src="maps/maps.js"/>
     <asset:javascript src="jquery-ui/jquery-ui.js"/>
     <g:javascript>
