@@ -118,7 +118,8 @@ redirect(controller: "profile")
             scheduleToDelete = Schedule.findWhere(id:  (params.dschedule[params.int("ind1")]).toLong() )
         }
 
-       u.removeFromSchedules(scheduleToDelete).save()
+        u.removeFromSchedules(scheduleToDelete)
+        scheduleToDelete.delete()
         redirect(controller: "profile")
     }
 

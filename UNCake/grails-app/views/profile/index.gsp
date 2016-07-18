@@ -161,21 +161,6 @@
                     </g:form>
                 </div>
 
-                <!-- Modal -->
-                <div class="modal fade" id="modalCr" role="dialog">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title" id="modal-title">Horario</h4>
-                            </div>
-
-                            <div class="modal-body" id="divSch">
-                                <p id="modal-message">Tu horario.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <p>
                     <a href="schedule" class="btn-floating waves-effect waves-light red"><i
@@ -220,8 +205,6 @@
 
 <script>
     $(document).ready(function () {
-        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-        $('.modal-trigger').leanModal();
         $('#message').delay(5000).fadeOut('slow');
     });
 </script>

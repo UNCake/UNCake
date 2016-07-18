@@ -166,7 +166,7 @@ class BootStrap {
                 //DBconnectionService.searchStudyPlans(loc)
             }
         }
-
+        
         def initST_Gr = []
         def type = ["PRE","POS"]
 
