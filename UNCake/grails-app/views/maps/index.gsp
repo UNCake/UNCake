@@ -10,94 +10,96 @@
 </head>
 <body class="blue-grey lighten-5">
 
-    <div class="content">
-        <div class="row transparent">
-            <br/>
-            <div class="col m3 transparent">
-                <div class="card blue-grey darken-1">
-                    <div class="card-content white-text">
-                        <span class="card-title">Información</span>
-                        <p>Los marcadores azules indican las entradas al campus. Digita el nombre o número del edificio a buscar y un marcador rojo te indicará la ubicación del destino.</p>
-                    </div>
-                </div><br/>
-                <div id="input-building" class="input-field col s12">
-                    <i class="material-icons prefix">search</i>
-                    <input placeholder="Nombre o código" id="building-name" type="text" onChange="clearAutoCompleteInput()">
-                    <label for="building-name">Edificio</label>
-                </div><div><br/><br/><br/><br/><br/></div>
-                <div style="text-align: center">
-                    <a class="waves-effect waves-light btn" id="search-building"> Buscar </a><br/><br/>
+<div class="content">
+    <div class="row transparent">
+        <br/>
+        <div class="col m3 transparent">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">Información</span>
+                    <p>Los marcadores azules indican las entradas al campus. Digita el nombre o número del edificio a buscar y un marcador rojo te indicará la ubicación del destino.</p>
                 </div>
+            </div><br/>
+
+
+            <div id="input-building" class="input-field">
+                <input id="building-name" class="dropdown-button" placeholder="Nombre o código" data-activates="dropdownBuilding">
+                <ul id="dropdownBuilding" class="dropdown-content"></ul>
+                <label class="active" for="building-name">Edificio</label>
             </div>
 
+            <div style="text-align: center">
+                <a class="waves-effect waves-light btn" id="search-building"> Buscar </a><br/><br/>
+            </div>
+        </div>
 
-            <div class="col m6 transparent" >
-                <div class="card white">
-                    <div>
-                        <div class="large-12 columns">
-                            <div class="panel" style="border: none;padding-top: 0;padding-bottom: 0;background-color: #fff;">
-                                <div class="row">
-                                    <div id="googleMap" class="large-10 columns" style="width:100%;height:550px;"></div>
-                                </div>
+
+        <div class="col m6 transparent" >
+            <div class="card white">
+                <div>
+                    <div class="large-12 columns">
+                        <div class="panel" style="border: none;padding-top: 0;padding-bottom: 0;background-color: #fff;">
+                            <div class="row">
+                                <div id="googleMap" class="large-10 columns" style="width:100%;height:550px;"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col m3">
-                <div class="card blue-grey darken-1">
-                    <div class="card-content white-text">
-                        <span class="card-title">Horarios</span>
-                        <p>Selecciona cada clase, un marcador amarillo te indicará el lugar. Puedes mantener un marcador a la vez o acumular varios en el mapa.</p>
-                    </div>
+        <div class="col m3">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">Horarios</span>
+                    <p>Selecciona cada clase, un marcador amarillo te indicará el lugar. Puedes mantener un marcador a la vez o acumular varios en el mapa.</p>
                 </div>
-                <g:if test="${session.user != null}">
-                    <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
-                        <div >
-                            <br/>
-                            <div class="switch">
-                                <label>
-                                    Acumular&nbsp;&nbsp;&nbsp;
-                                    <input type="checkbox" id="check-accumulate">
-                                    <span class="lever"></span>
-                                </label>
-                            </div><br/>
-                        </div>
-                            <ul id="schedules" class="collapsible" data-collapsible="accordion" >
-                                <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
-                                    <li>
-                                        <div class="collapsible-header"><i class="material-icons">schedule</i><p>${it.name}</p></div>
-                                        <div class="collapsible-body transparent">
-                                            <g:each in="${it.courses}" var="subj">
-                                                <div class="subject-area">
-                                                    <p class="title-subject truncate indigo lighten-4">${String.valueOf(subj.course.name)}</p>
-                                                    <g:each in="${subj.timeSlots}" var="subjectGroup">
-                                                        <g:if test="${subjectGroup.building != null}">
-                                                            <div class="day-subject waves-effect waves-light" data-loc="${subjectGroup.building.coordinates}" data-title="${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}" data-content="${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour} ${subjectGroup.building.code}-${subjectGroup.classroom}">
-                                                                <p class="subject-detail">${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour}<br/>
-                                                                ${subjectGroup.building.code}-${subjectGroup.classroom.replace('null', '')}</p>
-                                                            </div>
-                                                        </g:if>
-                                                    </g:each>
-                                                </div>
+            </div>
+            <g:if test="${session.user != null}">
+                <g:if test="${uncake.User.findById( ((uncake.User)session.user).id ).schedules.size() > 0}">
+                    <div >
+                        <br/>
+                        <div class="switch">
+                            <label>
+                                Acumular&nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" id="check-accumulate">
+                                <span class="lever"></span>
+                            </label>
+                        </div><br/>
+                    </div>
+                    <ul id="schedules" class="collapsible" data-collapsible="accordion" >
+                        <g:each in="${uncake.User.findById( ((uncake.User)session.user).id ).schedules}">
+                            <li>
+                                <div class="collapsible-header"><i class="material-icons">schedule</i><p>${it.name}</p></div>
+                                <div class="collapsible-body transparent">
+                                    <g:each in="${it.courses}" var="subj">
+                                        <div class="subject-area">
+                                            <p class="title-subject truncate indigo lighten-4">${String.valueOf(subj.course.name)}</p>
+                                            <g:each in="${subj.timeSlots}" var="subjectGroup">
+                                                <g:if test="${subjectGroup.building != null}">
+                                                    <div class="day-subject waves-effect waves-light" data-loc="${subjectGroup.building.coordinates}" data-title="${String.valueOf(subj.course)[0] + String.valueOf(subj.course).toLowerCase().substring(1)}" data-content="${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour} ${subjectGroup.building.code}-${subjectGroup.classroom}">
+                                                        <p class="subject-detail">${String.valueOf(subjectGroup.day).substring(0,3)} ${subjectGroup.startHour}-${subjectGroup.endHour}<br/>
+                                                            ${subjectGroup.building.code}-${subjectGroup.classroom.replace('null', '')}</p>
+                                                    </div>
+                                                </g:if>
                                             </g:each>
                                         </div>
-                                    </li>
-                                </g:each>
-                            </ul>
-                    </g:if>
+                                    </g:each>
+                                </div>
+                            </li>
+                        </g:each>
+                    </ul>
                 </g:if>
-            </div>
-            <g:hiddenField name="doorMarker" id="door-marker" value="${resource(dir:'images',file:'maps/entry.png', absolute:'true')}"></g:hiddenField>
-            <g:hiddenField name="pointMarker" id="point-marker" value="${resource(dir:'images',file:'maps/point2.png', absolute:'true')}"></g:hiddenField>
-            <g:hiddenField name="subjectMarker" id="subject-marker" value="${resource(dir:'images',file:'maps/point6.png', absolute:'true')}"></g:hiddenField>
+            </g:if>
         </div>
+        <g:hiddenField name="doorMarker" id="door-marker" value="${resource(dir:'images',file:'maps/entry.png', absolute:'true')}"></g:hiddenField>
+        <g:hiddenField name="pointMarker" id="point-marker" value="${resource(dir:'images',file:'maps/point2.png', absolute:'true')}"></g:hiddenField>
+        <g:hiddenField name="subjectMarker" id="subject-marker" value="${resource(dir:'images',file:'maps/point6.png', absolute:'true')}"></g:hiddenField>
     </div>
+</div>
 
-    <asset:javascript src="maps/maps.js"/>
-    <asset:javascript src="jquery-ui/jquery-ui.js"/>
-    <g:javascript>
+<asset:javascript src="maps/maps.js"/>
+<g:javascript>
         arrayMarkers = [];
         $(function() {
             $( ".day-subject" ).click( function(){
@@ -166,31 +168,56 @@
                  $("#search-building").trigger('click');
               }
             });*/
-            $( "#building-name" ).autocomplete({
-                source: function( request, response ) {
-                    $.ajax({
-                        url: "${createLink(controller: 'Building', action: 'getAllNames')}",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        data: {
-                            maxRows: 12,
-                            name_startsWith: request.term
-                        },
-                        success: function( data ) {
-                            response( $.map( data, function( item ) {
-                                return {
-                                    label: item,
-                                    value: item
-                                }
-                            }));
-                        }
+
+         $('#building-name').keyup(function () {
+            var building = $(this).val().toLowerCase();
+                $('#dropdownBuilding li').each(function () {
+                    var text = $(this).text().toLowerCase();
+                    (text.indexOf(building) >= 0) ? $(this).show() : $(this).hide();
+                });
+        });
+
+        var updateBuilding = function () {
+
+            $.ajax({
+                url: "${createLink(controller: 'Building', action: 'getAllNames')}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { },
+                success: function (data) {
+                    $('#dropdownBuilding').empty();
+                    $.each(data, function (key, value) {
+                        $('#dropdownBuilding')
+                                .append($('<li>', {value: value})
+                                        .html('<a>' + value + '</a>'));
                     });
-                }
-            });
+                    updateDropdown();
+                 }
+                });
+         }
+
+        updateBuilding();
+
+        var updateDropdown = function () {
+            $('.dropdown-button').dropdown({
+                        inDuration: 300,
+                        outDuration: 225,
+                        gutter: 0,
+                        belowOrigin: true,
+                        alignment: 'left'
+                    }
+            )
+        }
+
+         $('#dropdownBuilding').on('click', 'li', function () {
+            $('#building-name').val($(this).text());
+        });
+
+
         });
         function clearAutoCompleteInput() {
             $("#building-name").val('');
         }
-    </g:javascript>
+</g:javascript>
 </body>
 </html>
