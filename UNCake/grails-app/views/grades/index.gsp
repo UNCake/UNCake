@@ -198,7 +198,6 @@
         </div>
     <div/>
 
-    <asset:javascript src="jquery-ui/jquery-ui.js"/>
     <g:javascript>
         $(document).ready(function() {
             $('select').material_select();
@@ -229,7 +228,7 @@
                         data: {academicRecord: academicRecord},
                         success: function( result ){
                             if( result == "false" ){
-                                $( "#input-record" ).effect( "shake", {}, 500 );
+                                $( "#input-record" ).fadeIn(500);
                                 Materialize.toast("Ingresa una historia académica válida", 4000, "light-blue lighten-3 z-depth-2");
                             }
                             else{
@@ -247,7 +246,7 @@
                         }
                     });
                 }else{
-                    $( "#input-record" ).effect( "shake", {}, 500 );
+                    $( "#input-record" ).fadeIn( 500 );
                     Materialize.toast("Ingresa tu historia académica", 4000, "light-blue lighten-3 z-depth-2");
                 }
             });
@@ -284,14 +283,14 @@
                                 }else if( gradeSubject > 5){
                                     Materialize.toast("La nota mínima requerida es mayor a 5, exactamente: " + roundSubject(gradeSubject), 4000, "light-blue lighten-3 z-depth-2");
                                 }else{
-                                    $("#card-result").effect( "slide", {}, 500 );
+                                    $("#card-result").fadeIn( 500 );
                                     if( numSubjects > 1 )
                                         $("#projection-result").text("La nota mínima requerida en las " + numSubjects + " asignaturas para tener el PAPA en " + average + " es de " + roundSubject(gradeSubject) );
                                     else
                                         $("#projection-result").text("La nota mínima requerida en la asignatura para tener el PAPA en " + average + " es de " + roundSubject(gradeSubject) );
                                 }
                             }else{
-                                $("#card-result").effect( "slide", {}, 500 );
+                                $("#card-result").fadeIn( 500 );
                                 var averageObtained = parseFloat( result.split('&&&')[1] );
                                 if( numSubjects > 1 )
                                     $("#projection-result").text("El PAPA obtenido cursando las " + numSubjects + " asignaturas es de " + roundAverage(averageObtained) + " exactamente " + averageObtained );
@@ -383,20 +382,20 @@
                 $(".input-credits").each(function(){
                     if( !$(this).val().match( regExpCredits ) ){
                         creditsError = true;
-                        $(this).parent('div').effect( "shake", {}, 500 );
+                        $(this).parent('div').fadeIn( 500 );
                         Materialize.toast("Revisa los créditos ingresados", 4000, "light-blue lighten-3 z-depth-2");
                     }
                 });
                 $(".input-grade").each(function(){
                     if( !$(this).is(":disabled") && !$(this).val().match( regExpGrade ) ){
                         gradeError = true;
-                        $(this).parent('div').effect( "shake", {}, 500 );
+                        $(this).parent('div').fadeIn( 500 );
                         Materialize.toast("Revisa las notas ingresadas de 0-5 con una cifra decimal", 4000, "light-blue lighten-3 z-depth-2");
                     }
                     else{
                         if( parseFloat( $(this).val() ) > 5 ){
                             gradeError = true;
-                            $(this).parent('div').effect( "shake", {}, 500 );
+                            $(this).parent('div').fadeIn( 500 );
                             Materialize.toast("La nota ingresada no puede ser mayor a 5", 4000, "light-blue lighten-3 z-depth-2");
                         }
                     }
@@ -409,7 +408,7 @@
                         averageError = true
                 }
                 if( averageError ){
-                    $("#box-average").effect( "shake", {}, 500 );
+                    $("#box-average").fadeIn( 500 );
                     Materialize.toast("Revisa el promedio esperado de 0-5 con una cifra decimal", 4000, "light-blue lighten-3 z-depth-2");
                 }
                 return !creditsError & !gradeError & !averageError;
