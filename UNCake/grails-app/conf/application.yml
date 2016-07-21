@@ -90,7 +90,6 @@ dataSource:
     driverClassName: org.h2.Driver
     username: sa
     password:
-        
 environments:
     development:
         dataSource:
@@ -152,4 +151,4 @@ environments:
                 testWhileIdle: true
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
-                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED

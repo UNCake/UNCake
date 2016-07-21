@@ -269,8 +269,10 @@ class GradesController {
         def approved = String.valueOf(academicRecord.find(approvedPattern))
         def positions = [ADVANCE_FUND, ADVANCE_DISC, ADVANCE_FREE, ADVANCE_NIV]
         positions.each {
-            advanceComponents.add(Integer.parseInt(required.split('\t')[it]))
-            advanceComponents.add(Integer.parseInt(approved.split('\t')[it]))
+            def reqCompI = Integer.parseInt(required.split('\t')[it]);
+            def advCompI = Integer.parseInt(approved.split('\t')[it]) <= reqCompI ? Integer.parseInt(approved.split('\t')[it]) : reqCompI;
+            advanceComponents.add(reqCompI)
+            advanceComponents.add(advCompI)
         }
         return advanceComponents
     }

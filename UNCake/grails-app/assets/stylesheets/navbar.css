@@ -1,0 +1,19 @@
+.brand-logo, .brand-title{
+    font-family:'Kaushan Script','Helvetica Neue',Helvetica,Arial,cursive;
+    text-transform: none;
+}
+.brand-logo:hover{
+    text-decoration: none;
+    color: #23527C;
+    padding-left: 5px;
+    padding-right: 10px;
+    background-color: #6D79B7;
+}
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+main {
+    flex: 1 0 auto;
+}
